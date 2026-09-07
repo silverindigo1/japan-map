@@ -124,6 +124,13 @@ h1 small{font-weight:400;color:var(--muted);font-size:13px;margin-left:8px}
 .img-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
 .img-preview{width:56px;height:56px;border-radius:50%;border:1px solid var(--line);background:var(--washi);overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;font-size:22px}
 .img-preview img{width:100%;height:100%;object-fit:cover}
+.lib{display:flex;gap:6px;overflow-x:auto;padding:6px 1px;scrollbar-width:none}
+.lib::-webkit-scrollbar{display:none}
+.lib .item{position:relative;flex:none}
+.lib .item img{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);object-fit:cover;background:#fff;display:block}
+.lib .item.on img{border-color:var(--shu)}
+.lib .item .x{position:absolute;right:-3px;top:-3px;width:18px;height:18px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:11px;line-height:1;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.lib-empty{font-size:13px;color:var(--muted);padding:6px 0}
 .file-btn{position:relative;overflow:hidden}
 .file-btn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
 .paste-zone{border:1px dashed var(--line);border-radius:10px;padding:10px;font-size:13px;color:var(--muted);background:var(--washi);min-height:40px;outline:none}
@@ -181,7 +188,16 @@ textarea.notes{width:100%;min-height:96px;resize:vertical;border:1px solid var(-
 .empty{color:var(--muted);font-size:14px;padding:20px 0;text-align:center}
 .tip h3{font-size:15px;margin:18px 0 6px;display:flex;align-items:center;gap:8px}
 .tip h3 i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
-.tip textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--washi);line-height:1.45;resize:vertical}
+.tip{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:4px}
+.tip .head{display:flex;align-items:center;gap:8px}
+.tip .head h3{flex:1;margin:14px 0 6px}
+.tip .head .edit{font-size:12px;font-weight:600;color:var(--indigo);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--paper)}
+.tip .body{font-size:14px;line-height:1.55;white-space:pre-wrap;color:var(--ink)}
+.tip .body.empty{color:var(--muted);font-style:italic}
+.note-editor{position:absolute;inset:0;z-index:65;background:var(--paper);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.note-editor.open{display:flex}
+.note-editor textarea{flex:1;width:100%;border:0;padding:14px 16px;font-size:15px;line-height:1.55;background:var(--paper);resize:none;outline:none}
+.note-editor .foot{padding:8px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 .note{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 6px}
 .data-block{margin:14px 0}
 .data-block h3{font-size:15px;margin:0 0 6px}
@@ -282,7 +298,6 @@ body.picking .top,body.picking .fab{display:none}
         <a class="btn" id="appleLink" target="_blank" rel="noopener">Apple Maps</a>
         <button class="btn" id="coordBtn" type="button">Copy coordinates</button>
         <button class="btn" id="editBtn" type="button">Edit</button>
-        <button class="btn danger" id="deleteBtn" type="button">Delete</button>
       </div>
     </div>
   </section>
@@ -351,6 +366,15 @@ body.picking .top,body.picking .fab{display:none}
     </div>
   </aside>
 
+  <div class="note-editor" id="noteEditor" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <button class="btn" id="noteCancel" type="button">Cancel</button>
+      <h2 id="noteTitle"></h2>
+      <button class="btn primary" id="noteSave" type="button">Save</button>
+    </div>
+    <textarea id="noteText" spellcheck="false"></textarea>
+    <div class="foot">These notes are yours. Nothing here is written or changed by the app.</div>
+  </div>
   <div class="modal" id="modal" role="dialog" aria-modal="true">
     <div class="modal-head">
       <button class="btn" id="cancelForm" type="button">Cancel</button>
@@ -378,6 +402,8 @@ body.picking .top,body.picking .fab{display:none}
         </div>
         <div class="paste-zone" id="pasteZone" contenteditable="true" spellcheck="false">Or tap here and paste an image (copy it from Photos, Safari or a message first).</div>
         <div class="err" id="imgErr"></div>
+        <label style="margin-top:10px">Saved images, tap to reuse</label>
+        <div class="lib" id="imgLib"></div>
       </div>
       <div class="field">
         <label>Where</label>
@@ -397,6 +423,7 @@ body.picking .top,body.picking .fab{display:none}
       <div class="field"><label for="fDay">Day</label><select id="fDay"></select></div>
       <div class="field"><label for="fWhen">When or status (optional)</label><input id="fWhen" placeholder="12 Nov, tickets booked"></div>
       <div class="field"><label for="fNotes">Notes</label><textarea id="fNotes"></textarea></div>
+      <div class="field" id="deleteWrap" style="display:none"><button class="btn danger" id="deleteBtn" type="button">Delete this place</button></div>
     </div>
   </div>
 
@@ -1242,7 +1269,50 @@ var SEED_PLACES=[
   {id:'dotonbori',name:'Dotonbori',jp:'道頓堀',area:'osaka',cat:'food',icon:'🐙',lat:34.6687,lng:135.5013,when:'',notes:'Takoyaki, okonomiyaki, the Glico sign.'},
   {id:'osakacastle',name:'Osaka Castle',jp:'大阪城',area:'osaka',cat:'other',icon:'🏯',lat:34.6873,lng:135.5262,when:'',notes:''},
   {id:'kuromon',name:'Kuromon Market',jp:'黒門市場',area:'osaka',cat:'food',icon:'🍤',lat:34.6656,lng:135.5062,when:'',notes:'Grilled seafood at the stalls.'},
-  {id:'nara',name:'Nara Park and Todai-ji',jp:'奈良公園',area:'osaka',cat:'nature',icon:'🦌',lat:34.6851,lng:135.8430,when:'',notes:'Day trip. Deer crackers, the big Buddha.'}
+  {id:'nara',name:'Nara Park and Todai-ji',jp:'奈良公園',area:'osaka',cat:'nature',icon:'🦌',lat:34.6851,lng:135.8430,when:'',notes:'Day trip. Deer crackers, the big Buddha.'},
+  {id:'omoide',name:'Omoide Yokocho',jp:'思い出横丁',area:'tokyo',cat:'food',icon:'🍢',lat:35.69287,lng:139.69955,when:'',notes:'Alley of tiny yakitori counters by Shinjuku station. Smoky, cash, six seats per bar. Best from 18:00.'},
+  {id:'goldengai',name:'Golden Gai',jp:'新宿ゴールデン街',area:'tokyo',cat:'other',icon:'🏮',lat:35.69399,lng:139.7047,when:'',notes:'Two hundred doll-house bars. Many charge a small cover, some are locals only, look for English signs.'},
+  {id:'yanaka',name:'Yanaka Ginza',jp:'谷中銀座',area:'tokyo',cat:'food',icon:'🍡',lat:35.72767,lng:139.76532,when:'',notes:'Old Tokyo shopping lane, cats, croquettes. Sunset from the stairs at the east end.'},
+  {id:'uenopark',name:'Ueno Park',jp:'上野公園',area:'tokyo',cat:'nature',icon:'🍁',lat:35.71529,lng:139.77383,when:'',notes:'Museum park with ginkgo colour in November. Good pairing with Ameyoko and Yanaka.'},
+  {id:'tnm',name:'Tokyo National Museum',jp:'東京国立博物館',area:'tokyo',cat:'art',icon:'🏛️',lat:35.71904,lng:139.77597,when:'',notes:'Swords, armour, ceramics. The Honkan building alone takes two hours.'},
+  {id:'akiba',name:'Akihabara',jp:'秋葉原',area:'tokyo',cat:'shopping',icon:'🎮',lat:35.69716,lng:139.77516,when:'',notes:'Electronics, arcades, second-hand cameras. Yodobashi Akiba for anything technical.'},
+  {id:'toyosu',name:'Toyosu Market',jp:'豊洲市場',area:'tokyo',cat:'food',icon:'🐟',lat:35.64495,lng:139.78469,when:'',notes:'The wholesale market that replaced Tsukiji. Tuna auction viewing deck from 05:30, sushi upstairs. Closed most Wednesdays and Sundays.'},
+  {id:'borderless',name:'teamLab Borderless',jp:'チームラボボーダレス',area:'tokyo',cat:'art',icon:'🎨',lat:35.662,lng:139.74342,when:'',notes:'The other teamLab, at Azabudai Hills. Different from Planets: no water, rooms flow into each other. Timed tickets.'},
+  {id:'mori',name:'Mori Art Museum and Tokyo City View',jp:'森美術館',area:'tokyo',cat:'art',icon:'🏙️',lat:35.66043,lng:139.72926,when:'',notes:'53rd floor of Roppongi Hills. Exhibition plus the best indoor city view, open late.'},
+  {id:'shimokita',name:'Shimokitazawa',jp:'下北沢',area:'tokyo',cat:'shopping',icon:'🎧',lat:35.66157,lng:139.66706,when:'',notes:'Vintage shops, coffee, small theatres. Slow afternoon, no big sights.'},
+  {id:'nakameguro',name:'Nakameguro',jp:'中目黒',area:'tokyo',cat:'other',icon:'🌸',lat:35.64414,lng:139.69883,when:'',notes:'Canal-side boutiques and coffee. Quiet in November, pretty in the evening light.'},
+  {id:'imperial',name:'Imperial Palace East Gardens',jp:'皇居東御苑',area:'tokyo',cat:'nature',icon:'🏯',lat:35.6867,lng:139.7574,when:'',notes:'Free castle grounds and stone ramparts. Closed Mondays and Fridays.'},
+  {id:'ameyoko',name:'Ameyoko Market',jp:'アメヤ横丁',area:'tokyo',cat:'shopping',icon:'🛍️',lat:35.71002,lng:139.77454,when:'',notes:'Loud street market under the tracks: snacks, spices, cheap bags.'},
+  {id:'kagurazaka',name:'Kagurazaka',jp:'神楽坂',area:'tokyo',cat:'food',icon:'🍶',lat:35.70109,lng:139.74123,when:'',notes:'Stone lanes and old geisha district feel, French bakeries, good dinner area.'},
+  {id:'yumoto',name:'Hakone-Yumoto Station',jp:'箱根湯本駅',area:'hakone',cat:'other',icon:'🚉',lat:35.2332,lng:139.10347,when:'',notes:'Gateway to Hakone. Change here for the Tozan railway. Lockers and luggage forwarding available.'},
+  {id:'gorapark',name:'Gora Park',jp:'強羅公園',area:'hakone',cat:'nature',icon:'🌺',lat:35.24864,lng:139.04525,when:'',notes:'Terraced French garden five minutes from both ryokans. Glass blowing workshop inside.'},
+  {id:'pola',name:'Pola Museum of Art',jp:'ポーラ美術館',area:'hakone',cat:'art',icon:'🖼️',lat:35.25666,lng:139.0212,when:'',notes:'Impressionists in a forest building, glass corridors. Bus from Gora.'},
+  {id:'amazake',name:'Amazake Chaya',jp:'甘酒茶屋',area:'hakone',cat:'food',icon:'🍵',lat:35.20216,lng:139.04895,when:'',notes:'Thatched tea house on the old Tokaido road. Amazake and grilled mochi, unchanged for 400 years.'},
+  {id:'sekisho',name:'Hakone Checkpoint',jp:'箱根関所',area:'hakone',cat:'other',icon:'🏯',lat:35.19221,lng:139.02635,when:'',notes:'Reconstructed Edo barrier station on the lake shore, near the pirate boat pier.'},
+  {id:'odawara',name:'Odawara Castle',jp:'小田原城',area:'hakone',cat:'other',icon:'🏯',lat:35.25105,lng:139.15342,when:'',notes:'Twenty minutes from Hakone-Yumoto, easy stop on the way in or out.'},
+  {id:'togendai',name:'Togendai pier',jp:'桃源台',area:'hakone',cat:'nature',icon:'⛴️',lat:35.23797,lng:138.99459,when:'',notes:'Ropeway meets the Lake Ashi boat here. Boat to Moto-Hakone takes about 30 minutes.'},
+  {id:'ginkakuji',name:'Ginkaku-ji',jp:'銀閣寺',area:'kyoto',cat:'shrine',icon:'🏯',lat:35.0269,lng:135.79837,when:'',notes:'Silver Pavilion, moss and sand garden. Start of the Philosopher\'s Path.'},
+  {id:'nanzenji',name:'Nanzen-ji',jp:'南禅寺',area:'kyoto',cat:'shrine',icon:'⛩️',lat:35.01153,lng:135.79272,when:'',notes:'Huge gate and the brick aqueduct. Free to walk the grounds.'},
+  {id:'tofukuji',name:'Tofuku-ji',jp:'東福寺',area:'kyoto',cat:'nature',icon:'🍁',lat:34.97717,lng:135.77458,when:'',notes:'The Kyoto maple temple. Tsutenkyo bridge is packed by 09:00 in late November.'},
+  {id:'eikando',name:'Eikan-do',jp:'永観堂',area:'kyoto',cat:'nature',icon:'🍁',lat:35.01438,lng:135.79488,when:'',notes:'Best autumn illumination in Kyoto, evenings in late November. Buy tickets on arrival, expect a queue.'},
+  {id:'nijo',name:'Nijo Castle',jp:'二条城',area:'kyoto',cat:'other',icon:'🏯',lat:35.01401,lng:135.74854,when:'',notes:'Shogun\'s palace with nightingale floors that squeak on purpose.'},
+  {id:'sanjusangendo',name:'Sanjusangendo',jp:'三十三間堂',area:'kyoto',cat:'shrine',icon:'🏯',lat:34.98908,lng:135.77174,when:'',notes:'1001 gold Kannon statues in a 120 metre hall. No photos inside.'},
+  {id:'pontocho',name:'Pontocho',jp:'先斗町',area:'kyoto',cat:'food',icon:'🏮',lat:35.00425,lng:135.77121,when:'',notes:'Narrow lantern alley along the river, dinner and bars.'},
+  {id:'yasaka',name:'Yasaka Shrine',jp:'八坂神社',area:'kyoto',cat:'shrine',icon:'⛩️',lat:35.0036,lng:135.77826,when:'',notes:'Gion\'s shrine, lit at night, opens onto Maruyama Park.'},
+  {id:'toji',name:'To-ji',jp:'東寺',area:'kyoto',cat:'shrine',icon:'🏯',lat:34.98063,lng:135.74772,when:'',notes:'Tallest wooden pagoda in Japan. Flea market on the 21st of the month.'},
+  {id:'byodoin',name:'Byodo-in, Uji',jp:'平等院',area:'kyoto',cat:'shrine',icon:'🪷',lat:34.8895,lng:135.80745,when:'',notes:'The temple on the 10 yen coin. Uji is 20 minutes by train, also the best matcha in Japan.'},
+  {id:'umeda',name:'Umeda Sky Building',jp:'梅田スカイビル',area:'osaka',cat:'other',icon:'🏙️',lat:34.70529,lng:135.49053,when:'',notes:'Floating garden observatory, open air roof. Sunset slot is the one to aim for.'},
+  {id:'tsutenkaku',name:'Tsutenkaku and Shinsekai',jp:'通天閣',area:'osaka',cat:'other',icon:'🗼',lat:34.65254,lng:135.50631,when:'',notes:'Retro tower district, kushikatsu everywhere. Rule: no double dipping the sauce.'},
+  {id:'hozenji',name:'Hozenji Yokocho',jp:'法善寺横丁',area:'osaka',cat:'food',icon:'🏮',lat:34.66797,lng:135.50332,when:'',notes:'Stone alley off Dotonbori with the moss-covered statue. Quiet counter restaurants.'},
+  {id:'amerika',name:'Amerikamura',jp:'アメリカ村',area:'osaka',cat:'shopping',icon:'🛍️',lat:34.67209,lng:135.49795,when:'',notes:'Osaka\'s youth quarter, vintage and streetwear.'},
+  {id:'kaiyukan',name:'Osaka Aquarium Kaiyukan',jp:'海遊館',area:'osaka',cat:'other',icon:'🐋',lat:34.65455,lng:135.42892,when:'',notes:'One of the world\'s largest aquariums, whale sharks. Half a day with the bay area.'},
+  {id:'sumiyoshi',name:'Sumiyoshi Taisha',jp:'住吉大社',area:'osaka',cat:'shrine',icon:'⛩️',lat:34.613,lng:135.4931,when:'',notes:'Ancient shrine with the steep arched bridge, older style than most.'},
+  {id:'kasuga',name:'Kasuga Taisha',jp:'春日大社',area:'osaka',cat:'shrine',icon:'⛩️',lat:34.68051,lng:135.84607,when:'',notes:'Three thousand lanterns in the forest, deer all around.'},
+  {id:'naramachi',name:'Naramachi',jp:'ならまち',area:'osaka',cat:'other',icon:'🏘️',lat:34.67836,lng:135.83709,when:'',notes:'Old merchant lanes south of the park, cafes and craft shops.'},
+  {id:'kofukuji',name:'Kofuku-ji',jp:'興福寺',area:'osaka',cat:'shrine',icon:'🏯',lat:34.68297,lng:135.83187,when:'',notes:'Five-storey pagoda at the edge of Nara Park.'},
+  {id:'isuien',name:'Isuien Garden',jp:'依水園',area:'osaka',cat:'nature',icon:'🍁',lat:34.68547,lng:135.83792,when:'',notes:'Small garden borrowing Todai-ji gate and the hills as backdrop. Tea house inside.'},
+  {id:'takeshita',name:'Takeshita Street',jp:'竹下通り',area:'tokyo',cat:'shopping',icon:'🛍️',lat:35.67116,lng:139.70496,when:'',notes:'Teen Harajuku: crepes, thrift, crowds. Ten minutes is enough, then walk to Omotesando.'},
+  {id:'philosopher',name:'Philosopher\'s Path',jp:'哲学の道',area:'kyoto',cat:'nature',icon:'🌿',lat:35.01537,lng:135.79477,when:'',notes:'Canal walk from Ginkaku-ji to Nanzen-ji, about 30 minutes, maples the whole way.'}
 ];
 
 var SEED_TIPS={
@@ -1259,8 +1329,27 @@ var SEED_TIPS={
 
 var state={places:[],tips:{},hidden:[]};
 var map,layer,attribution,markers={},selectedId=null,editingId=null,pickMode=false,activeArea='tokyo';
-var noteTimer=null,tipTimers={},pendingDelete=null,pendingReset=null,saveWarned=false;
+var noteTimer=null,tipTimers={},pendingDelete=null,pendingReset=null,saveWarned=false,mergedCount=0;
 var formImg='',formPhoto='';
+function library(){ if(!state.library)state.library=[]; return state.library; }
+function removedSeeds(){ if(!state.removedSeeds)state.removedSeeds=[]; return state.removedSeeds; }
+/* Adds starter places that this device has never seen. Never edits, moves or removes anything the user has,
+   and never brings back a starter place that was deleted here. */
+function mergeSeeds(){
+  var have={},gone={},added=0;
+  state.places.forEach(function(p){ have[p.id]=1; });
+  removedSeeds().forEach(function(id){ gone[id]=1; });
+  SEED_PLACES.forEach(function(sp){
+    if(have[sp.id]||gone[sp.id])return;
+    var dup=state.places.some(function(p){
+      return p.name.toLowerCase()===sp.name.toLowerCase()&&distM([p.lat,p.lng],[sp.lat,sp.lng])<120;
+    });
+    if(dup)return;
+    state.places.push(Object.assign({visited:false,notes:'',img:'',photo:'',day:'',order:0},sp));
+    added++;
+  });
+  return added;
+}
 var TRIP_START='2026-11-10',TRIP_END='2026-12-01';
 var activeDay=null,expandedDay=null,userPos=null,userMarker=null,userCircle=null,sortNear=false;
 function pad2(n){return (n<10?'0':'')+n;}
@@ -1356,6 +1445,10 @@ function init(){
       state.places=saved.places;
       state.tips=Object.assign({},SEED_TIPS,saved.tips||{});
       state.hidden=Array.isArray(saved.hidden)?saved.hidden:[];
+      state.library=Array.isArray(saved.library)?saved.library:[];
+      state.removedSeeds=Array.isArray(saved.removedSeeds)?saved.removedSeeds:[];
+      mergedCount=mergeSeeds();
+      if(mergedCount)persist();
     }else{
       state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
       state.tips=Object.assign({},SEED_TIPS);
@@ -1363,6 +1456,7 @@ function init(){
     buildMap();buildTabs();buildChips();buildForm();
     renderMarkers();renderList();renderTips();bind();
     $('#storageNote').textContent=store.describe();
+    if(mergedCount) setTimeout(function(){toast(mergedCount+' new places added to the list. Your own places and notes are untouched.');},900);
     if(!getGoogleKey()) gStatus('No key saved. The built-in map is in use.');
   });
 }
@@ -1374,7 +1468,7 @@ function buildMap(){
   L.control.scale({position:'bottomleft',imperial:false}).addTo(map);
   buildBase();
   probeTiles();
-  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();}};
+  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;}};
   if(getGoogleKey()) setTimeout(enableGoogle,50);
   layer=L.layerGroup().addTo(map);
   map.on('click',onMapClick);
@@ -1808,21 +1902,35 @@ function renderList(){
   if(!any){var e=document.createElement('div');e.className='empty';e.textContent=q?'Nothing matches.':'No places yet. Tap + on the map to add one.';box.appendChild(e);}
 }
 
+var editingTip=null;
 function renderTips(){
   var box=$('#tipList');box.innerHTML='';
   var keys=['general'].concat(CAT_ORDER);
   keys.forEach(function(k){
     var wrap=document.createElement('div');wrap.className='tip';
-    var h=document.createElement('h3');
     var color=k==='general'?'#1B1F2A':CATS[k].color;
-    h.innerHTML='<i style="--c:'+color+'"></i>'+esc(k==='general'?'General':CATS[k].label);
-    var ta=document.createElement('textarea');ta.value=state.tips[k]||'';ta.placeholder='Add what we should know about '+(k==='general'?'the trip':CATS[k].label.toLowerCase())+'.';
-    ta.addEventListener('input',function(){
-      clearTimeout(tipTimers[k]);
-      tipTimers[k]=setTimeout(function(){state.tips[k]=ta.value;persist();},500);
-    });
-    wrap.appendChild(h);wrap.appendChild(ta);box.appendChild(wrap);
+    var label=k==='general'?'General':CATS[k].label;
+    var head=document.createElement('div');head.className='head';
+    head.innerHTML='<h3><i style="--c:'+color+'"></i>'+esc(label)+'</h3>';
+    var btn=document.createElement('button');btn.type='button';btn.className='edit';btn.textContent='Edit';
+    btn.addEventListener('click',function(){openTipEditor(k,label);});
+    head.appendChild(btn);
+    var body=document.createElement('div');
+    var txt=state.tips[k]||'';
+    body.className='body'+(txt?'':' empty');
+    body.textContent=txt||'Nothing written yet. Tap Edit to add what you want to remember.';
+    wrap.appendChild(head);wrap.appendChild(body);box.appendChild(wrap);
   });
+}
+function openTipEditor(k,label){
+  editingTip=k;
+  $('#noteTitle').textContent=label;
+  $('#noteText').value=state.tips[k]||'';
+  $('#noteEditor').classList.add('open');
+}
+function closeTipEditor(save){
+  if(save&&editingTip!==null){ state.tips[editingTip]=$('#noteText').value; persist(); renderTips(); toast('Saved'); }
+  editingTip=null;$('#noteEditor').classList.remove('open');window.scrollTo(0,0);
 }
 
 function setDay(iso,fit){
@@ -1904,6 +2012,32 @@ function openDrawer(){$('#drawer').classList.add('open');$('#scrim').classList.a
 function closeDrawer(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open');window.scrollTo(0,0);}
 
 var PASTE_HINT='Or tap here and paste an image (copy it from Photos, Safari or a message first).';
+function libAdd(img,photo){
+  var lib=library();
+  for(var i=0;i<lib.length;i++){ if(lib[i].img===img) return; }
+  lib.unshift({id:uid(),img:img,photo:photo||''});
+  if(lib.length>40) lib.length=40;
+  persist();renderLib();
+}
+function renderLib(){
+  var box=$('#imgLib');if(!box)return;
+  var lib=library();
+  if(!lib.length){box.innerHTML='<div class="lib-empty">Images you add are kept here and can be reused on other places.</div>';return;}
+  box.innerHTML='';
+  lib.forEach(function(it){
+    var w=document.createElement('div');w.className='item'+(formImg===it.img?' on':'');
+    w.innerHTML='<img src="'+it.img+'" alt=""><button type="button" class="x" title="Remove from saved images">&times;</button>';
+    w.querySelector('img').addEventListener('click',function(){formImg=it.img;formPhoto=it.photo||'';renderImgPreview();renderLib();});
+    w.querySelector('.x').addEventListener('click',function(e){
+      e.stopPropagation();
+      var used=state.places.filter(function(p){return p.img===it.img;}).length;
+      state.library=library().filter(function(x){return x.id!==it.id;});
+      persist();renderLib();
+      toast(used?'Removed from saved images. '+used+' place'+(used===1?'':'s')+' keep the image.':'Removed from saved images.');
+    });
+    box.appendChild(w);
+  });
+}
 function renderImgPreview(){
   var box=$('#imgPreview');
   box.innerHTML=formImg?'<img src="'+formImg+'" alt="">':'<span>'+esc($('#fIcon').value||'📍')+'</span>';
@@ -1929,7 +2063,7 @@ function shrink(im,maxSide,square){
 function applyImage(src){
   var im=new Image();
   im.onload=function(){
-    try{formImg=shrink(im,96,true);formPhoto=shrink(im,420,false);$('#imgErr').textContent='';renderImgPreview();}
+    try{formImg=shrink(im,96,true);formPhoto=shrink(im,420,false);$('#imgErr').textContent='';renderImgPreview();libAdd(formImg,formPhoto);renderLib();}
     catch(e){$('#imgErr').textContent='Could not process that image.';}
   };
   im.onerror=function(){$('#imgErr').textContent='Could not read that image.';};
@@ -1965,7 +2099,7 @@ function bindLink(){
 function bindImages(){
   bindLink();
   $('#fImg').addEventListener('change',function(){if(this.files&&this.files[0])takeImageFile(this.files[0]);this.value='';});
-  $('#imgRemove').addEventListener('click',function(){formImg='';formPhoto='';renderImgPreview();});
+  $('#imgRemove').addEventListener('click',function(){formImg='';formPhoto='';renderImgPreview();renderLib();});
   $('#fIcon').addEventListener('input',renderImgPreview);
   var zone=$('#pasteZone');
   function grab(dt){
@@ -2013,7 +2147,8 @@ function openForm(p){
   $('#fWhen').value=p?(p.when||''):'';$('#fNotes').value=p?(p.notes||''):'';
   $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';
   $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#imgErr').textContent='';
-  formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();
+  $('#deleteWrap').style.display=p?'':'none';$('#deleteBtn').textContent='Delete this place';pendingDelete=null;
+  formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderLib();
   closeSheet();closeDrawer();
   $('#modal').classList.add('open');
   if(!p)setTimeout(function(){$('#fName').focus();},50);
@@ -2119,7 +2254,7 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
@@ -2127,7 +2262,7 @@ function importJson(text){
   var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
   if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];
   $('#importErr').textContent='';$('#importText').value='';
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
@@ -2164,13 +2299,16 @@ function bind(){
     copyText(p.lat.toFixed(5)+', '+p.lng.toFixed(5),function(ok){toast(ok?'Coordinates copied. Paste into Apple or Google Maps.':'Copy blocked here. Coordinates are shown under the name.');});
   });
   $('#deleteBtn').addEventListener('click',function(){
-    var p=byId(selectedId);if(!p)return;
-    if(pendingDelete!==p.id){pendingDelete=p.id;$('#deleteBtn').textContent='Tap again to delete';setTimeout(function(){if(pendingDelete===p.id){pendingDelete=null;$('#deleteBtn').textContent='Delete';}},3000);return;}
+    var p=byId(editingId);if(!p)return;
+    if(pendingDelete!==p.id){pendingDelete=p.id;$('#deleteBtn').textContent='Tap again to delete '+p.name;setTimeout(function(){if(pendingDelete===p.id){pendingDelete=null;$('#deleteBtn').textContent='Delete this place';}},4000);return;}
+    if(SEED_PLACES.some(function(sp){return sp.id===p.id;})) removedSeeds().push(p.id);
     state.places=state.places.filter(function(x){return x.id!==p.id;});
-    pendingDelete=null;closeSheet();persist();renderMarkers();renderList();renderDays();if(activeDay)setDay(activeDay,false);toast('Deleted '+p.name);
+    pendingDelete=null;closeForm();closeSheet();persist();renderMarkers();renderList();renderDays();if(activeDay)setDay(activeDay,false);toast('Deleted '+p.name);
   });
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
+  $('#noteSave').addEventListener('click',function(){closeTipEditor(true);});
+  $('#noteCancel').addEventListener('click',function(){closeTipEditor(false);});
   $('#mapBtn').addEventListener('click',function(e){e.stopPropagation();$('#mapMenu').classList.toggle('on');});
   $('#mapMenu').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
@@ -2225,12 +2363,13 @@ function bind(){
     if(pendingReset===null){pendingReset=1;$('#resetBtn').textContent='Tap again to replace everything';setTimeout(function(){pendingReset=null;$('#resetBtn').textContent='Reset to starter list';},3000);return;}
     pendingReset=null;$('#resetBtn').textContent='Reset to starter list';
     state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
-    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];
+    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];
     persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('tokyo');toast('Starter list restored');
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
-    if($('#modal').classList.contains('open'))closeForm();
+    if($('#noteEditor').classList.contains('open'))closeTipEditor(false);
+    else if($('#modal').classList.contains('open'))closeForm();
     else if(pickMode){endPick();$('#modal').classList.add('open');}
     else if($('#drawer').classList.contains('open'))closeDrawer();
     else closeSheet();
