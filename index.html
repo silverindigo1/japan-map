@@ -602,6 +602,11 @@ body.picking .top,body.picking .fab{display:none}
         <div class="seg" id="themeSeg"><button type="button" data-theme="auto">Auto</button><button type="button" data-theme="light">Light</button><button type="button" data-theme="dark">Dark</button></div>
       </div>
       <div class="data-block">
+        <h3>Japanese voice</h3>
+        <div class="inline-btns"><select id="voiceSel" style="flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:14px"></select><button class="btn" id="voiceTest" type="button">Test</button></div>
+        <p class="note" id="voiceHint"></p>
+      </div>
+      <div class="data-block">
         <h3>Google Maps</h3>
         <p class="note">With your own Maps JavaScript API key the map switches to Google Maps with English labels. Needs a Google Cloud project with billing enabled; usage for two phones stays inside the free monthly allowance. Does not work inside Claude, only in Safari or the home screen app.</p>
         <input id="gKey" placeholder="Paste API key" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)">
@@ -1881,7 +1886,7 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
-      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';
       state.bookings=Array.isArray(saved.bookings)?saved.bookings:[];state.removedBookings=Array.isArray(saved.removedBookings)?saved.removedBookings:[];state.expenses=Array.isArray(saved.expenses)?saved.expenses:[];state.budget=saved.budget||'';mergeBookings();
       if(!state.expMigrated){state.places.forEach(function(p){if(p.spent)syncPlaceExpense(p);});state.expMigrated=1;}
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
@@ -2688,6 +2693,9 @@ function bindWho(){
 }
 function bindTools(){
   bindWho();bindBookings();bindExpenses();
+  $('#voiceSel').addEventListener('change',function(){state.voiceName=this.value;persist();pickVoice();});
+  $('#voiceTest').addEventListener('click',function(){speakJa('こんにちは。新婚旅行で日本に来ました。');});
+  renderVoicePicker();
   $('#themeSeg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;state.theme=b.dataset.theme;persist();applyTheme();});
   if(window.matchMedia){try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch(e){}}
   applyTheme();
@@ -2725,11 +2733,36 @@ function mergeGuides(){
 }
 /* Spoken Japanese through the phone's own voice, no audio files, works offline once the voice is installed. */
 var jaVoice=null;
+function jaVoices(){
+  if(!window.speechSynthesis)return [];
+  return (speechSynthesis.getVoices()||[]).filter(function(v){return /^ja/i.test(v.lang);});
+}
+function voiceRank(v){
+  var n=(v.name||'').toLowerCase(),s=0;
+  if(/premium/.test(n))s+=30;
+  if(/enhanced|拡張|高品質/.test(n))s+=20;
+  if(/siri/.test(n))s+=15;
+  if(/o-ren|kyoko|otoya|hattori/.test(n))s+=5;
+  if(/compact|コンパクト/.test(n))s-=10;
+  if(v.localService)s+=2;
+  return s;
+}
 function pickVoice(){
-  if(!window.speechSynthesis)return;
-  var vs=speechSynthesis.getVoices()||[];
-  var ja=vs.filter(function(v){return /^ja/i.test(v.lang);});
-  jaVoice=ja.filter(function(v){return /kyoko|o-ren|otoya|hattori/i.test(v.name);})[0]||ja[0]||null;
+  var ja=jaVoices();
+  if(state.voiceName){var chosen=ja.filter(function(v){return v.name===state.voiceName;})[0];if(chosen){jaVoice=chosen;renderVoicePicker();return;}}
+  jaVoice=ja.slice().sort(function(a,b){return voiceRank(b)-voiceRank(a);})[0]||null;
+  renderVoicePicker();
+}
+function renderVoicePicker(){
+  var sel=$('#voiceSel');if(!sel)return;
+  var ja=jaVoices();sel.innerHTML='';
+  if(!ja.length){var o=document.createElement('option');o.value='';o.textContent='No Japanese voice found on this device';sel.appendChild(o);$('#voiceHint').textContent='Install one: Settings, Accessibility, Spoken Content (iOS 26: Read and Speak), Voices, Japanese, download an Enhanced or Premium voice.';return;}
+  ja.slice().sort(function(a,b){return voiceRank(b)-voiceRank(a);}).forEach(function(v){
+    var o=document.createElement('option');o.value=v.name;o.textContent=v.name+(voiceRank(v)>=20?'  (high quality)':'');sel.appendChild(o);
+  });
+  sel.value=jaVoice?jaVoice.name:'';
+  var best=ja.some(function(v){return voiceRank(v)>=20;});
+  $('#voiceHint').textContent=best?'Using '+(jaVoice?jaVoice.name:'')+'.':'Only the basic voice is installed. For a clearer one: Settings, Accessibility, Spoken Content (iOS 26: Read and Speak), Voices, Japanese, download Kyoko (Enhanced) or a Premium voice, then come back here and pick it.';
 }
 if(window.speechSynthesis){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}
 function speakJa(text){
@@ -2737,7 +2770,7 @@ function speakJa(text){
   try{
     speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(text);
-    u.lang='ja-JP';u.rate=0.85;u.pitch=1;
+    u.lang='ja-JP';u.rate=0.9;u.pitch=1;
     if(jaVoice)u.voice=jaVoice;
     u.onerror=function(){toast('No Japanese voice on this phone. iPhone: Settings, Accessibility, Spoken Content, Voices, Japanese.');};
     speechSynthesis.speak(u);
@@ -3571,7 +3604,7 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
