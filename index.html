@@ -27,7 +27,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 input,textarea,select{font:inherit;color:inherit}
 em{font-style:normal}
 :focus-visible{outline:2px solid var(--shu);outline-offset:2px}
-#app{position:relative;height:100%;width:100%}
+#app{position:relative;height:100%;width:100%;overflow:hidden}
 #map{position:absolute;left:0;right:0;top:0;bottom:var(--tb);z-index:0;background:#C6DBE7}
 .tabbar{position:absolute;left:0;right:0;bottom:0;height:var(--tb);padding-bottom:env(safe-area-inset-bottom);background:var(--paper);border-top:1px solid var(--line);display:flex;z-index:58}
 .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--muted);font-weight:600;padding:6px 0}
@@ -116,6 +116,51 @@ a.btn{color:inherit}
 .emg a b{display:block;font-size:15px}
 .emg a small{color:var(--muted);font-size:12px}
 .emg .addr{font-size:13px;line-height:1.5;margin-top:8px}
+.wx{font-size:12px;color:var(--muted);white-space:nowrap}
+.day-row .wx{width:auto;flex:none;text-align:right;line-height:1.3}
+.day-row .wx b{display:block;font-size:14px;color:var(--ink);font-weight:600}
+.daybar .wx{margin-left:6px}
+.nowbtn{font-size:13px;font-weight:600;color:#fff;background:var(--indigo);padding:7px 11px;border-radius:999px;margin-right:6px}
+.now-list{max-height:60vh;overflow:auto}
+.now-row{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 0;border-bottom:1px solid var(--line)}
+.now-row .pin{flex:none}
+.now-row div{flex:1;min-width:0}
+.now-row b{display:block;font-size:15px;font-weight:600}
+.now-row small{color:var(--muted);font-size:12px;display:block}
+.why{display:inline-block;font-size:11px;color:var(--indigo);background:var(--washi);border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin:3px 4px 0 0}
+.jr-day h3{font-size:13px;color:var(--muted);font-weight:600;margin:16px 0 4px}
+.jr-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.jr-row .pin{flex:none;margin-top:2px}
+.jr-row img.ph{width:64px;height:48px;object-fit:cover;border-radius:8px;flex:none}
+.jr-row div{flex:1;min-width:0}
+.jr-row b{display:block;font-size:15px;font-weight:600}
+.jr-row small{color:var(--muted);font-size:12px;display:block}
+.jr-row p{margin:4px 0 0;font-size:13px;line-height:1.4;color:var(--ink)}
+.spent{display:flex;align-items:center;gap:8px;margin:4px 0 8px;font-size:13px}
+.spent input{width:110px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:14px}
+.spent span{color:var(--muted)}
+.seg{display:flex;gap:6px}
+.seg button{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:13px}
+.seg button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+body.dark{--ink:#EDEDF0;--muted:#A0A5B2;--paper:#181B22;--washi:#222630;--line:#33384A;--indigo:#9FB4FF;--shu:#FF6A4D;--shu-soft:#3A2622}
+body.dark .lbl{text-shadow:none}
+body.dark .pin{background:#2A2E3A}
+body.dark .bunch{background:#2A2E3A;color:#fff}
+body.dark .cluster span{text-shadow:none;color:#fff}
+body.dark .btn.primary{color:#0F1220}
+body.dark .btn.accent{color:#fff}
+body.dark .tabbar button.on{color:var(--shu)}
+body.dark .top{background:linear-gradient(var(--paper) 82%,rgba(24,27,34,0))}
+body.dark .leaflet-control-attribution{background:rgba(24,27,34,.8);color:var(--muted)}
+body.dark .leaflet-control-scale-line{background:rgba(24,27,34,.7);color:var(--ink);border-color:var(--line)}
+body.dark .photo.logo{background:#fff}
+body.dark .bigjp{background:var(--paper)}
+body.dark .bigjp .j{color:var(--ink)}
+body.dark .emg a{background:var(--washi)}
+body.dark .toast{background:#EDEDF0;color:#181B22}
+body.dark .pin .num,body.dark .tabbar .cnt,body.dark .stop-row .n,body.dark .cluster,body.dark .nowbtn,body.dark .seg button.on,body.dark .daybar button,body.dark .why{color:#0F1220}
+body.dark .cluster span{color:var(--ink)}
+body.dark .why{background:#E4E9FF;border-color:#E4E9FF}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
 .sort-row button{padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12px}
 .sort-row button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -214,7 +259,8 @@ textarea.notes{width:100%;min-height:96px;resize:vertical;border:1px solid var(-
 .scrim{position:absolute;inset:0;background:rgba(27,31,42,.35);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
 .scrim.open{opacity:1;pointer-events:auto}
 .drawer{position:absolute;top:0;right:0;bottom:var(--tb);width:100%;box-shadow:none;background:var(--paper);z-index:50;transform:translateX(102%);transition:transform .28s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
-.drawer.open{transform:none}
+.drawer.open{transform:none;visibility:visible;transition:transform .28s ease}
+.drawer{visibility:hidden;transition:transform .28s ease,visibility 0s linear .28s}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0}
 .drawer .tabs{display:none}
 .drawer.more .tabs{display:flex}
@@ -330,6 +376,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="title-row">
       <h1>Japan 2026 <small id="subTitle">Florian &amp; Lendita, 10 Nov to 1 Dec</small></h1>
       <span>
+        <button class="nowbtn" id="nowBtn" type="button">What now?</button>
         <button class="searchbtn" id="searchBtn" type="button" aria-label="Search places">&#9906;</button>
         <button class="today-btn" id="todayBtn" type="button" style="display:none">Today</button>
         <button class="menu-btn" id="menuBtn" aria-label="Open list and notes" style="display:none">List</button>
@@ -337,12 +384,16 @@ body.picking .top,body.picking .fab{display:none}
     </div>
     <nav class="areas" id="areaTabs" aria-label="Areas"></nav>
     <div class="chips" id="chips" aria-label="Filter by type"></div>
-    <div class="daybar" id="dayBar"><b id="dayLabel"></b><span id="dayCount"></span><span class="spacer"></span><button id="dayPrev" type="button">&lsaquo;</button><button id="dayNext" type="button">&rsaquo;</button><button id="dayClear" type="button">Clear</button></div>
+    <div class="daybar" id="dayBar"><b id="dayLabel"></b><span id="dayCount"></span><span class="wx" id="dayWx"></span><span class="spacer"></span><button id="dayPrev" type="button">&lsaquo;</button><button id="dayNext" type="button">&rsaquo;</button><button id="dayClear" type="button">Clear</button></div>
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
   <div class="searchwrap" id="searchWrap">
     <div class="row"><input id="mapSearch" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off"><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
     <div class="sres" id="searchRes"></div>
+  </div>
+  <div class="note-editor" id="nowSheet" role="dialog" aria-modal="true" style="z-index:64">
+    <div class="modal-head"><button class="btn" id="nowClose" type="button">Close</button><h2>What now?</h2><span style="width:60px"></span></div>
+    <div class="form"><p class="note" id="nowIntro"></p><div class="now-list" id="nowList"></div></div>
   </div>
   <div class="bigjp" id="bigJp" role="dialog"><div class="j" id="bigJpText"></div><div class="e" id="bigJpEn"></div><div class="h">Show this to a taxi driver or at a counter. Tap to close.</div></div>
 
@@ -378,6 +429,8 @@ body.picking .top,body.picking .fab{display:none}
       <div class="daypick"><label for="sheetDay">Day</label><select id="sheetDay"></select><input class="timein" id="sheetTime" type="time" aria-label="Time"><button class="prio-btn" id="prioBtn" type="button">☆ Must do</button></div>
       <div class="near-label" id="nearLabel" style="display:none">Close by</div>
       <div class="near" id="nearRow"></div>
+      <div class="note" id="sheetVisited" style="margin:0 0 6px"></div>
+      <div class="spent"><label for="sheetSpent">Spent</label><input id="sheetSpent" inputmode="numeric" placeholder="yen"><span id="spentDkk"></span></div>
       <div class="label">Our notes</div>
       <textarea class="notes" id="notes" placeholder="What we want to do here, what to order, what to buy, who recommended it."></textarea>
       <div class="saved" id="savedHint"></div>
@@ -402,6 +455,7 @@ body.picking .top,body.picking .fab{display:none}
       <button data-panel="days" role="tab">Days</button>
       <button data-panel="guides" role="tab">Guides</button>
       <button data-panel="tools" role="tab">Tools</button>
+      <button data-panel="journal" role="tab">Journal</button>
       <button data-panel="tips" role="tab">Nice to know</button>
       <button data-panel="data" role="tab">Backup</button>
     </div>
@@ -419,6 +473,11 @@ body.picking .top,body.picking .fab{display:none}
       <p class="note">Longer reads. Open one, edit it, or write your own.</p>
       <div id="guideList"></div>
       <div class="inline-btns" style="margin-top:14px"><button class="btn" id="guideNew" type="button">Write a new guide</button></div>
+    </div>
+    <div class="panel" id="panel-journal">
+      <p class="note">Everything you mark as visited lands here with the time, your notes, photo and what you spent. Your honeymoon, written by itself.</p>
+      <div class="inline-btns" style="margin-bottom:8px"><button class="btn" id="jrShare" type="button">Share the journal as text</button></div>
+      <div id="jrList"></div>
     </div>
     <div class="panel" id="panel-tools">
       <div class="tool">
@@ -448,6 +507,10 @@ body.picking .top,body.picking .fab{display:none}
       <p class="note" id="storageNote">Checking where notes are saved.</p>
       <p class="note">Use this page to move the list to another phone or to keep a copy.</p>
       <p class="note" id="dataSize"></p>
+      <div class="data-block">
+        <h3>Appearance</h3>
+        <div class="seg" id="themeSeg"><button type="button" data-theme="auto">Auto</button><button type="button" data-theme="light">Light</button><button type="button" data-theme="dark">Dark</button></div>
+      </div>
       <div class="data-block">
         <h3>Google Maps</h3>
         <p class="note">With your own Maps JavaScript API key the map switches to Google Maps with English labels. Needs a Google Cloud project with billing enabled; usage for two phones stays inside the free monthly allowance. Does not work inside Claude, only in Safari or the home screen app.</p>
@@ -1456,7 +1519,55 @@ var SEED_PLACES=[
   {id:'kofukuji',name:'Kofuku-ji',jp:'興福寺',area:'osaka',cat:'shrine',icon:'🏯',lat:34.68297,lng:135.83187,when:'',notes:'Five-storey pagoda at the edge of Nara Park.'},
   {id:'isuien',name:'Isuien Garden',jp:'依水園',area:'osaka',cat:'nature',icon:'🍁',lat:34.68547,lng:135.83792,when:'',notes:'Small garden borrowing Todai-ji gate and the hills as backdrop. Tea house inside.'},
   {id:'takeshita',name:'Takeshita Street',jp:'竹下通り',area:'tokyo',cat:'shopping',icon:'🛍️',lat:35.67116,lng:139.70496,when:'',notes:'Teen Harajuku: crepes, thrift, crowds. Ten minutes is enough, then walk to Omotesando.'},
-  {id:'philosopher',name:'Philosopher\'s Path',jp:'哲学の道',area:'kyoto',cat:'nature',icon:'🌿',lat:35.01537,lng:135.79477,when:'',notes:'Canal walk from Ginkaku-ji to Nanzen-ji, about 30 minutes, maples the whole way.'}
+  {id:'philosopher',name:'Philosopher\'s Path',jp:'哲学の道',area:'kyoto',cat:'nature',icon:'🌿',lat:35.01537,lng:135.79477,when:'',notes:'Canal walk from Ginkaku-ji to Nanzen-ji, about 30 minutes, maples the whole way.'},
+  {id:'shibuyasky',name:'Shibuya Sky',jp:'渋谷スカイ',area:'tokyo',cat:'other',icon:'🌆',lat:35.65829,lng:139.70226,when:'',notes:'Open air rooftop 230 m up, above the crossing. Book a sunset slot online a week ahead, they sell out.'},
+  {id:'tocho',name:'Tokyo Metropolitan Government Building',jp:'東京都庁',area:'tokyo',cat:'other',icon:'🏢',lat:35.6895,lng:139.69171,when:'',notes:'Free observation deck on the 45th floor. Clear winter mornings show Mount Fuji.'},
+  {id:'zojoji',name:'Zojo-ji',jp:'増上寺',area:'tokyo',cat:'shrine',icon:'🏯',lat:35.65728,lng:139.74834,when:'',notes:'Temple with Tokyo Tower rising behind it. Best photo in the city at dusk.'},
+  {id:'tokyotower',name:'Tokyo Tower',jp:'東京タワー',area:'tokyo',cat:'other',icon:'🗼',lat:35.65845,lng:139.74554,when:'',notes:'The old one, orange, lit at night. Skytree is taller, this one is prettier.'},
+  {id:'ginza',name:'Ginza Six',jp:'GINZA SIX',area:'tokyo',cat:'shopping',icon:'🛍️',lat:35.66953,lng:139.76405,when:'',notes:'Department store district. Rooftop garden is free, basement food hall is a good rainy-day lunch.'},
+  {id:'marunouchi',name:'Tokyo Station Marunouchi side',jp:'東京駅丸の内',area:'tokyo',cat:'other',icon:'🚉',lat:35.68115,lng:139.76598,when:'',notes:'The red brick station facade, ramen street underground, Shinkansen platforms on the other side.'},
+  {id:'nezumuseum',name:'Nezu Museum',jp:'根津美術館',area:'tokyo',cat:'art',icon:'🖼️',lat:35.66224,lng:139.71726,when:'',notes:'Quiet Asian art collection with one of the best gardens in Tokyo, ten minutes from Omotesando.'},
+  {id:'tsite',name:'Daikanyama T-Site',jp:'代官山 T-SITE',area:'tokyo',cat:'shopping',icon:'📚',lat:35.64926,lng:139.69983,when:'',notes:'Bookshop campus with cafes. Good coffee stop between Shibuya and Nakameguro.'},
+  {id:'yoyogipark',name:'Yoyogi Park',jp:'代々木公園',area:'tokyo',cat:'nature',icon:'🌳',lat:35.67141,lng:139.69517,when:'',notes:'Big open park next to Meiji Jingu. Ginkgo avenue turns gold in late November.'},
+  {id:'tsukishima',name:'Tsukishima Monja Street',jp:'月島もんじゃストリート',area:'tokyo',cat:'food',icon:'🍳',lat:35.66428,lng:139.78246,when:'',notes:'Monjayaki, the Tokyo cousin of okonomiyaki, cooked on the table. Pick any busy one.'},
+  {id:'inokashira',name:'Inokashira Park',jp:'井の頭公園',area:'tokyo',cat:'nature',icon:'🦢',lat:35.69891,lng:139.5787,when:'',notes:'Pond, rowing boats, cafes, next to Kichijoji. Pair with the Ghibli Museum.'},
+  {id:'ghibli',name:'Ghibli Museum',jp:'三鷹の森ジブリ美術館',area:'tokyo',cat:'art',icon:'🎬',lat:35.69617,lng:139.57063,when:'',notes:'Tickets go on sale on the 10th of the previous month and sell out in minutes. No photos inside.'},
+  {id:'gotokuji',name:'Gotokuji, the lucky cat temple',jp:'豪徳寺',area:'tokyo',cat:'shrine',icon:'🐱',lat:35.6485,lng:139.64726,when:'',notes:'Thousands of maneki-neko figures. Twenty minutes from Shibuya on the Setagaya line.'},
+  {id:'nakano',name:'Nakano Broadway',jp:'中野ブロードウェイ',area:'tokyo',cat:'shopping',icon:'🎮',lat:35.70924,lng:139.66569,when:'',notes:'Vintage toys, manga, watches, four floors of collectors\' shops.'},
+  {id:'kokugikan',name:'Ryogoku Kokugikan',jp:'両国国技館',area:'tokyo',cat:'experience',icon:'🥋',lat:35.69688,lng:139.79346,when:'',notes:'Sumo stadium. No tournament in November in Tokyo, but the sumo museum is open and chanko restaurants are around it.'},
+  {id:'sumidaaq',name:'Sumida Aquarium',jp:'すみだ水族館',area:'tokyo',cat:'other',icon:'🐧',lat:35.7101,lng:139.80933,when:'',notes:'Penguins under Skytree. Good if it rains.'},
+  {id:'hie',name:'Hie Shrine',jp:'日枝神社',area:'tokyo',cat:'shrine',icon:'⛩️',lat:35.67468,lng:139.73988,when:'',notes:'Tunnel of red torii up the hill, a small Fushimi Inari in the middle of Akasaka.'},
+  {id:'catstreet',name:'Cat Street',jp:'キャットストリート',area:'tokyo',cat:'shopping',icon:'🐈',lat:35.66586,lng:139.70515,when:'',notes:'Pedestrian lane between Harajuku and Shibuya, streetwear and coffee.'},
+  {id:'ebisuyokocho',name:'Ebisu Yokocho',jp:'恵比寿横丁',area:'tokyo',cat:'food',icon:'🍢',lat:35.64815,lng:139.71074,when:'',notes:'Covered alley of tiny bars and grills, loud and friendly, from 18:00.'},
+  {id:'hakoneart',name:'Hakone Museum of Art',jp:'箱根美術館',area:'hakone',cat:'art',icon:'🍃',lat:35.24819,lng:139.04271,when:'',notes:'Moss garden with maples, next to Gora Park. The best November colour in Gora.'},
+  {id:'hakoneen',name:'Hakone-en',jp:'箱根園',area:'hakone',cat:'nature',icon:'⛴️',lat:35.21324,lng:139.01025,when:'',notes:'Lakeside spot with a ropeway up Komagatake for the Fuji view. Boat pier.'},
+  {id:'yuryo',name:'Hakone Yuryo',jp:'箱根湯寮',area:'hakone',cat:'experience',icon:'♨️',lat:35.23383,lng:139.09583,when:'',notes:'Day onsen near Hakone-Yumoto with private baths for two, free shuttle from the station.'},
+  {id:'ryoanji',name:'Ryoan-ji',jp:'龍安寺',area:'kyoto',cat:'shrine',icon:'🪨',lat:35.03346,lng:135.71809,when:'',notes:'The rock garden. Fifteen stones, you can never see all of them at once. Next to the tea ceremony.'},
+  {id:'ninnaji',name:'Ninna-ji',jp:'仁和寺',area:'kyoto',cat:'shrine',icon:'🏯',lat:35.02981,lng:135.71415,when:'',notes:'Big quiet temple grounds and a five-storey pagoda, ten minutes from Ryoan-ji.'},
+  {id:'kitano',name:'Kitano Tenmangu',jp:'北野天満宮',area:'kyoto',cat:'shrine',icon:'🍁',lat:35.03048,lng:135.73492,when:'',notes:'Shrine of learning with a maple garden along a stream, opens for autumn colour in November. Flea market on the 25th.'},
+  {id:'kodaiji',name:'Kodai-ji',jp:'高台寺',area:'kyoto',cat:'shrine',icon:'🏮',lat:35.0003,lng:135.7806,when:'',notes:'Higashiyama temple with bamboo grove and autumn illumination.'},
+  {id:'chionin',name:'Chion-in',jp:'知恩院',area:'kyoto',cat:'shrine',icon:'🔔',lat:35.00562,lng:135.78354,when:'',notes:'Enormous gate and a huge bell. Between Gion and Maruyama Park.'},
+  {id:'heian',name:'Heian Shrine',jp:'平安神宮',area:'kyoto',cat:'shrine',icon:'⛩️',lat:35.01607,lng:135.7829,when:'',notes:'Giant orange torii, wide gravel court, pond garden behind.'},
+  {id:'shimogamo',name:'Shimogamo Shrine',jp:'下鴨神社',area:'kyoto',cat:'shrine',icon:'🌲',lat:35.03699,lng:135.77245,when:'',notes:'Ancient shrine in a primeval forest at the river fork. Calm, few tourists.'},
+  {id:'monkeypark',name:'Arashiyama Monkey Park',jp:'嵐山モンキーパーク',area:'kyoto',cat:'nature',icon:'🐒',lat:35.00909,lng:135.67497,when:'',notes:'Twenty minute climb, wild macaques, city view from the top.'},
+  {id:'kifune',name:'Kifune Shrine',jp:'貴船神社',area:'kyoto',cat:'shrine',icon:'⛩️',lat:35.12189,lng:135.76294,when:'',notes:'Lantern staircase in a mountain village north of the city. Half day trip by Eizan train.'},
+  {id:'sanzenin',name:'Sanzen-in, Ohara',jp:'三千院',area:'kyoto',cat:'shrine',icon:'🍁',lat:35.11964,lng:135.83492,when:'',notes:'Moss garden temple in a farming valley, an hour by bus. Autumn colour is spectacular.'},
+  {id:'gekkeikan',name:'Gekkeikan Okura Sake Museum',jp:'月桂冠大倉記念館',area:'kyoto',cat:'experience',icon:'🍶',lat:34.92888,lng:135.76163,when:'',notes:'Sake brewery museum in Fushimi with tasting. Near Fushimi Inari, combine the two.'},
+  {id:'kyototower',name:'Kyoto Tower',jp:'京都タワー',area:'kyoto',cat:'other',icon:'🗼',lat:34.98755,lng:135.75933,when:'',notes:'Opposite the station. There is a public bath in the basement.'},
+  {id:'kamogawa',name:'Kamo River delta',jp:'鴨川デルタ',area:'kyoto',cat:'nature',icon:'🏞️',lat:35.03012,lng:135.77174,when:'',notes:'Stepping stones where the rivers meet. Picnic spot, sunset walk south along the bank.'},
+  {id:'shitennoji',name:'Shitenno-ji',jp:'四天王寺',area:'osaka',cat:'shrine',icon:'🏯',lat:34.65472,lng:135.5168,when:'',notes:'Japan\'s oldest official temple, quiet, flea market on the 21st and 22nd.'},
+  {id:'nakanoshima',name:'Nakanoshima Park',jp:'中之島公園',area:'osaka',cat:'nature',icon:'🌹',lat:34.6924,lng:135.50776,when:'',notes:'Rose garden and riverside between Umeda and Namba.'},
+  {id:'tsuruhashi',name:'Tsuruhashi Korea Town',jp:'鶴橋',area:'osaka',cat:'food',icon:'🥩',lat:34.6654,lng:135.53021,when:'',notes:'Yakiniku alley by the station, the best grilled meat in Osaka.'},
+  {id:'nambaparks',name:'Namba Parks',jp:'なんばパークス',area:'osaka',cat:'shopping',icon:'🛍️',lat:34.66168,lng:135.50208,when:'',notes:'Shopping mall with terraced rooftop garden, next to Namba station.'},
+  {id:'todaiji',name:'Todai-ji',jp:'東大寺',area:'osaka',cat:'shrine',icon:'🧘',lat:34.68824,lng:135.83976,when:'',notes:'The Great Buddha hall. Try the pillar hole if you are small enough.'},
+  {id:'nigatsudo',name:'Nigatsu-do',jp:'二月堂',area:'osaka',cat:'shrine',icon:'🌇',lat:34.68927,lng:135.84427,when:'',notes:'Balcony hall above Todai-ji with the best view over Nara at sunset. Free.'},
+  {id:'yoshikien',name:'Yoshikien Garden',jp:'吉城園',area:'osaka',cat:'nature',icon:'🍵',lat:34.6851,lng:135.83721,when:'',notes:'Small quiet garden next to the busy Isuien, often free for foreign visitors.'},
+  {id:'horyuji',name:'Horyu-ji',jp:'法隆寺',area:'osaka',cat:'shrine',icon:'🏯',lat:34.61401,lng:135.73604,when:'',notes:'World\'s oldest wooden buildings, half an hour by train from Nara. Only if you love temples.'},
+  {id:'lalique',name:'Lalique Museum Hakone',jp:'箱根ラリック美術館',area:'hakone',cat:'art',icon:'💎',lat:35.27055,lng:139.00957,when:'',notes:'Art nouveau glass, tea in a restored Orient Express carriage. Bus from Gora or Sengokuhara.'},
+  {id:'motohakone',name:'Moto-Hakone port',jp:'元箱根港',area:'hakone',cat:'other',icon:'⛴️',lat:35.20283,lng:139.0306,when:'',notes:'Where the Lake Ashi boat lands. Hakone Shrine\'s water torii is a short walk along the shore.'},
+  {id:'togetsukyo',name:'Togetsukyo Bridge',jp:'渡月橋',area:'kyoto',cat:'nature',icon:'🌉',lat:35.01287,lng:135.67776,when:'',notes:'The Arashiyama bridge with the mountains behind. Start of the bamboo grove walk.'},
+  {id:'tempozan',name:'Tempozan Ferris Wheel',jp:'天保山大観覧車',area:'osaka',cat:'other',icon:'🎡',lat:34.65627,lng:135.43096,when:'',notes:'Next to the aquarium. See-through gondolas exist if you dare.'},
+  {id:'wakakusa',name:'Mount Wakakusa',jp:'若草山',area:'osaka',cat:'nature',icon:'⛰️',lat:34.69117,lng:135.85426,when:'',notes:'Grass hill above the park, 30 minutes up, view over the whole basin.'}
 ];
 
 var SEED_GUIDES=[
@@ -1607,7 +1718,7 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
-      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';mergeChecks();
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
       state.removedGuides=Array.isArray(saved.removedGuides)?saved.removedGuides:[];
       mergeGuides();
@@ -1633,7 +1744,7 @@ function buildMap(){
   L.control.scale({position:'bottomleft',imperial:false}).addTo(map);
   buildBase();
   probeTiles();
-  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;}};
+  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);}};
   if(getGoogleKey()) setTimeout(enableGoogle,50);
   layer=L.layerGroup().addTo(map);
   map.on('click',onMapClick);
@@ -2033,6 +2144,8 @@ function openSheet(id){
   fillDaySelect($('#sheetDay'));$('#sheetDay').value=p.day||'';$('#sheetTime').value=p.time||'';
   var pb=$('#prioBtn');pb.classList.toggle('on',!!p.prio);pb.textContent=p.prio?'★ Must do':'☆ Must do';
   renderNearby(p);
+  $('#sheetVisited').textContent=p.visited&&p.visitedAt?'Visited '+fmtStamp(p.visitedAt):'';
+  $('#sheetSpent').value=p.spent||'';$('#spentDkk').textContent=spentDkk(p.spent);
   var ph=$('#sheetPhoto'); if(p.photo){ph.src=p.photo;ph.className='photo'+(p.photo.indexOf('data:image/png')===0?' logo':'');ph.style.display='block';} else {ph.removeAttribute('src');ph.style.display='none';}
   $('#visitBtn').textContent=p.visited?'Visited, undo':'Mark as visited';
   $('#visitBtn').className='btn'+(p.visited?'':' accent');
@@ -2128,6 +2241,45 @@ function mergeChecks(){
   checks().forEach(function(c){have[c.id]=1;});removedChecks().forEach(function(id){gone[id]=1;});
   SEED_CHECKS.forEach(function(s){ if(!have[s[0]]&&!gone[s[0]]) checks().push({id:s[0],text:s[1],done:false}); });
 }
+function journalGroups(){
+  var vis=state.places.filter(function(p){return p.visited;}).sort(function(a,b){return (a.visitedAt||'')<(b.visitedAt||'')?1:-1;});
+  var groups={},order=[];
+  vis.forEach(function(p){var k=p.visitedAt?p.visitedAt.slice(0,10):'undated';if(!groups[k]){groups[k]=[];order.push(k);}groups[k].push(p);});
+  return {order:order,groups:groups};
+}
+function renderJournal(){
+  var box=$('#jrList');if(!box)return;box.innerHTML='';
+  var j=journalGroups();
+  if(!j.order.length){box.innerHTML='<div class="empty">Nothing visited yet. Mark a place as visited and it appears here.</div>';return;}
+  var total=0;
+  j.order.forEach(function(k){
+    var wrap=document.createElement('div');wrap.className='jr-day';
+    var h=document.createElement('h3');h.textContent=k==='undated'?'Undated':dayLabel(k,true)+(k>=TRIP_START&&k<=TRIP_END?', '+dayHint(k):'');wrap.appendChild(h);
+    j.groups[k].forEach(function(p){
+      total+=parseFloat(p.spent)||0;
+      var r=document.createElement('button');r.type='button';r.className='jr-row';
+      var tm=p.visitedAt?p.visitedAt.slice(11,16):'';
+      var when=p.visitedAt?new Date(p.visitedAt):null;var tms=when&&!isNaN(when)?pad2(when.getHours())+':'+pad2(when.getMinutes()):'';
+      r.innerHTML=pinHtml(p)+'<div><b>'+esc(p.name)+'</b><small>'+esc((tms?tms+', ':'')+(AREAS[p.area]||AREAS.other).label+(p.spent?', '+p.spent+' yen':''))+'</small>'+(p.notes?'<p>'+esc(p.notes.length>140?p.notes.slice(0,140)+'…':p.notes)+'</p>':'')+'</div>'+(p.photo?'<img class="ph" src="'+p.photo+'" alt="">':'');
+      r.addEventListener('click',function(){showPage('map');map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);});
+      wrap.appendChild(r);
+    });
+    box.appendChild(wrap);
+  });
+  if(total){var t=document.createElement('p');t.className='note';t.textContent='Spent so far: '+Math.round(total).toLocaleString()+' yen'+(spentDkk(total)?' ('+spentDkk(total).replace('≈ ','about ')+')':'');box.appendChild(t);}
+}
+function journalText(){
+  var j=journalGroups(),out=['Japan 2026, our journal'];
+  j.order.forEach(function(k){
+    out.push('');out.push(k==='undated'?'Undated':dayLabel(k,true)+(k>=TRIP_START&&k<=TRIP_END?', '+dayHint(k):''));
+    j.groups[k].forEach(function(p){
+      var when=p.visitedAt?new Date(p.visitedAt):null;var tms=when&&!isNaN(when)?pad2(when.getHours())+':'+pad2(when.getMinutes())+' ':'';
+      out.push(tms+p.name+(p.jp?' ('+p.jp+')':'')+(p.spent?', '+p.spent+' yen':''));
+      if(p.notes)out.push('  '+p.notes);
+    });
+  });
+  return out.join('\n');
+}
 function renderChecks(){
   var box=$('#chkList');if(!box)return;box.innerHTML='';
   var list=checks().slice().sort(function(a,b){return (a.done===b.done)?0:(a.done?1:-1);});
@@ -2144,7 +2296,22 @@ function renderChecks(){
   var done=checks().filter(function(c){return c.done;}).length;
   var h=$('#panel-tools .tool:nth-child(2) h3');if(h)h.textContent='Checklist, '+done+' of '+checks().length+' done';
 }
+function applyTheme(){
+  var t=state.theme||'auto';
+  var dark=t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.body.classList.toggle('dark',dark);
+  document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.theme===t);});
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',dark?'#181B22':'#FFFFFF');
+}
 function bindTools(){
+  $('#themeSeg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;state.theme=b.dataset.theme;persist();applyTheme();});
+  if(window.matchMedia){try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch(e){}}
+  applyTheme();
+  $('#jrShare').addEventListener('click',function(){
+    var text=journalText();
+    if(navigator.share){navigator.share({title:'Japan 2026 journal',text:text}).catch(function(){});return;}
+    copyText(text,function(ok){toast(ok?'Journal copied':'Could not copy here');});
+  });
   $('#chkAdd').addEventListener('click',function(){
     var v=$('#chkNew').value.trim();if(!v)return;
     checks().unshift({id:uid(),text:v,done:false});$('#chkNew').value='';persist();renderChecks();
@@ -2272,7 +2439,7 @@ function setDay(iso,fit){
     var list=dayPlaces(iso);
     $('#dayLabel').textContent=dayLabel(iso,true);
     $('#dayCount').textContent=list.length?list.length+(list.length===1?' stop':' stops'):'no stops yet';
-    bar.classList.add('on');
+    bar.classList.add('on');updateDayBarWx();
     if(fit&&list.length){
       if(list.length===1)map.flyTo([list[0].lat,list[0].lng],14,{duration:.6});
       else map.fitBounds(list.map(function(p){return [p.lat,p.lng];}),{padding:[60,40],maxZoom:15});
@@ -2313,6 +2480,63 @@ function renderNearby(p){
     row.appendChild(b);
   });
 }
+/* Weather: Open-Meteo, free for personal use, no key. Cached per area for three hours. */
+var WX_ICON=function(c){ if(c===0)return '☀️'; if(c===1)return '🌤️'; if(c===2)return '⛅'; if(c===3)return '☁️'; if(c===45||c===48)return '🌫️'; if(c>=51&&c<=57)return '🌦️'; if(c>=61&&c<=67)return '🌧️'; if(c>=71&&c<=77)return '🌨️'; if(c>=80&&c<=82)return '🌦️'; if(c>=85&&c<=86)return '🌨️'; if(c>=95)return '⛈️'; return ''; };
+function wxAreaFor(iso){ var h=dayHint(iso); if(h==='Tokyo')return 'tokyo'; if(h==='Hakone')return 'hakone'; if(h==='Kyoto')return 'kyoto'; if(h.indexOf('Osaka')===0)return 'osaka'; return null; }
+function wxFor(iso,areaKey){
+  var w=state.weather&&state.weather[areaKey]; if(!w||!w.days)return null;
+  return w.days[iso]||null;
+}
+function fetchWeather(force){
+  if(!navigator.onLine&&navigator.onLine!==undefined)return;
+  state.weather=state.weather||{};
+  var now=Date.now();
+  ['tokyo','hakone','kyoto','osaka'].forEach(function(k){
+    var w=state.weather[k];
+    if(!force&&w&&w.fetched&&now-w.fetched<3*3600*1000)return;
+    var c=AREAS[k].center;
+    var url='https://api.open-meteo.com/v1/forecast?latitude='+c[0]+'&longitude='+c[1]+'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&timezone=Asia%2FTokyo&forecast_days=16';
+    fetch(url).then(function(r){return r.json();}).then(function(js){
+      if(!js||!js.daily)return;
+      var days={};
+      js.daily.time.forEach(function(t,i){
+        days[t]={code:js.daily.weather_code[i],hi:Math.round(js.daily.temperature_2m_max[i]),lo:Math.round(js.daily.temperature_2m_min[i]),rain:js.daily.precipitation_probability_max[i],set:(js.daily.sunset[i]||'').slice(11,16),rise:(js.daily.sunrise[i]||'').slice(11,16)};
+      });
+      state.weather[k]={fetched:Date.now(),days:days};
+      persist();
+      if(currentPage==='days')renderDays();
+      if(activeDay)updateDayBarWx();
+    }).catch(function(){});
+  });
+}
+/* Sunrise and sunset for any date, computed locally, Japan time. Good to a couple of minutes. */
+function sunTimes(iso,lat,lng){
+  var p=iso.split('-');var J=Date.UTC(+p[0],+p[1]-1,+p[2],12,0,0)/86400000+2440587.5;
+  var n=Math.round(J-2451545.0+0.0008);var Js=n-lng/360;
+  var rad=Math.PI/180;
+  var M=((357.5291+0.98560028*Js)%360+360)%360;
+  var C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad);
+  var lam=((M+C+180+102.9372)%360+360)%360;
+  var Jt=2451545.0+Js+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*lam*rad);
+  var dec=Math.asin(Math.sin(lam*rad)*Math.sin(23.4397*rad));
+  var cosw=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*Math.sin(dec))/(Math.cos(lat*rad)*Math.cos(dec));
+  if(cosw<-1||cosw>1)return null;
+  var w=Math.acos(cosw)/rad;
+  function hm(Jx){var h=(((Jx-0.5)%1)+1)%1*24+9;h=h%24;var hh=Math.floor(h),mm=Math.round((h-hh)*60);if(mm===60){hh=(hh+1)%24;mm=0;}return pad2(hh)+':'+pad2(mm);}
+  return {rise:hm(Jt-w/360),set:hm(Jt+w/360)};
+}
+function wxLine(iso){
+  var k=wxAreaFor(iso);if(!k)return '';
+  var w=wxFor(iso,k);var c=AREAS[k].center;var s=sunTimes(iso,c[0],c[1]);
+  var parts=[];
+  if(w)parts.push(WX_ICON(w.code)+' '+w.hi+'°/'+w.lo+'°'+(w.rain>=40?' '+w.rain+'% rain':''));
+  if(s)parts.push('sunset '+s.set);
+  return parts.join(', ');
+}
+function updateDayBarWx(){
+  var el=$('#dayWx');if(!el)return;
+  el.textContent=activeDay?wxLine(activeDay):'';
+}
 function tripStatus(){
   var t=todayIso();
   var d0=new Date(TRIP_START+'T12:00:00'),d1=new Date(TRIP_END+'T12:00:00'),dn=new Date(t+'T12:00:00');
@@ -2339,11 +2563,14 @@ function renderDays(){
   tripDays().forEach(function(d){
     var list=dayPlaces(d);
     var row=document.createElement('button');row.type='button';row.className='day-row'+(d===t?' today':'');
-    row.innerHTML='<span class="d"><b>'+esc(dayLabel(d))+'</b><small>'+esc(dayLabel(d,true).split(' ')[0])+'</small></span><span class="hint">'+esc(dayHint(d))+'</span><span class="cnt">'+list.length+'</span>';
+    var wk=wxAreaFor(d),wxd=wk?wxFor(d,wk):null;
+    var wxHtml=wxd?'<span class="wx"><b>'+esc(WX_ICON(wxd.code))+' '+wxd.hi+'°</b>'+wxd.lo+'°'+(wxd.rain>=40?' '+wxd.rain+'%':'')+'</span>':'';
+    row.innerHTML='<span class="d"><b>'+esc(dayLabel(d))+'</b><small>'+esc(dayLabel(d,true).split(' ')[0])+'</small></span><span class="hint">'+esc(dayHint(d))+'</span>'+wxHtml+'<span class="cnt">'+list.length+'</span>';
     row.addEventListener('click',function(){expandedDay=expandedDay===d?null:d;renderDays();});
     box.appendChild(row);
     if(expandedDay===d){
       var wrap=document.createElement('div');wrap.className='day-stops';
+      var sunl=wxLine(d);if(sunl){var sl=document.createElement('div');sl.className='note';sl.textContent=sunl+'. Weather by Open-Meteo.';wrap.appendChild(sl);}
       if(!list.length){var e=document.createElement('div');e.className='note';e.textContent='Nothing planned. Open a place, Edit, choose this day.';wrap.appendChild(e);}
       list.forEach(function(p,i){
         if(i>0){
@@ -2451,6 +2678,8 @@ function showPage(name){
   if(panel==='days')renderDays();
   if(panel==='guides')renderGuides();
   if(panel==='tools')renderChecks();
+  if(panel==='journal')renderJournal();
+  if(panel==='days')fetchWeather(false);
   activatePanel(panel);
   $('#drawerTitle').textContent=PAGE_TITLE[name]||'';
   $('#visitCount').style.display=name==='places'?'':'none';
@@ -2663,6 +2892,39 @@ function typeIcon(kind,name){
   return CATS[c]?CATS[c].icon:'📍';
 }
 /* map-wide search: our own places first, then anywhere in Japan */
+function fmtStamp(iso){var d=new Date(iso);if(isNaN(d))return '';return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+', '+pad2(d.getHours())+':'+pad2(d.getMinutes());}
+function spentDkk(yen){var r=parseFloat(String(state.rate||'').replace(',','.'));var y=parseFloat(yen);if(!y||!r)return '';return '≈ '+(y*r/100).toFixed(0)+' DKK';}
+function whatNow(){
+  var t=new Date(),h=t.getHours()+t.getMinutes()/60,today=todayIso();
+  var origin=userPos||[map.getCenter().lat,map.getCenter().lng];
+  var meal=(h>=11&&h<14.5)||(h>=17.5&&h<21.5);
+  var late=h>=17;var early=h<10.5;
+  var cands=state.places.filter(function(p){return !p.visited;}).map(function(p){
+    var d=distM(origin,[p.lat,p.lng]);var score=0,why=[];
+    if(p.day===today){score+=40;why.push('planned today');}
+    if(p.prio){score+=25;why.push('must do');}
+    if(d<800){score+=30;why.push('walkable');}else if(d<2500){score+=18;why.push('close');}else if(d<8000){score+=6;}else score-=25;
+    if(meal&&p.cat==='food'){score+=22;why.push('meal time');}
+    if(early&&(p.cat==='shrine'||p.cat==='nature')){score+=10;why.push('good early');}
+    if(late&&(p.cat==='food'||/bar|yokocho|gai|night|view|sky|tower|illumination|lantern/i.test(p.name+' '+p.notes))){score+=12;if(why.indexOf('meal time')===-1)why.push('good after dark');}
+    if(late&&(p.cat==='shrine'||p.cat==='nature')&&!/illumination|lantern|night/i.test(p.notes))score-=15;
+    return {p:p,d:d,score:score,why:why};
+  }).sort(function(a,b){return b.score-a.score;}).slice(0,8);
+  $('#nowIntro').textContent=(userPos?'From where you are':'From the middle of the map')+', '+pad2(t.getHours())+':'+pad2(t.getMinutes())+(today>=TRIP_START&&today<=TRIP_END?', '+dayHint(today):'')+'. Not visited yet, closest and best fitting first.';
+  var box=$('#nowList');box.innerHTML='';
+  if(!cands.length){box.innerHTML='<div class="empty">Everything is visited. Impressive.</div>';}
+  cands.forEach(function(c){
+    var b=document.createElement('button');b.type='button';b.className='now-row';
+    b.innerHTML=pinHtml(c.p)+'<div><b>'+esc(c.p.name)+'</b><small>'+esc(fmtDist(c.d))+(c.p.time?', planned '+esc(c.p.time):'')+'</small>'+c.why.map(function(w){return '<span class="why">'+esc(w)+'</span>';}).join('')+'</div>';
+    b.addEventListener('click',function(){
+      $('#nowSheet').classList.remove('open');showPage('map');
+      if(state.hidden.indexOf(c.p.cat)>-1){state.hidden.splice(state.hidden.indexOf(c.p.cat),1);buildChips();renderMarkers();}
+      map.flyTo([c.p.lat,c.p.lng],15,{duration:.7});setTimeout(function(){openSheet(c.p.id);},780);
+    });
+    box.appendChild(b);
+  });
+  $('#nowSheet').classList.add('open');
+}
 function openSearch(){
   $('#searchWrap').classList.add('on');
   $('#mapSearch').value='';$('#searchRes').innerHTML='';
@@ -2815,7 +3077,7 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
@@ -2823,7 +3085,7 @@ function importJson(text){
   var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
   if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();
   $('#importErr').textContent='';$('#importText').value='';
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
@@ -2835,8 +3097,9 @@ function bind(){
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click',function(){
-      if(['tools','tips','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
+      if(['tools','journal','tips','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
       if(b.dataset.panel==='tools')renderChecks();
+      if(b.dataset.panel==='journal')renderJournal();
       activatePanel(b.dataset.panel);
     });
   });
@@ -2858,7 +3121,8 @@ function bind(){
   });
   $('#visitBtn').addEventListener('click',function(){
     var p=byId(selectedId);if(!p)return;
-    p.visited=!p.visited;refreshMarker(p.id);persist();renderList();
+    p.visited=!p.visited;p.visitedAt=p.visited?new Date().toISOString():'';refreshMarker(p.id);persist();renderList();
+    $('#sheetVisited').textContent=p.visited&&p.visitedAt?'Visited '+fmtStamp(p.visitedAt):'';
     $('#sheetIcon').innerHTML=pinHtml(p);
     $('#visitBtn').textContent=p.visited?'Visited, undo':'Mark as visited';
     $('#visitBtn').className='btn'+(p.visited?'':' accent');
@@ -2879,6 +3143,7 @@ function bind(){
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
   $('#sheetDay').addEventListener('change',function(){var p=byId(selectedId);if(p)assignDay(p,this.value);});
+  $('#sheetSpent').addEventListener('input',function(){var p=byId(selectedId);if(!p)return;p.spent=this.value.replace(/[^0-9]/g,'');$('#spentDkk').textContent=spentDkk(p.spent);clearTimeout(noteTimer);noteTimer=setTimeout(function(){persist();},400);});
   $('#sheetTime').addEventListener('change',function(){var p=byId(selectedId);if(!p)return;p.time=this.value||'';persist();renderDays();});
   $('#prioBtn').addEventListener('click',function(){
     var p=byId(selectedId);if(!p)return;
@@ -2937,6 +3202,9 @@ function bind(){
     geoTimer=setTimeout(geocode,700);
   });
   $('#searchBtn').addEventListener('click',openSearch);
+  $('#nowBtn').addEventListener('click',function(){ if(!userPos&&navigator.geolocation){ navigator.geolocation.getCurrentPosition(function(pos){userPos=[pos.coords.latitude,pos.coords.longitude];whatNow();},function(){whatNow();},{timeout:4000,maximumAge:120000}); } else whatNow(); });
+  $('#nowClose').addEventListener('click',function(){$('#nowSheet').classList.remove('open');});
+  fetchWeather(false);
   $('#searchCancel').addEventListener('click',closeSearch);
   $('#mapSearch').addEventListener('input',runSearch);
   $('#copyBtn').addEventListener('click',function(){
@@ -2966,7 +3234,8 @@ function bind(){
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
-    if($('#searchWrap').classList.contains('on'))closeSearch();
+    if($('#nowSheet').classList.contains('open'))$('#nowSheet').classList.remove('open');
+    else if($('#searchWrap').classList.contains('on'))closeSearch();
     else if($('#guideView').classList.contains('open')&&!$('#noteEditor').classList.contains('open'))closeGuide();
     else if($('#noteEditor').classList.contains('open'))closeTipEditor(false);
     else if($('#modal').classList.contains('open'))closeForm();
