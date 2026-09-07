@@ -61,6 +61,18 @@ a.btn{color:inherit}
 .day-actions{display:flex;gap:8px;padding:6px 0 4px}
 .badge{display:inline-block;font-size:10px;font-weight:700;color:var(--indigo);background:var(--washi);border:1px solid var(--line);border-radius:6px;padding:1px 5px;margin-left:6px;vertical-align:middle}
 .dist{color:var(--muted);font-size:11px;white-space:nowrap}
+.leg{display:flex;align-items:center;gap:6px;padding:0 0 0 30px;font-size:11px;color:var(--muted);height:18px}
+.leg i{display:block;width:1px;height:16px;background:var(--line);margin-left:10px}
+.near{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:2px 0 8px}
+.near::-webkit-scrollbar{display:none}
+.near button{flex:none;display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);max-width:190px}
+.near button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.near button em{font-style:normal;color:var(--muted);white-space:nowrap}
+.near-label{font-size:12px;color:var(--muted);margin-bottom:4px}
+.daypick{display:flex;align-items:center;gap:8px;margin:2px 0 8px;font-size:13px}
+.daypick select{flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:13px}
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
+.filter-row select{flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:13px}
 .locbtn{position:absolute;right:14px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:20;width:44px;height:44px;border-radius:50%;background:var(--paper);border:1px solid var(--line);box-shadow:0 2px 8px rgba(27,31,42,.2);display:flex;align-items:center;justify-content:center;font-size:19px}
 @media (min-width:700px){.locbtn{right:16px;bottom:82px}}
 .you{width:16px;height:16px;border-radius:50%;background:#1E7BEF;border:3px solid #fff;box-shadow:0 0 0 2px rgba(30,123,239,.35),0 2px 6px rgba(0,0,0,.35)}
@@ -289,6 +301,9 @@ body.picking .top,body.picking .fab{display:none}
     <div class="sheet-body">
       <div class="when" id="sheetWhen"></div>
       <img class="photo" id="sheetPhoto" alt="" style="display:none">
+      <div class="daypick"><label for="sheetDay">Day</label><select id="sheetDay"></select></div>
+      <div class="near-label" id="nearLabel" style="display:none">Close by</div>
+      <div class="near" id="nearRow"></div>
       <div class="label">Our notes</div>
       <textarea class="notes" id="notes" placeholder="What we want to do here, what to order, what to buy, who recommended it."></textarea>
       <div class="saved" id="savedHint"></div>
@@ -317,10 +332,11 @@ body.picking .top,body.picking .fab{display:none}
     <div class="panel on" id="panel-places">
       <input class="search" id="search" type="search" placeholder="Search name or notes" autocomplete="off">
       <div class="sort-row"><span>Sort</span><button id="sortArea" class="on" type="button">By area</button><button id="sortNear" type="button">Nearest to me</button></div>
+      <div class="filter-row"><span>Show</span><select id="dayFilter"><option value="">All places</option><option value="planned">Planned</option><option value="unplanned">Not planned yet</option></select></div>
       <div id="placeList"></div>
     </div>
     <div class="panel" id="panel-days">
-      <p class="note">Give each place a day (Edit &gt; Day). Tap a date to see its stops in order, move them, and show them numbered on the map.</p>
+      <p class="note">Open a place and pick a day, or use Edit. Tap a date here to see its stops in order, reorder them, and show them numbered on the map. Distances are straight line, so treat them as a rough guide.</p>
       <div id="dayList"></div>
     </div>
     <div class="panel" id="panel-tips">
@@ -1836,6 +1852,8 @@ function openSheet(id){
   $('#sheetMeta').textContent=a.label+', '+c.label.toLowerCase()+'  '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);
   var w=$('#sheetWhen');w.textContent=p.when||'';w.style.display=p.when?'inline-block':'none';
   $('#notes').value=p.notes||'';$('#savedHint').textContent='';
+  fillDaySelect($('#sheetDay'));$('#sheetDay').value=p.day||'';
+  renderNearby(p);
   var ph=$('#sheetPhoto'); if(p.photo){ph.src=p.photo;ph.className='photo'+(p.photo.indexOf('data:image/png')===0?' logo':'');ph.style.display='block';} else {ph.removeAttribute('src');ph.style.display='none';}
   $('#visitBtn').textContent=p.visited?'Visited, undo':'Mark as visited';
   $('#visitBtn').className='btn'+(p.visited?'':' accent');
@@ -1872,9 +1890,13 @@ function renderList(){
   var box=$('#placeList');box.innerHTML='';
   var visited=state.places.filter(function(p){return p.visited;}).length;
   $('#visitCount').textContent=visited+' of '+state.places.length+' visited';
+  var f=$('#dayFilter')?$('#dayFilter').value:'';
   var groups={};
   state.places.forEach(function(p){
     if(q&&(p.name+' '+(p.jp||'')+' '+(p.notes||'')).toLowerCase().indexOf(q)===-1)return;
+    if(f==='planned'&&!p.day)return;
+    if(f==='unplanned'&&p.day)return;
+    if(f&&f!=='planned'&&f!=='unplanned'&&p.day!==f)return;
     var k=(sortNear&&userPos)?'near':(AREAS[p.area]?p.area:'other');(groups[k]=groups[k]||[]).push(p);
   });
   var any=false;
@@ -1948,6 +1970,39 @@ function setDay(iso,fit){
   }else bar.classList.remove('on');
   renderMarkers();
 }
+function fillDaySelect(sel){
+  if(sel.dataset.filled)return;
+  var o=document.createElement('option');o.value='';o.textContent='Not planned yet';sel.appendChild(o);
+  tripDays().forEach(function(d){var op=document.createElement('option');op.value=d;op.textContent=dayLabel(d,true)+', '+dayHint(d);sel.appendChild(op);});
+  sel.dataset.filled='1';
+}
+function assignDay(p,iso){
+  var prev=p.day||'';
+  p.day=iso;
+  if(iso&&iso!==prev){ var mx=-1; dayPlaces(iso).forEach(function(q){ if(q.id!==p.id&&(q.order||0)>mx)mx=q.order||0; }); p.order=mx+1; }
+  persist();renderList();renderDays();
+  if(activeDay)setDay(activeDay,false); else renderMarkers();
+  toast(iso?p.name+' planned for '+dayLabel(iso,true):p.name+' removed from the plan');
+}
+function renderNearby(p){
+  var row=$('#nearRow'),lab=$('#nearLabel');
+  var near=state.places.filter(function(q){return q.id!==p.id;})
+    .map(function(q){return {p:q,d:distM([p.lat,p.lng],[q.lat,q.lng])};})
+    .filter(function(x){return x.d<2000;})
+    .sort(function(a,b){return a.d-b.d;}).slice(0,4);
+  row.innerHTML='';
+  lab.style.display=near.length?'':'none';
+  near.forEach(function(x){
+    var b=document.createElement('button');b.type='button';
+    b.innerHTML='<span>'+esc(x.p.displayIcon||x.p.icon||CATS[x.p.cat].icon)+' '+esc(x.p.name)+'</span><em>'+esc(fmtDist(x.d))+'</em>';
+    b.addEventListener('click',function(){
+      if(state.hidden.indexOf(x.p.cat)>-1){state.hidden.splice(state.hidden.indexOf(x.p.cat),1);buildChips();renderMarkers();}
+      map.flyTo([x.p.lat,x.p.lng],Math.max(map.getZoom(),15),{duration:.6});
+      setTimeout(function(){openSheet(x.p.id);},680);
+    });
+    row.appendChild(b);
+  });
+}
 function bindDays(){
   $('#dayClear').addEventListener('click',function(){setDay(null);});
   $('#dayPrev').addEventListener('click',function(){if(activeDay&&activeDay>TRIP_START)setDay(addDays(activeDay,-1),true);});
@@ -1969,6 +2024,11 @@ function renderDays(){
       var wrap=document.createElement('div');wrap.className='day-stops';
       if(!list.length){var e=document.createElement('div');e.className='note';e.textContent='Nothing planned. Open a place, Edit, choose this day.';wrap.appendChild(e);}
       list.forEach(function(p,i){
+        if(i>0){
+          var leg=document.createElement('div');leg.className='leg';
+          leg.innerHTML='<i></i>'+esc(fmtDist(distM([list[i-1].lat,list[i-1].lng],[p.lat,p.lng])));
+          wrap.appendChild(leg);
+        }
         var r=document.createElement('div');r.className='stop-row';
         r.innerHTML='<span class="n">'+(i+1)+'</span><button type="button" class="name">'+esc(p.name)+(p.visited?' ✓':'')+'</button><button type="button" class="mv up" '+(i===0?'disabled':'')+'>▲</button><button type="button" class="mv down" '+(i===list.length-1?'disabled':'')+'>▼</button>';
         r.querySelector('.name').addEventListener('click',function(){closeDrawer();setDay(d,false);map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);});
@@ -1979,10 +2039,33 @@ function renderDays(){
       var act=document.createElement('div');act.className='day-actions';
       var show=document.createElement('button');show.className='btn small primary';show.textContent='Show this day on the map';show.type='button';
       show.addEventListener('click',function(){closeDrawer();setDay(d,true);});
-      act.appendChild(show);wrap.appendChild(act);
+      act.appendChild(show);
+      if(list.length>2){
+        var opt=document.createElement('button');opt.className='btn small';opt.textContent='Shortest route';opt.type='button';
+        opt.addEventListener('click',function(){shortestRoute(d);});
+        act.appendChild(opt);
+      }
+      wrap.appendChild(act);
       box.appendChild(wrap);
     }
   });
+}
+/* Reorders the day by nearest next stop, keeping the first stop where it is. Straight-line distance,
+   so treat it as a suggestion, not a routed itinerary. */
+function shortestRoute(iso){
+  var list=dayPlaces(iso);
+  if(list.length<3)return;
+  var before=0;for(var k=1;k<list.length;k++)before+=distM([list[k-1].lat,list[k-1].lng],[list[k].lat,list[k].lng]);
+  var rest=list.slice(1),out=[list[0]];
+  while(rest.length){
+    var cur=out[out.length-1],bi=0,bd=Infinity;
+    rest.forEach(function(q,i){var dd=distM([cur.lat,cur.lng],[q.lat,q.lng]);if(dd<bd){bd=dd;bi=i;}});
+    out.push(rest.splice(bi,1)[0]);
+  }
+  var after=0;for(var m=1;m<out.length;m++)after+=distM([out[m-1].lat,out[m-1].lng],[out[m].lat,out[m].lng]);
+  out.forEach(function(p,i){p.order=i;});
+  persist();renderDays();if(activeDay===iso)setDay(iso,false);
+  toast(after<before-50?'Reordered, about '+fmtDist(before-after).split(',')[0]+' shorter':'Order kept, it was already the shortest');
 }
 function swapOrder(list,i,j){
   if(j<0||j>=list.length)return;
@@ -2278,6 +2361,11 @@ function bind(){
     });
   });
   $('#search').addEventListener('input',renderList);
+  $('#dayFilter').addEventListener('change',renderList);
+  (function(){
+    var sel=$('#dayFilter');
+    tripDays().forEach(function(d){var o=document.createElement('option');o.value=d;o.textContent=dayLabel(d,true);sel.appendChild(o);});
+  })();
   $('#closeSheet').addEventListener('click',closeSheet);
   $('#notes').addEventListener('input',function(){
     var p=byId(selectedId);if(!p)return;
@@ -2307,6 +2395,7 @@ function bind(){
   });
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
+  $('#sheetDay').addEventListener('change',function(){var p=byId(selectedId);if(p)assignDay(p,this.value);});
   $('#noteSave').addEventListener('click',function(){closeTipEditor(true);});
   $('#noteCancel').addEventListener('click',function(){closeTipEditor(false);});
   $('#mapBtn').addEventListener('click',function(e){e.stopPropagation();$('#mapMenu').classList.toggle('on');});
