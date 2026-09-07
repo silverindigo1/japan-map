@@ -206,7 +206,21 @@ textarea.notes{width:100%;min-height:96px;resize:vertical;border:1px solid var(-
 .tip .head .edit{font-size:12px;font-weight:600;color:var(--indigo);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--paper)}
 .tip .body{font-size:14px;line-height:1.55;white-space:pre-wrap;color:var(--ink)}
 .tip .body.empty{color:var(--muted);font-style:italic}
-.note-editor{position:absolute;inset:0;z-index:65;background:var(--paper);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.guide-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 0;border-bottom:1px solid var(--line)}
+.guide-row .g{font-size:20px;width:28px;flex:none;text-align:center}
+.guide-row div{flex:1;min-width:0}
+.guide-row b{display:block;font-size:15px;font-weight:600}
+.guide-row small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.guide-view{position:absolute;inset:0;z-index:66;background:var(--paper);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.guide-view.open{display:flex}
+.guide-body{overflow:auto;padding:6px 18px 40px;font-size:15px;line-height:1.6;white-space:pre-wrap;-webkit-overflow-scrolling:touch}
+.guide-body{white-space:normal}
+.guide-body p{margin:0 0 10px}
+.guide-body h4{font-size:15px;font-weight:700;margin:20px 0 6px;color:var(--indigo);letter-spacing:.01em}
+.guide-body h4:first-child{margin-top:6px}
+.guide-view .modal-head h2{font-size:15px;text-align:center;flex:1;padding:0 8px}
+.guide-view .modal-head{gap:8px}
+.note-editor{position:absolute;inset:0;z-index:70;background:var(--paper);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
 .note-editor.open{display:flex}
 .note-editor textarea{flex:1;width:100%;border:0;padding:14px 16px;font-size:15px;line-height:1.55;background:var(--paper);resize:none;outline:none}
 .note-editor .foot{padding:8px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
@@ -231,7 +245,23 @@ textarea.notes{width:100%;min-height:96px;resize:vertical;border:1px solid var(-
 .emoji-grid button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);font-size:20px;background:var(--paper)}
 .emoji-grid button.on{border-color:var(--shu);background:var(--shu-soft)}
 .inline-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.geo-results button{display:block;width:100%;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-top:6px;font-size:13px;background:var(--washi);line-height:1.35}
+.geo-results button{display:block;width:100%;text-align:left;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin-top:6px;font-size:13px;background:var(--washi);line-height:1.35}
+.geo-results button b{display:block;font-size:14px;font-weight:600}
+.geo-results button small{color:var(--muted);font-size:12px}
+.searchwrap{position:absolute;left:0;right:0;top:0;z-index:45;background:var(--paper);padding:calc(8px + env(safe-area-inset-top)) 12px 10px;box-shadow:0 4px 14px rgba(27,31,42,.12);display:none}
+.searchwrap.on{display:block}
+.searchwrap .row{display:flex;gap:8px;align-items:center}
+.searchwrap input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:15px}
+.searchwrap .cancel{font-size:14px;font-weight:600;color:var(--indigo);padding:6px 4px}
+.sres{max-height:56vh;overflow:auto;margin-top:8px}
+.sres .grp{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px}
+.sres button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 4px;border-bottom:1px solid var(--line)}
+.sres button .ico{width:30px;height:30px;border-radius:50%;background:var(--washi);display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+.sres button div{min-width:0;flex:1}
+.sres button b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sres button small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.sres .state{font-size:13px;color:var(--muted);padding:10px 2px}
+.searchbtn{font-size:16px;font-weight:600;color:var(--indigo);padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);margin-right:6px}
 .geo-results p{font-size:13px;color:var(--muted);margin:6px 0 0}
 .err{color:var(--shu);font-size:13px;margin-top:4px}
 
@@ -261,6 +291,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="title-row">
       <h1>Japan 2026 <small>Florian &amp; Lendita, 10 Nov to 1 Dec</small></h1>
       <span>
+        <button class="searchbtn" id="searchBtn" type="button" aria-label="Search places">&#9906;</button>
         <button class="today-btn" id="todayBtn" type="button" style="display:none">Today</button>
         <button class="menu-btn" id="menuBtn" aria-label="Open list and notes">List</button>
       </span>
@@ -270,6 +301,10 @@ body.picking .top,body.picking .fab{display:none}
     <div class="daybar" id="dayBar"><b id="dayLabel"></b><span id="dayCount"></span><span class="spacer"></span><button id="dayPrev" type="button">&lsaquo;</button><button id="dayNext" type="button">&rsaquo;</button><button id="dayClear" type="button">Clear</button></div>
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
+  <div class="searchwrap" id="searchWrap">
+    <div class="row"><input id="mapSearch" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off"><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
+    <div class="sres" id="searchRes"></div>
+  </div>
   <div class="bigjp" id="bigJp" role="dialog"><div class="j" id="bigJpText"></div><div class="e" id="bigJpEn"></div><div class="h">Show this to a taxi driver or at a counter. Tap to close.</div></div>
 
   <div class="banner" id="banner"><span>Tap the map where the place is</span><button id="cancelPick" type="button">Cancel</button></div>
@@ -326,6 +361,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="tabs" role="tablist">
       <button class="on" data-panel="places" role="tab">Places</button>
       <button data-panel="days" role="tab">Days</button>
+      <button data-panel="guides" role="tab">Guides</button>
       <button data-panel="tips" role="tab">Nice to know</button>
       <button data-panel="data" role="tab">Backup</button>
     </div>
@@ -338,6 +374,11 @@ body.picking .top,body.picking .fab{display:none}
     <div class="panel" id="panel-days">
       <p class="note">Open a place and pick a day, or use Edit. Tap a date here to see its stops in order, reorder them, and show them numbered on the map. Distances are straight line, so treat them as a rough guide.</p>
       <div id="dayList"></div>
+    </div>
+    <div class="panel" id="panel-guides">
+      <p class="note">Longer reads. Open one, edit it, or write your own.</p>
+      <div id="guideList"></div>
+      <div class="inline-btns" style="margin-top:14px"><button class="btn" id="guideNew" type="button">Write a new guide</button></div>
     </div>
     <div class="panel" id="panel-tips">
       <p class="note">Starter notes to edit. Nothing here is verified, so check the official site before relying on hours, prices or rules.</p>
@@ -382,6 +423,17 @@ body.picking .top,body.picking .fab{display:none}
     </div>
   </aside>
 
+  <div class="guide-view" id="guideView" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <button class="btn" id="guideBack" type="button">Back</button>
+      <h2 id="guideTitle"></h2>
+      <button class="btn" id="guideEdit" type="button">Edit</button>
+    </div>
+    <div class="guide-body" id="guideText"></div>
+    <div class="foot" style="padding:8px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line)">
+      <button class="btn danger small" id="guideDelete" type="button">Delete this guide</button>
+    </div>
+  </div>
   <div class="note-editor" id="noteEditor" role="dialog" aria-modal="true">
     <div class="modal-head">
       <button class="btn" id="noteCancel" type="button">Cancel</button>
@@ -411,6 +463,7 @@ body.picking .top,body.picking .fab{display:none}
       </div>
       <div class="field">
         <label>Pin image (optional, replaces the emoji on the pin)</label>
+        <p class="note" style="margin:0 0 8px">Small round icon only. Use Photo below if you also want a picture on the place card.</p>
         <div class="img-row">
           <div class="img-preview" id="imgPreview"></div>
           <label class="btn small file-btn">Choose image<input type="file" id="fImg" accept="image/*"></label>
@@ -422,6 +475,14 @@ body.picking .top,body.picking .fab{display:none}
         <div class="lib" id="imgLib"></div>
       </div>
       <div class="field">
+        <label>Photo (optional, shown large on the place card)</label>
+        <div class="img-row">
+          <div class="img-preview" id="photoPreview" style="border-radius:10px;width:78px;height:56px"></div>
+          <label class="btn small file-btn">Choose photo<input type="file" id="fPhoto" accept="image/*"></label>
+          <button class="btn small" id="photoRemove" type="button">Remove</button>
+        </div>
+      </div>
+      <div class="field">
         <label>Where</label>
         <input id="fLink" placeholder="Paste a Google Maps link or 35.7134, 139.7897" autocomplete="off" style="margin-bottom:8px">
         <div class="two">
@@ -431,7 +492,7 @@ body.picking .top,body.picking .fab{display:none}
         <div class="inline-btns">
           <button class="btn small" id="pickBtn" type="button">Pick on map</button>
           <button class="btn small" id="centerBtn" type="button">Use map centre</button>
-          <button class="btn small" id="geoBtn" type="button">Find by name</button>
+          <button class="btn small" id="geoBtn" type="button">Search by name</button>
         </div>
         <div class="geo-results" id="geoResults"></div>
         <div class="err" id="formErr"></div>
@@ -1331,6 +1392,17 @@ var SEED_PLACES=[
   {id:'philosopher',name:'Philosopher\'s Path',jp:'哲学の道',area:'kyoto',cat:'nature',icon:'🌿',lat:35.01537,lng:135.79477,when:'',notes:'Canal walk from Ginkaku-ji to Nanzen-ji, about 30 minutes, maples the whole way.'}
 ];
 
+var SEED_GUIDES=[
+  {id:'knives',icon:'🔪',title:'Buying kitchen knives in Japan',text:'Where\nKappabashi in Tokyo is the classic street, about 200 metres of kitchen shops. Nishiki Market in Kyoto has Aritsugu, busier and pricier. Both are on the map.\n\nSteel, the one real decision\nCarbon steel (hagane, shirogami, aogami) takes the keenest edge and is easiest to sharpen, but it rusts if you leave it wet and it will patina to a grey brown. Fine if you dry it every time.\nStainless (VG10, ginsan, SG2) is nearly as sharp in practice and forgiving in a normal kitchen.\nClad or san-mai means a hard core with softer steel on the sides. Common and good.\nIf you are unsure which you are holding, ask: "Is it carbon or stainless?" Most shops answer in English.\n\nBevel\nDouble bevel (ryoba) is sharpened on both sides, like a European knife. Anyone can use it, either hand.\nSingle bevel (kataba) is the traditional Japanese grind, sharper for fish and vegetables, but handed. Left handed versions exist and cost more. Do not buy single bevel unless you want to learn to sharpen it.\n\nShapes worth knowing\nGyuto, the all round chef knife, 210 mm is the useful size for most kitchens, 240 mm if you have space.\nSantoku, shorter and taller, good for small boards.\nNakiri, straight edge for vegetables, brilliant for cabbage and onions.\nPetty, the small knife, 120 to 150 mm.\nSujihiki, long slicer for meat and fish.\nDeba and yanagiba are specialist fish knives, single bevel, skip unless you fillet whole fish.\n\nHandles\nWa handle is the light Japanese octagonal or D shaped wood handle. Yo handle is the western riveted one. Wa handles are lighter and can be replaced.\n\nPrice\nA good gyuto starts around 12,000 to 20,000 yen. Under 8,000 yen tends to be soft steel or tourist stock. Above 40,000 is craftsmanship and name, not necessarily a better cut.\n\nAt the shop\nAsk to hold it. The balance point should sit around where the blade meets the handle.\nMost shops engrave your name on the blade while you wait, often free, takes 10 minutes. Bring the spelling written down.\nAsk for the sharpening angle and whether it has been sharpened before sale.\nBuy a whetstone with the knife, 1000 grit is the workhorse, add 3000 or 6000 for finishing. Ask for a two minute demonstration, they will usually give one.\n\nGetting it home\nKnives must go in checked luggage. Never in hand luggage, they will be confiscated at security.\nAsk for the cardboard sheath and tape it. Wrap in clothes in the middle of the case.\nTax free: bring the passport, ask before they ring it up. Keep the paperwork with the receipt until you leave Japan.\n\nCare at home\nHand wash, dry immediately, never the dishwasher. No glass or stone boards, wood or plastic only. No bones, no frozen food. Strop or hone lightly every few uses, full sharpen when it stops slicing paper cleanly.'},
+  {id:'trains',icon:'🚄',title:'Trains, IC cards and the Shinkansen',text:'IC card first\nSuica or PASMO in Apple Wallet is the single best thing you can set up before you fly. Add it in Wallet, top up with Apple Pay, tap the phone at the gate. Works on almost all trains, buses, konbini, vending machines and many lockers.\nTop up in the Wallet app whenever it drops under about 2,000 yen.\n\nDo you need a JR Pass\nFor this trip, probably not. The nationwide pass got expensive in 2023 and a Tokyo, Hakone, Kyoto, Osaka trip usually costs less as single tickets. Do the arithmetic before buying: Tokyo to Kyoto one way is roughly 14,000 yen in reserved seating.\nRegional passes can still be worth it, in particular the Hakone Freepass for the Hakone loop and the Kansai passes if you do many day trips.\n\nShinkansen practicalities\nTokyo to Kyoto is about 2 hours 15 minutes on Nozomi, about 2 hours 40 on Hikari.\nReserved seats (shitei) cost slightly more than unreserved (jiyu). In November reserve, foliage season is busy.\nSit on the right hand side going Tokyo to Kyoto for Mount Fuji, roughly 40 minutes after departure, clearest in the morning.\nBig suitcases: the oversized baggage area at the back of the carriage needs a free reservation on Nozomi and Hikari. Book it with the seat, or forward the bags instead.\nEkiben, the station lunch box, is part of the ride. Buy on the platform, eat on board. Eating is fine on the Shinkansen, not on local trains.\n\nLocal trains\nStand left on escalators in Tokyo, right in Osaka.\nDo not talk on the phone. Keep it silent.\nQueue on the marks painted on the platform.\nWomen only carriages exist at rush hour, marked in pink.\nLast trains are around midnight and there is no night service. Check the last train time before a long dinner, it is the number one way to end up in a taxi.\n\nApps\nGoogle Maps transit directions work well in Japan and show the platform and the carriage to board. Jorudan and Navitime give the same in more detail.\n\nLuggage forwarding\nTakkyubin moves a suitcase hotel to hotel, usually next day, around 2,000 yen per bag. Ask at reception the day before. Use it for Tokyo to Kyoto and travel to Hakone with a small bag, the ryokan mountain trains are not suitcase friendly.'},
+  {id:'food',icon:'🍜',title:'Eating out without stress',text:'Ordering\nMany places have a ticket machine at the door. Put in cash or tap the IC card, press the picture, take the ticket to the counter. The top left button is usually the house special.\nPlastic food models and photo menus are normal, pointing is normal.\nSay sumimasen to get attention, itadakimasu before eating if you like, gochisosama deshita on the way out.\n\nPaying\nNo tipping, ever. It confuses people.\nPay at the till, not at the table. Take the bill slip with you.\nCash is still king in small places. Many counter restaurants and izakaya are cash only.\n\nTable manners that actually matter\nDo not stick chopsticks upright in rice, and do not pass food chopstick to chopstick, both are funeral rites.\nSlurping noodles is fine and helps cool them.\nPour for the other person, not yourself, when sharing beer or sake.\nWet towel (oshibori) is for hands, not face.\n\nTiming\nLunch sets (teishoku) are the bargain of Japan, often half the dinner price for the same kitchen.\nPopular ramen and sushi counters queue at 12:00 and 19:00. Go at 11:30 or 14:30.\nMany restaurants close between lunch and dinner, roughly 14:30 to 17:30.\n\nWords worth recognising\n定食 teishoku, set meal. 大盛り omori, large portion. 替玉 kaedama, extra noodles.\n食べ放題 tabehodai, all you can eat. 飲み放題 nomihodai, all you can drink.\n禁煙 kinen, non smoking. 喫煙 kitsuen, smoking allowed.\n\nAllergies and preferences\nWrite what you cannot eat on a card in Japanese and show it. Vegetarian is genuinely hard, dashi (fish stock) is in almost everything, including most vegetable dishes.\n\nKonbini\n7-Eleven, Lawson and FamilyMart are good food, not a compromise. Onigiri, egg sandwiches, fried chicken, hot coffee. Lawson\'s karaage kun and 7-Eleven\'s tamago sando are the classics. They also have ATMs that take foreign cards, which many Japanese banks do not.'},
+  {id:'onsen',icon:'♨️',title:'Onsen and ryokan, how it works',text:'Before the bath\nTake off shoes at the entrance, wear the slippers, never slippers on tatami.\nUndress completely in the changing room, no swimwear. Small towel comes with you, big towel stays.\nLong hair up and out of the water.\n\nIn the bath\nWash first, sitting on the stool, soap and rinse thoroughly. The bath is for soaking, not cleaning.\nNo soap in the tub. No swimming. Keep the small towel out of the water, most people fold it on their head.\nMove slowly, the water is often 40 to 42 degrees.\n\nTattoos\nStill a barrier at many public onsen. Private baths and in room baths, which you have in Hakone, avoid the question entirely.\n\nRyokan rhythm\nCheck in around 15:00 to 16:00. Green tea and a sweet on arrival.\nChange into the yukata. Left side over right, always, right over left is for funerals. The belt ties at the waist, the outer jacket (tanzen) is for cold corridors.\nWear the yukata to dinner, breakfast and around the building.\nDinner is at a fixed time, usually 18:00 or 18:30, kaiseki, many small courses. Say if you cannot eat something when you book, not on the night.\nFuton is laid out while you are at dinner.\nBreakfast is Japanese, rice, fish, miso, pickles, around 07:30 or 08:00.\nCheck out is usually 10:00.\n\nSmall things\nBring your own toiletries only if you are fussy, everything is provided.\nDrink water before and after, and do not bathe drunk.\nTake the small towel and the yukata belt back to the room, they are not souvenirs, but the toothbrush and small amenities usually are.'},
+  {id:'money',icon:'💴',title:'Money, cards and tax free',text:'Cash\nCarry more cash than feels normal, 20,000 to 30,000 yen between you. Shrines, small restaurants, markets and some trains are cash only.\n7-Eleven ATMs accept foreign cards and have English menus. So do post office ATMs. Many bank ATMs do not.\n\nCards\nVisa and Mastercard are widely accepted in hotels, department stores and chains. American Express less so.\nContactless works in most chains. Tell your bank you are travelling.\n\nTax free shopping\nAvailable to tourists at shops with a tax free sign, on purchases over the current minimum threshold in one shop on one day.\nBring the passport, ask before paying, they process it at a separate counter in department stores.\nConsumables get sealed in a bag you are not supposed to open until you leave. Do not open it.\nKeep the paperwork with the passport until you leave the country.\n\nRough prices, autumn 2026, for a sense of scale\nRamen 900 to 1,400 yen. Coffee 400 to 600. Konbini lunch 600 to 900.\nTemple entry 400 to 800. Museum 1,500 to 2,500.\nTokyo to Kyoto Shinkansen about 14,000 one way.\nA good izakaya dinner with drinks 4,000 to 6,000 per person.\n\nSplitting\nSplitting a bill by item is unusual, splitting evenly is fine. Small change trays sit on the counter, put the money there rather than in the hand.'},
+  {id:'november',icon:'🍁',title:'November in Japan, weather and autumn colour',text:'Weather\nTokyo and Kyoto in November: roughly 10 to 17 degrees, dry and clear, cold after sunset. Hakone is 4 to 6 degrees colder and can be wet.\nSunset is around 16:30 by late November. Plan outdoor sights for the morning.\n\nWhat to pack\nLayers, a warm mid layer, a light windproof jacket. Comfortable shoes you can slip on and off many times a day.\nSocks without holes, you will take your shoes off in temples, ryokan and some restaurants.\nA small umbrella, or buy a 700 yen one at a konbini.\nA tote for shopping, plastic bags cost money and bins are rare.\n\nAutumn colour\nKyoto peaks roughly the third week of November into early December. Tokyo runs about a week later.\nTofuku-ji, Eikan-do, Nanzen-ji and the Philosopher\'s Path are the classics. All are busy from 09:30, so start at opening.\nEvening illuminations run at several Kyoto temples in late November, Eikan-do and Kiyomizu-dera among them. Check the exact dates when you arrive, they are announced each year.\nHakone colour is usually a bit earlier, mid November, and the Open-Air Museum and Gora Park are lovely for it.'},
+  {id:'phrases',icon:'🗣️',title:'Phrases that carry you through',text:'Basics\nSumimasen, excuse me and sorry and thank you all at once. The single most useful word.\nArigato gozaimasu, thank you.\nOnegaishimasu, please, when asking for something.\nHai, yes. Daijobu desu, it is fine or no thanks.\nEigo no menu wa arimasu ka, do you have an English menu.\n\nGetting around\nKore wa doko desu ka, where is this (while pointing at the map).\nEki wa doko desu ka, where is the station.\nShow the Japanese name on a place card by tapping the Japanese line, it fills the screen.\n\nEating\nOsusume wa nan desu ka, what do you recommend.\nKore o kudasai, this one please, while pointing.\nOkaikei onegaishimasu, the bill please.\nGochisosama deshita, thank you for the meal, on the way out.\n\nShopping\nIkura desu ka, how much is it.\nMenzei dekimasu ka, can I get tax free.\nNamae o horemasu ka, can you engrave a name.\n\nIf something goes wrong\nTasukete kudasai, please help.\nByoin wa doko desu ka, where is a hospital.\nNihongo ga wakarimasen, I do not understand Japanese.\nEmergency numbers: 110 police, 119 fire and ambulance.'},
+  {id:'etiquette',icon:'🙏',title:'Small rules that make you welcome',text:'Everyday\nQuiet on trains, no phone calls.\nDo not eat while walking, except at festival stalls and market streets.\nCarry your rubbish until you find a bin, or take it back to the hotel.\nQueue, always, and let people off before boarding.\nPoint with an open hand, not a finger.\n\nShoes\nOff at ryokan entrances, temple halls, some restaurants and any home. If there is a step up and a shoe rack, shoes come off.\nSeparate toilet slippers exist. Change back on the way out, forgetting is the classic tourist moment.\n\nShrines and temples\nBow once at the torii and walk to the side of the path, the middle is for the gods.\nRinse hands at the basin, left then right, then rinse the mouth from the hand, never from the ladle.\nAt a shrine: coin, bow twice, clap twice, pray, bow once. At a Buddhist temple do not clap.\nPhotos are usually fine outside, often not inside halls. Look for the signs.\nGoshuin stamp books cost around 2,000 yen empty and a few hundred yen per stamp. A good souvenir.\n\nMoney and service\nNo tipping. Service is included and pride based.\nHand money to the tray, not the person.\nBoth hands when giving or receiving a card or a gift.\n\nPhotos of people\nAsk before photographing geisha and maiko in Gion. There are streets in Kyoto where photography is banned outright and fines apply.'}
+];
+
 var SEED_TIPS={
   general:'Cash still matters at small shops, shrines and some ramen counters. Keep coins and small notes.\nSuica or PASMO in Apple Wallet covers trains, buses, konbini and vending machines. Top up in the Wallet app.\nTax free shopping needs the passport at the till. Check the current minimum spend before relying on it.\nBins are rare. Carry a small bag for wrappers.\nLuggage forwarding (takkyubin) hotel to hotel is worth it for Tokyo to Kyoto. Ask at reception the day before and keep a small bag for Hakone.',
   art:'teamLab Planets: barefoot through water in parts. Trousers that roll above the knee, or shorts. Free lockers.\nteamLab Biovortex: bags over 50 cm and drinks without lids stay in the lockers. Timed entry, arrive 15 minutes early.\nWeekday mornings are the calm slots at both.',
@@ -1463,11 +1535,20 @@ function init(){
       state.hidden=Array.isArray(saved.hidden)?saved.hidden:[];
       state.library=Array.isArray(saved.library)?saved.library:[];
       state.removedSeeds=Array.isArray(saved.removedSeeds)?saved.removedSeeds:[];
+      if(!state.photoSplit){
+        state.places.forEach(function(p){ if(p.img&&p.photo) p.photo=''; });
+        (state.library||[]).forEach(function(it){ it.photo=''; });
+        state.photoSplit=1;
+      }
+      state.guides=Array.isArray(saved.guides)?saved.guides:[];
+      state.removedGuides=Array.isArray(saved.removedGuides)?saved.removedGuides:[];
+      mergeGuides();
       mergedCount=mergeSeeds();
-      if(mergedCount)persist();
+      persist();
     }else{
       state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
       state.tips=Object.assign({},SEED_TIPS);
+      state.guides=[];mergeGuides();
     }
     buildMap();buildTabs();buildChips();buildForm();
     renderMarkers();renderList();renderTips();bind();
@@ -1924,7 +2005,81 @@ function renderList(){
   if(!any){var e=document.createElement('div');e.className='empty';e.textContent=q?'Nothing matches.':'No places yet. Tap + on the map to add one.';box.appendChild(e);}
 }
 
-var editingTip=null;
+var editingTip=null,editingGuide=null,viewingGuide=null;
+function guides(){ if(!state.guides)state.guides=[]; return state.guides; }
+function removedGuides(){ if(!state.removedGuides)state.removedGuides=[]; return state.removedGuides; }
+function mergeGuides(){
+  var have={},gone={},added=0;
+  guides().forEach(function(g){have[g.id]=1;});
+  removedGuides().forEach(function(id){gone[id]=1;});
+  SEED_GUIDES.forEach(function(sg){
+    if(have[sg.id]||gone[sg.id])return;
+    guides().push({id:sg.id,icon:sg.icon,title:sg.title,text:sg.text});
+    added++;
+  });
+  return added;
+}
+function renderGuides(){
+  var box=$('#guideList');if(!box)return;
+  box.innerHTML='';
+  if(!guides().length){box.innerHTML='<div class="empty">No guides yet.</div>';return;}
+  guides().forEach(function(g){
+    var r=document.createElement('button');r.type='button';r.className='guide-row';
+    var first=(g.text||'').split('\n').filter(function(l){return l.trim();})[0]||'Empty';
+    r.innerHTML='<span class="g">'+esc(g.icon||'📖')+'</span><div><b>'+esc(g.title)+'</b><small>'+esc(first)+'</small></div><span style="color:var(--muted)">&rsaquo;</span>';
+    r.addEventListener('click',function(){openGuide(g.id);});
+    box.appendChild(r);
+  });
+}
+function openGuide(id){
+  var g=guides().filter(function(x){return x.id===id;})[0];if(!g)return;
+  viewingGuide=id;
+  $('#guideTitle').textContent=g.title;
+  $('#guideText').innerHTML=formatGuide(g.text||'');
+  $('#guideView').classList.add('open');
+}
+/* Blank line separated blocks. A short first line in a block becomes its heading. */
+function formatGuide(text){
+  return text.split(/\n\s*\n/).map(function(block){
+    var lines=block.split('\n').filter(function(l){return l.trim();});
+    if(!lines.length)return '';
+    var out='';
+    if(lines.length>1&&lines[0].length<60&&!/[.!?:,]$/.test(lines[0].trim())){
+      out+='<h4>'+esc(lines.shift().trim())+'</h4>';
+    }
+    if(lines.length)out+='<p>'+lines.map(esc).join('<br>')+'</p>';
+    return out;
+  }).join('');
+}
+function closeGuide(){viewingGuide=null;$('#guideView').classList.remove('open');window.scrollTo(0,0);}
+function editGuide(id){
+  var g=id?guides().filter(function(x){return x.id===id;})[0]:null;
+  editingGuide=g?g.id:'new';
+  $('#noteTitle').textContent=g?'Edit guide':'New guide';
+  $('#noteText').value=g?((g.title||'')+'\n\n'+(g.text||'')):'';
+  $('#noteText').placeholder='First line is the title. Everything below is the guide.';
+  editingTip=null;
+  $('#noteEditor').classList.add('open');
+}
+function saveGuideFromEditor(){
+  var raw=$('#noteText').value,i=raw.indexOf('\n');
+  var title=(i>-1?raw.slice(0,i):raw).trim()||'Untitled guide';
+  var text=(i>-1?raw.slice(i+1):'').replace(/^\s+/,'');
+  if(editingGuide==='new'){
+    guides().unshift({id:uid(),icon:'📖',title:title,text:text});
+  }else{
+    var g=guides().filter(function(x){return x.id===editingGuide;})[0];
+    if(g){g.title=title;g.text=text;}
+  }
+  persist();renderGuides();
+  if(viewingGuide===editingGuide){openGuide(editingGuide);}
+  editingGuide=null;
+}
+function deleteGuide(id){
+  if(SEED_GUIDES.some(function(g){return g.id===id;})) removedGuides().push(id);
+  state.guides=guides().filter(function(g){return g.id!==id;});
+  persist();renderGuides();closeGuide();
+}
 function renderTips(){
   var box=$('#tipList');box.innerHTML='';
   var keys=['general'].concat(CAT_ORDER);
@@ -1945,14 +2100,16 @@ function renderTips(){
   });
 }
 function openTipEditor(k,label){
-  editingTip=k;
+  editingTip=k;editingGuide=null;
   $('#noteTitle').textContent=label;
   $('#noteText').value=state.tips[k]||'';
   $('#noteEditor').classList.add('open');
 }
 function closeTipEditor(save){
-  if(save&&editingTip!==null){ state.tips[editingTip]=$('#noteText').value; persist(); renderTips(); toast('Saved'); }
-  editingTip=null;$('#noteEditor').classList.remove('open');window.scrollTo(0,0);
+  if(save&&editingGuide!==null){ saveGuideFromEditor(); toast('Saved'); }
+  else if(save&&editingTip!==null){ state.tips[editingTip]=$('#noteText').value; persist(); renderTips(); toast('Saved'); }
+  editingTip=null;editingGuide=null;$('#noteText').placeholder='';
+  $('#noteEditor').classList.remove('open');window.scrollTo(0,0);
 }
 
 function setDay(iso,fit){
@@ -2146,7 +2303,7 @@ function shrink(im,maxSide,square){
 function applyImage(src){
   var im=new Image();
   im.onload=function(){
-    try{formImg=shrink(im,96,true);formPhoto=shrink(im,420,false);$('#imgErr').textContent='';renderImgPreview();libAdd(formImg,formPhoto);renderLib();}
+    try{formImg=shrink(im,96,true);$('#imgErr').textContent='';renderImgPreview();libAdd(formImg,'');renderLib();}
     catch(e){$('#imgErr').textContent='Could not process that image.';}
   };
   im.onerror=function(){$('#imgErr').textContent='Could not read that image.';};
@@ -2179,10 +2336,27 @@ function bindLink(){
   }
   f.addEventListener('input',go);f.addEventListener('paste',function(){setTimeout(go,50);});
 }
+function renderPhotoPreview(){
+  var box=$('#photoPreview');if(!box)return;
+  box.innerHTML=formPhoto?'<img src="'+formPhoto+'" alt="" style="border-radius:10px">':'<span style="font-size:18px">🖼️</span>';
+  $('#photoRemove').style.display=formPhoto?'':'none';
+}
+function takePhotoFile(file){
+  if(!file||!/^image\//.test(file.type)){$('#imgErr').textContent='That is not an image.';return;}
+  var r=new FileReader();
+  r.onload=function(){
+    var im=new Image();
+    im.onload=function(){ try{ formPhoto=shrink(im,640,false); renderPhotoPreview(); }catch(e){ $('#imgErr').textContent='Could not process that photo.'; } };
+    im.src=r.result;
+  };
+  r.readAsDataURL(file);
+}
 function bindImages(){
   bindLink();
+  $('#fPhoto').addEventListener('change',function(){if(this.files&&this.files[0])takePhotoFile(this.files[0]);this.value='';});
+  $('#photoRemove').addEventListener('click',function(){formPhoto='';renderPhotoPreview();});
   $('#fImg').addEventListener('change',function(){if(this.files&&this.files[0])takeImageFile(this.files[0]);this.value='';});
-  $('#imgRemove').addEventListener('click',function(){formImg='';formPhoto='';renderImgPreview();renderLib();});
+  $('#imgRemove').addEventListener('click',function(){formImg='';renderImgPreview();renderLib();});
   $('#fIcon').addEventListener('input',renderImgPreview);
   var zone=$('#pasteZone');
   function grab(dt){
@@ -2231,7 +2405,7 @@ function openForm(p){
   $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';
   $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#imgErr').textContent='';
   $('#deleteWrap').style.display=p?'':'none';$('#deleteBtn').textContent='Delete this place';pendingDelete=null;
-  formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderLib();
+  formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderPhotoPreview();renderLib();
   closeSheet();closeDrawer();
   $('#modal').classList.add('open');
   if(!p)setTimeout(function(){$('#fName').focus();},50);
@@ -2255,26 +2429,112 @@ function saveFormData(){
   setTimeout(function(){openSheet(id);},680);
   toast(wasEdit?'Saved':'Added');
 }
-function geocode(){
-  var q=$('#fName').value.trim();var box=$('#geoResults');
-  if(!q){box.innerHTML='<p>Type a name first.</p>';return;}
-  box.innerHTML='<p>Searching</p>';
-  fetch('https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=jp&q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}})
-  .then(function(r){return r.json();})
-  .then(function(js){
-    box.innerHTML='';
-    if(!js.length){box.innerHTML='<p>No match. Pick on map or enter coordinates.</p>';return;}
-    js.forEach(function(it){
-      var b=document.createElement('button');b.type='button';b.textContent=it.display_name;
-      b.addEventListener('click',function(){$('#fLat').value=(+it.lat).toFixed(5);$('#fLng').value=(+it.lon).toFixed(5);box.innerHTML='<p>Location set.</p>';});
+/* Live lookup against OpenStreetMap Nominatim, English names where they exist.
+   One request per typed pause, as their usage policy asks. */
+var geoTimer=null,geoSeq=0;
+function geoLookup(q,cb){
+  var seq=++geoSeq;
+  var c=map.getCenter();
+  var url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=jp&namedetails=1&accept-language=en&q='+encodeURIComponent(q)
+    +'&viewbox='+(c.lng-1.2)+','+(c.lat+0.9)+','+(c.lng+1.2)+','+(c.lat-0.9);
+  fetch(url,{headers:{'Accept':'application/json'}})
+    .then(function(r){return r.json();})
+    .then(function(js){ if(seq===geoSeq) cb(null,(js||[]).map(mapHit)); })
+    .catch(function(e){ if(seq===geoSeq) cb(e); });
+}
+function mapHit(r){
+  var nd=r.namedetails||{};
+  var name=nd['name:en']||r.name||(r.display_name||'').split(',')[0];
+  var addr=(r.display_name||'').split(',').slice(1,4).join(',').trim();
+  return {name:name,jp:nd['name:ja']||'',addr:addr,lat:+r.lat,lng:+r.lon,kind:(r.type||r.category||'')};
+}
+function typeIcon(kind,name){
+  var c=guessCat(name+' '+kind);
+  return CATS[c]?CATS[c].icon:'📍';
+}
+/* map-wide search: our own places first, then anywhere in Japan */
+function openSearch(){
+  $('#searchWrap').classList.add('on');
+  $('#mapSearch').value='';$('#searchRes').innerHTML='';
+  setTimeout(function(){$('#mapSearch').focus();},80);
+}
+function closeSearch(){$('#searchWrap').classList.remove('on');window.scrollTo(0,0);}
+function runSearch(){
+  var q=$('#mapSearch').value.trim(),box=$('#searchRes');
+  box.innerHTML='';
+  if(q.length<2){box.innerHTML='<div class="state">Type at least two letters.</div>';return;}
+  var mine=state.places.filter(function(p){
+    return (p.name+' '+(p.jp||'')+' '+(p.notes||'')).toLowerCase().indexOf(q.toLowerCase())>-1;
+  }).slice(0,6);
+  if(mine.length){
+    var h=document.createElement('div');h.className='grp';h.textContent='Our places';box.appendChild(h);
+    mine.forEach(function(p){
+      var b=document.createElement('button');b.type='button';
+      b.innerHTML='<span class="ico">'+esc(p.img?'📌':(p.icon||CATS[p.cat].icon))+'</span><div><b>'+esc(p.name)+'</b><small>'+esc((AREAS[p.area]||AREAS.other).label+(p.day?', '+dayLabel(p.day):''))+'</small></div>';
+      b.addEventListener('click',function(){
+        closeSearch();
+        if(state.hidden.indexOf(p.cat)>-1){state.hidden.splice(state.hidden.indexOf(p.cat),1);buildChips();renderMarkers();}
+        map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);
+      });
       box.appendChild(b);
     });
-  })
-  .catch(function(){box.innerHTML='<p>Search is not available inside Claude. Pick on map, use map centre, or paste coordinates from Google Maps (long press a spot, the numbers appear at the top).</p>';});
+  }
+  var loading=document.createElement('div');loading.className='state';loading.textContent='Looking up "'+q+'" in Japan';box.appendChild(loading);
+  clearTimeout(geoTimer);
+  geoTimer=setTimeout(function(){
+    geoLookup(q,function(err,hits){
+      loading.remove();
+      if(err){var e=document.createElement('div');e.className='state';e.textContent='Online search is not available here. It works in Safari and the home screen app.';box.appendChild(e);return;}
+      if(!hits.length){var n=document.createElement('div');n.className='state';n.textContent='Nothing found in Japan for that.';box.appendChild(n);return;}
+      var h2=document.createElement('div');h2.className='grp';h2.textContent='Add from the map of Japan';box.appendChild(h2);
+      hits.forEach(function(hit){
+        var b=document.createElement('button');b.type='button';
+        b.innerHTML='<span class="ico">'+esc(typeIcon(hit.kind,hit.name))+'</span><div><b>'+esc(hit.name)+'</b><small>'+esc(hit.addr||hit.kind)+'</small></div>';
+        b.addEventListener('click',function(){addFromHit(hit);});
+        box.appendChild(b);
+      });
+    });
+  },450);
+}
+function addFromHit(hit){
+  closeSearch();
+  var c=guessCat(hit.name+' '+hit.kind);
+  openForm(null);
+  $('#fName').value=hit.name;$('#fJp').value=hit.jp||'';
+  $('#fLat').value=hit.lat.toFixed(5);$('#fLng').value=hit.lng.toFixed(5);
+  $('#fCat').value=c;$('#fIcon').value=CATS[c].icon;
+  $('#fArea').value=guessArea(hit.lat,hit.lng);
+  renderImgPreview();
+  $('#geoResults').innerHTML='<p>Found on the map of Japan. Check the type and day, then Save.</p>';
+}
+function geocode(){
+  var q=$('#fName').value.trim();var box=$('#geoResults');
+  if(q.length<2){box.innerHTML='<p>Type a name first.</p>';return;}
+  box.innerHTML='<p>Searching</p>';
+  geoLookup(q,function(err,hits){
+    box.innerHTML='';
+    if(err){box.innerHTML='<p>Search is not available inside Claude. Pick on map, use map centre, or paste a Google Maps link above.</p>';return;}
+    if(!hits.length){box.innerHTML='<p>No match in Japan. Pick on map or paste a Google Maps link.</p>';return;}
+    hits.forEach(function(hit){
+      var b=document.createElement('button');b.type='button';
+      b.innerHTML='<b>'+esc(hit.name)+'</b><small>'+esc(hit.addr||hit.kind)+'</small>';
+      b.addEventListener('click',function(){
+        $('#fLat').value=hit.lat.toFixed(5);$('#fLng').value=hit.lng.toFixed(5);
+        if(!$('#fName').value.trim()||$('#fName').value.trim().toLowerCase()===q.toLowerCase())$('#fName').value=hit.name;
+        if(hit.jp&&!$('#fJp').value.trim())$('#fJp').value=hit.jp;
+        $('#fArea').value=guessArea(hit.lat,hit.lng);
+        box.innerHTML='<p>Location set from '+esc(hit.name)+'.</p>';
+      });
+      box.appendChild(b);
+    });
+  });
 }
 
 function guessCat(name){
-  var n=(name||'').toLowerCase();
+  var n=(name||'').toLowerCase().replace(/_/g,' ');
+  if(/theme park|amusement|aquarium|zoo|attraction|studios|tower|observation|arcade|karaoke|cinema/.test(n))return 'other';
+  if(/museum|teamlab|gallery|art gallery|exhibition/.test(n))return 'art';
+  if(/hotel|ryokan|hostel|guest house|inn\b|apartment|hospitality/.test(n))return 'hotel';
   if(/shrine|temple|jingu|jinja|taisha|-ji\b|dera\b|torii|pagoda|castle|-jo\b/.test(n))return 'shrine';
   if(/ramen|sushi|market|cafe|coffee|restaurant|izakaya|yakitori|udon|soba|tempura|okonomiyaki|bakery|bar\b|food|dessert|matcha|tea\b/.test(n))return 'food';
   if(/museum|teamlab|gallery|art\b|exhibition/.test(n))return 'art';
@@ -2287,6 +2547,14 @@ function guessCat(name){
 function guessArea(lat,lng){
   var best='other';
   (BASE.bbox||[]).forEach(function(b,i){if(lat>=b[0]&&lng>=b[1]&&lat<=b[2]&&lng<=b[3])best=['tokyo','hakone','kyoto','osaka','osaka'][i]||'other';});
+  if(best!=='other')return best;
+  /* outside the detailed boxes, fall back to the closest trip area within 60 km */
+  var bd=60000;
+  AREA_ORDER.forEach(function(k){
+    if(k==='other')return;
+    var d=distM([lat,lng],[AREAS[k].center[0],AREAS[k].center[1]]);
+    if(d<bd){bd=d;best=k;}
+  });
   return best;
 }
 function stripHtml(s){var d=document.createElement('div');d.innerHTML=String(s||'').replace(/<br\s*\/?>/gi,'\n').replace(/<\/(p|div|li)>/gi,'\n');return (d.textContent||'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();}
@@ -2337,7 +2605,7 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
@@ -2345,13 +2613,13 @@ function importJson(text){
   var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
   if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();
   $('#importErr').textContent='';$('#importText').value='';
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
 
 function bind(){
-  $('#menuBtn').addEventListener('click',function(){renderList();renderDays();openDrawer();});
+  $('#menuBtn').addEventListener('click',function(){renderList();renderDays();renderGuides();openDrawer();});
   $('#closeDrawer').addEventListener('click',closeDrawer);
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
@@ -2397,6 +2665,15 @@ function bind(){
   $('#locBtn').addEventListener('click',locate);
   $('#sheetDay').addEventListener('change',function(){var p=byId(selectedId);if(p)assignDay(p,this.value);});
   $('#noteSave').addEventListener('click',function(){closeTipEditor(true);});
+  $('#guideBack').addEventListener('click',closeGuide);
+  $('#guideEdit').addEventListener('click',function(){editGuide(viewingGuide);});
+  $('#guideNew').addEventListener('click',function(){editGuide(null);});
+  $('#guideDelete').addEventListener('click',function(){
+    var id=viewingGuide;if(!id)return;
+    var b=$('#guideDelete');
+    if(b.dataset.armed!==id){b.dataset.armed=id;b.textContent='Tap again to delete this guide';setTimeout(function(){b.dataset.armed='';b.textContent='Delete this guide';},4000);return;}
+    b.dataset.armed='';b.textContent='Delete this guide';deleteGuide(id);toast('Guide deleted');
+  });
   $('#noteCancel').addEventListener('click',function(){closeTipEditor(false);});
   $('#mapBtn').addEventListener('click',function(e){e.stopPropagation();$('#mapMenu').classList.toggle('on');});
   $('#mapMenu').addEventListener('click',function(e){
@@ -2430,6 +2707,16 @@ function bind(){
   $('#cancelPick').addEventListener('click',function(){endPick();$('#modal').classList.add('open');});
   $('#centerBtn').addEventListener('click',function(){var c=map.getCenter();$('#fLat').value=c.lat.toFixed(5);$('#fLng').value=c.lng.toFixed(5);$('#geoResults').innerHTML='<p>Set to the map centre.</p>';});
   $('#geoBtn').addEventListener('click',geocode);
+  $('#fName').addEventListener('input',function(){
+    if($('#fLat').value)return;
+    clearTimeout(geoTimer);
+    var v=this.value.trim();
+    if(v.length<3)return;
+    geoTimer=setTimeout(geocode,700);
+  });
+  $('#searchBtn').addEventListener('click',openSearch);
+  $('#searchCancel').addEventListener('click',closeSearch);
+  $('#mapSearch').addEventListener('input',runSearch);
   $('#copyBtn').addEventListener('click',function(){
     var txt=exportJson();
     copyText(txt,function(ok){ if(ok){toast('Copied. Paste it into Notes or a message.');} else {$('#importText').value=txt;toast('Copy blocked. The text is in the Import box, select and copy it.');} });
@@ -2452,12 +2739,14 @@ function bind(){
     if(pendingReset===null){pendingReset=1;$('#resetBtn').textContent='Tap again to replace everything';setTimeout(function(){pendingReset=null;$('#resetBtn').textContent='Reset to starter list';},3000);return;}
     pendingReset=null;$('#resetBtn').textContent='Reset to starter list';
     state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
-    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];
+    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();
     persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('tokyo');toast('Starter list restored');
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
-    if($('#noteEditor').classList.contains('open'))closeTipEditor(false);
+    if($('#searchWrap').classList.contains('on'))closeSearch();
+    else if($('#guideView').classList.contains('open')&&!$('#noteEditor').classList.contains('open'))closeGuide();
+    else if($('#noteEditor').classList.contains('open'))closeTipEditor(false);
     else if($('#modal').classList.contains('open'))closeForm();
     else if(pickMode){endPick();$('#modal').classList.add('open');}
     else if($('#drawer').classList.contains('open'))closeDrawer();

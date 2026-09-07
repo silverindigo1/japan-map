@@ -1,5 +1,5 @@
 /* Caches the app shell so the app opens without a connection. Map tiles are fetched live and kept only as a small fallback cache. */
-var SHELL_CACHE='japan-map-shell-v13';
+var SHELL_CACHE='japan-map-shell-v14';
 var TILE_CACHE='japan-map-tiles-v1';
 var SHELL=[
   './',
