@@ -84,6 +84,32 @@ a.btn{color:inherit}
 .sheet-title .jp{cursor:pointer;text-decoration:underline dotted var(--line)}
 .lbl.hk{font-size:10px;font-weight:600;color:#7A3418;transform:translate(-50%,6px);text-shadow:0 0 3px #fff,0 0 3px #fff}
 .lbl.rw{font-size:10px;font-weight:600;color:#1F5F7A;transform:translate(-50%,6px);text-shadow:0 0 3px #fff,0 0 3px #fff}
+.tabs{overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{white-space:nowrap;flex:none}
+.pin .star{position:absolute;right:-6px;bottom:-6px;width:16px;height:16px;border-radius:50%;background:#F2B705;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;font-style:normal}
+.prio-btn{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:13px;font-weight:600}
+.prio-btn.on{background:#FFF4CC;border-color:#F2B705;color:#7A5A00}
+.timein{width:84px;padding:7px 8px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:13px}
+.stop-row .t{font-size:11px;color:var(--muted);width:40px;flex:none;text-align:right}
+.chk-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.chk-row input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--indigo)}
+.chk-row label{flex:1;font-size:14.5px}
+.chk-row.done label{color:var(--muted);text-decoration:line-through}
+.chk-row .rm{color:var(--muted);font-size:16px;padding:0 6px}
+.chk-add{display:flex;gap:8px;margin:8px 0 14px}
+.chk-add input{flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)}
+.tool{border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0}
+.tool h3{margin:0 0 8px;font-size:15px}
+.conv{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.conv input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:16px}
+.conv .eq{color:var(--muted)}
+.rate{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:8px}
+.rate input{width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--washi)}
+.emg a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;text-decoration:none;color:inherit;background:var(--washi)}
+.emg a b{display:block;font-size:15px}
+.emg a small{color:var(--muted);font-size:12px}
+.emg .addr{font-size:13px;line-height:1.5;margin-top:8px}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
 .sort-row button{padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12px}
 .sort-row button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -289,7 +315,7 @@ body.picking .top,body.picking .fab{display:none}
 
   <header class="top">
     <div class="title-row">
-      <h1>Japan 2026 <small>Florian &amp; Lendita, 10 Nov to 1 Dec</small></h1>
+      <h1>Japan 2026 <small id="subTitle">Florian &amp; Lendita, 10 Nov to 1 Dec</small></h1>
       <span>
         <button class="searchbtn" id="searchBtn" type="button" aria-label="Search places">&#9906;</button>
         <button class="today-btn" id="todayBtn" type="button" style="display:none">Today</button>
@@ -336,7 +362,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="sheet-body">
       <div class="when" id="sheetWhen"></div>
       <img class="photo" id="sheetPhoto" alt="" style="display:none">
-      <div class="daypick"><label for="sheetDay">Day</label><select id="sheetDay"></select></div>
+      <div class="daypick"><label for="sheetDay">Day</label><select id="sheetDay"></select><input class="timein" id="sheetTime" type="time" aria-label="Time"><button class="prio-btn" id="prioBtn" type="button">☆ Must do</button></div>
       <div class="near-label" id="nearLabel" style="display:none">Close by</div>
       <div class="near" id="nearRow"></div>
       <div class="label">Our notes</div>
@@ -362,13 +388,14 @@ body.picking .top,body.picking .fab{display:none}
       <button class="on" data-panel="places" role="tab">Places</button>
       <button data-panel="days" role="tab">Days</button>
       <button data-panel="guides" role="tab">Guides</button>
+      <button data-panel="tools" role="tab">Tools</button>
       <button data-panel="tips" role="tab">Nice to know</button>
       <button data-panel="data" role="tab">Backup</button>
     </div>
     <div class="panel on" id="panel-places">
       <input class="search" id="search" type="search" placeholder="Search name or notes" autocomplete="off">
       <div class="sort-row"><span>Sort</span><button id="sortArea" class="on" type="button">By area</button><button id="sortNear" type="button">Nearest to me</button></div>
-      <div class="filter-row"><span>Show</span><select id="dayFilter"><option value="">All places</option><option value="planned">Planned</option><option value="unplanned">Not planned yet</option></select></div>
+      <div class="filter-row"><span>Show</span><select id="dayFilter"><option value="">All places</option><option value="planned">Planned</option><option value="unplanned">Not planned yet</option><option value="must">Must do</option></select></div>
       <div id="placeList"></div>
     </div>
     <div class="panel" id="panel-days">
@@ -379,6 +406,26 @@ body.picking .top,body.picking .fab{display:none}
       <p class="note">Longer reads. Open one, edit it, or write your own.</p>
       <div id="guideList"></div>
       <div class="inline-btns" style="margin-top:14px"><button class="btn" id="guideNew" type="button">Write a new guide</button></div>
+    </div>
+    <div class="panel" id="panel-tools">
+      <div class="tool">
+        <h3>Yen to kroner</h3>
+        <div class="conv"><input id="cvYen" inputmode="decimal" placeholder="JPY"><span class="eq">=</span><input id="cvDkk" inputmode="decimal" placeholder="DKK"></div>
+        <div class="rate">Rate, DKK per 100 JPY: <input id="cvRate" inputmode="decimal" placeholder="e.g. 4.5"><span id="cvNote"></span></div>
+      </div>
+      <div class="tool">
+        <h3>Checklist</h3>
+        <div class="chk-add"><input id="chkNew" placeholder="Add an item"><button class="btn small" id="chkAdd" type="button">Add</button></div>
+        <div id="chkList"></div>
+      </div>
+      <div class="tool emg">
+        <h3>If something goes wrong</h3>
+        <a href="tel:110"><b>110</b><small>Police</small></a>
+        <a href="tel:119"><b>119</b><small>Ambulance and fire</small></a>
+        <a href="tel:+81334963001"><b>+81 3 3496 3001</b><small>Royal Danish Embassy, Tokyo. Emergencies. Phone hours weekdays 10 to 12 and 13 to 15; outside those hours the call is forwarded to the Foreign Ministry watch centre in Copenhagen</small></a>
+        <a href="tel:+4533921112"><b>+45 33 92 11 12</b><small>Udenrigsministeriets Globale Vagtcentral, Copenhagen, 24 hours</small></a>
+        <div class="addr">Royal Danish Embassy<br>29-6 Sarugaku-cho, Shibuya-ku, Tokyo 150-0033<br>デンマーク大使館 東京都渋谷区猿楽町29-6</div>
+      </div>
     </div>
     <div class="panel" id="panel-tips">
       <p class="note">Starter notes to edit. Nothing here is verified, so check the official site before relying on hours, prices or rules.</p>
@@ -497,7 +544,7 @@ body.picking .top,body.picking .fab{display:none}
         <div class="geo-results" id="geoResults"></div>
         <div class="err" id="formErr"></div>
       </div>
-      <div class="field"><label for="fDay">Day</label><select id="fDay"></select></div>
+      <div class="two"><div class="field"><label for="fDay">Day</label><select id="fDay"></select></div><div class="field"><label for="fTime">Time (optional)</label><input id="fTime" type="time"></div></div>
       <div class="field"><label for="fWhen">When or status (optional)</label><input id="fWhen" placeholder="12 Nov, tickets booked"></div>
       <div class="field"><label for="fNotes">Notes</label><textarea id="fNotes"></textarea></div>
       <div class="field" id="deleteWrap" style="display:none"><button class="btn danger" id="deleteBtn" type="button">Delete this place</button></div>
@@ -1521,7 +1568,7 @@ function pinHtml(p,extra,onMap){
     if(p.day===activeDay){var idx=dayPlaces(activeDay).indexOf(p);if(idx>-1)num='<em class="num">'+(idx+1)+'</em>';}
     else cls=' dim';
   }
-  return '<div class="pin'+(p.visited?' visited':'')+(p.img?' has-img':'')+cls+(extra||'')+'" style="--c:'+c.color+'">'+inner+'<em class="chk">✓</em>'+num+'</div>';
+  return '<div class="pin'+(p.visited?' visited':'')+(p.img?' has-img':'')+cls+(extra||'')+'" style="--c:'+c.color+'">'+inner+'<em class="chk">✓</em>'+num+(p.prio?'<em class="star">★</em>':'')+'</div>';
 }
 function iconFor(p){
   return L.divIcon({className:'pinwrap',iconSize:[34,34],iconAnchor:[17,17],html:pinHtml(p,p.id===selectedId?' sel':'',true)});
@@ -1540,6 +1587,7 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';mergeChecks();
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
       state.removedGuides=Array.isArray(saved.removedGuides)?saved.removedGuides:[];
       mergeGuides();
@@ -1548,7 +1596,7 @@ function init(){
     }else{
       state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
       state.tips=Object.assign({},SEED_TIPS);
-      state.guides=[];mergeGuides();
+      state.guides=[];mergeGuides();state.checks=[];mergeChecks();
     }
     buildMap();buildTabs();buildChips();buildForm();
     renderMarkers();renderList();renderTips();bind();
@@ -1933,7 +1981,8 @@ function openSheet(id){
   $('#sheetMeta').textContent=a.label+', '+c.label.toLowerCase()+'  '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);
   var w=$('#sheetWhen');w.textContent=p.when||'';w.style.display=p.when?'inline-block':'none';
   $('#notes').value=p.notes||'';$('#savedHint').textContent='';
-  fillDaySelect($('#sheetDay'));$('#sheetDay').value=p.day||'';
+  fillDaySelect($('#sheetDay'));$('#sheetDay').value=p.day||'';$('#sheetTime').value=p.time||'';
+  var pb=$('#prioBtn');pb.classList.toggle('on',!!p.prio);pb.textContent=p.prio?'★ Must do':'☆ Must do';
   renderNearby(p);
   var ph=$('#sheetPhoto'); if(p.photo){ph.src=p.photo;ph.className='photo'+(p.photo.indexOf('data:image/png')===0?' logo':'');ph.style.display='block';} else {ph.removeAttribute('src');ph.style.display='none';}
   $('#visitBtn').textContent=p.visited?'Visited, undo':'Mark as visited';
@@ -1977,7 +2026,8 @@ function renderList(){
     if(q&&(p.name+' '+(p.jp||'')+' '+(p.notes||'')).toLowerCase().indexOf(q)===-1)return;
     if(f==='planned'&&!p.day)return;
     if(f==='unplanned'&&p.day)return;
-    if(f&&f!=='planned'&&f!=='unplanned'&&p.day!==f)return;
+    if(f==='must'&&!p.prio)return;
+    if(f&&f!=='planned'&&f!=='unplanned'&&f!=='must'&&p.day!==f)return;
     var k=(sortNear&&userPos)?'near':(AREAS[p.area]?p.area:'other');(groups[k]=groups[k]||[]).push(p);
   });
   var any=false;
@@ -2006,6 +2056,60 @@ function renderList(){
 }
 
 var editingTip=null,editingGuide=null,viewingGuide=null;
+var SEED_CHECKS=[
+  ['c-suica','Suica or PASMO added to Apple Wallet and topped up'],
+  ['c-esim','eSIM or pocket wifi ordered'],
+  ['c-vjw','Visit Japan Web filled in, QR code screenshot saved'],
+  ['c-teamlab','teamLab tickets saved as screenshots'],
+  ['c-shink','Shinkansen seats reserved, Tokyo to Kyoto'],
+  ['c-hakone','Hakone ryokan confirmations saved'],
+  ['c-bank','Bank told about Japan, card limits checked'],
+  ['c-cash','Plan for cash: 7-Eleven ATM on day one'],
+  ['c-offline','Offline Google Maps downloaded for Tokyo, Kyoto, Osaka'],
+  ['c-adapter','Plug adapter, type A flat pins, and a power bank'],
+  ['c-shoes','Shoes that slip on and off, socks without holes'],
+  ['c-layers','Layers and a light rain jacket, evenings are cold'],
+  ['c-knifebag','Space in the suitcase for knives, checked luggage only'],
+  ['c-backup','Backup of this app copied to Notes on both phones']
+];
+function checks(){ if(!state.checks)state.checks=[]; return state.checks; }
+function removedChecks(){ if(!state.removedChecks)state.removedChecks=[]; return state.removedChecks; }
+function mergeChecks(){
+  var have={},gone={};
+  checks().forEach(function(c){have[c.id]=1;});removedChecks().forEach(function(id){gone[id]=1;});
+  SEED_CHECKS.forEach(function(s){ if(!have[s[0]]&&!gone[s[0]]) checks().push({id:s[0],text:s[1],done:false}); });
+}
+function renderChecks(){
+  var box=$('#chkList');if(!box)return;box.innerHTML='';
+  var list=checks().slice().sort(function(a,b){return (a.done===b.done)?0:(a.done?1:-1);});
+  list.forEach(function(c){
+    var r=document.createElement('div');r.className='chk-row'+(c.done?' done':'');
+    r.innerHTML='<input type="checkbox" id="chk-'+esc(c.id)+'"'+(c.done?' checked':'')+'><label for="chk-'+esc(c.id)+'">'+esc(c.text)+'</label><button type="button" class="rm" aria-label="Remove">&times;</button>';
+    r.querySelector('input').addEventListener('change',function(){c.done=this.checked;persist();renderChecks();});
+    r.querySelector('.rm').addEventListener('click',function(){
+      if(SEED_CHECKS.some(function(s){return s[0]===c.id;}))removedChecks().push(c.id);
+      state.checks=checks().filter(function(x){return x.id!==c.id;});persist();renderChecks();
+    });
+    box.appendChild(r);
+  });
+  var done=checks().filter(function(c){return c.done;}).length;
+  var h=$('#panel-tools .tool:nth-child(2) h3');if(h)h.textContent='Checklist, '+done+' of '+checks().length+' done';
+}
+function bindTools(){
+  $('#chkAdd').addEventListener('click',function(){
+    var v=$('#chkNew').value.trim();if(!v)return;
+    checks().unshift({id:uid(),text:v,done:false});$('#chkNew').value='';persist();renderChecks();
+  });
+  $('#chkNew').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('#chkAdd').click();}});
+  var yen=$('#cvYen'),dkk=$('#cvDkk'),rate=$('#cvRate');
+  function r(){var v=parseFloat(String(rate.value).replace(',','.'));return isNaN(v)||v<=0?null:v;}
+  rate.value=state.rate||'';
+  function note(){$('#cvNote').textContent=r()?'':'Enter the rate once, for example from a bank app';}
+  note();
+  rate.addEventListener('input',function(){state.rate=rate.value;persist();note();if(yen.value)yen.dispatchEvent(new Event('input'));});
+  yen.addEventListener('input',function(){var v=parseFloat(String(yen.value).replace(',','.')),k=r();dkk.value=(isNaN(v)||!k)?'':(v*k/100).toFixed(2);});
+  dkk.addEventListener('input',function(){var v=parseFloat(String(dkk.value).replace(',','.')),k=r();yen.value=(isNaN(v)||!k)?'':Math.round(v/k*100);});
+}
 function guides(){ if(!state.guides)state.guides=[]; return state.guides; }
 function removedGuides(){ if(!state.removedGuides)state.removedGuides=[]; return state.removedGuides; }
 function mergeGuides(){
@@ -2160,7 +2264,16 @@ function renderNearby(p){
     row.appendChild(b);
   });
 }
+function tripStatus(){
+  var t=todayIso();
+  var d0=new Date(TRIP_START+'T12:00:00'),d1=new Date(TRIP_END+'T12:00:00'),dn=new Date(t+'T12:00:00');
+  var daysTo=Math.round((d0-dn)/86400000),total=Math.round((d1-d0)/86400000)+1;
+  if(t<TRIP_START)return daysTo===1?'Tomorrow. Florian & Lendita':daysTo+' days to go. Florian & Lendita';
+  if(t<=TRIP_END)return 'Day '+(Math.round((dn-d0)/86400000)+1)+' of '+total+', '+dayHint(t);
+  return 'Florian & Lendita, 10 Nov to 1 Dec';
+}
 function bindDays(){
+  $('#subTitle').textContent=tripStatus();
   $('#dayClear').addEventListener('click',function(){setDay(null);});
   $('#dayPrev').addEventListener('click',function(){if(activeDay&&activeDay>TRIP_START)setDay(addDays(activeDay,-1),true);});
   $('#dayNext').addEventListener('click',function(){if(activeDay&&activeDay<TRIP_END)setDay(addDays(activeDay,1),true);});
@@ -2187,7 +2300,7 @@ function renderDays(){
           wrap.appendChild(leg);
         }
         var r=document.createElement('div');r.className='stop-row';
-        r.innerHTML='<span class="n">'+(i+1)+'</span><button type="button" class="name">'+esc(p.name)+(p.visited?' ✓':'')+'</button><button type="button" class="mv up" '+(i===0?'disabled':'')+'>▲</button><button type="button" class="mv down" '+(i===list.length-1?'disabled':'')+'>▼</button>';
+        r.innerHTML='<span class="n">'+(i+1)+'</span><span class="t">'+esc(p.time||'')+'</span><button type="button" class="name">'+esc(p.name)+(p.visited?' ✓':'')+'</button><button type="button" class="mv up" '+(i===0?'disabled':'')+'>▲</button><button type="button" class="mv down" '+(i===list.length-1?'disabled':'')+'>▼</button>';
         r.querySelector('.name').addEventListener('click',function(){closeDrawer();setDay(d,false);map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);});
         r.querySelector('.up').addEventListener('click',function(){swapOrder(list,i,i-1);});
         r.querySelector('.down').addEventListener('click',function(){swapOrder(list,i,i+1);});
@@ -2197,6 +2310,9 @@ function renderDays(){
       var show=document.createElement('button');show.className='btn small primary';show.textContent='Show this day on the map';show.type='button';
       show.addEventListener('click',function(){closeDrawer();setDay(d,true);});
       act.appendChild(show);
+      var sh=document.createElement('button');sh.className='btn small';sh.textContent='Share as text';sh.type='button';
+      sh.addEventListener('click',function(){shareDay(d);});
+      act.appendChild(sh);
       if(list.length>2){
         var opt=document.createElement('button');opt.className='btn small';opt.textContent='Shortest route';opt.type='button';
         opt.addEventListener('click',function(){shortestRoute(d);});
@@ -2223,6 +2339,23 @@ function shortestRoute(iso){
   out.forEach(function(p,i){p.order=i;});
   persist();renderDays();if(activeDay===iso)setDay(iso,false);
   toast(after<before-50?'Reordered, about '+fmtDist(before-after).split(',')[0]+' shorter':'Order kept, it was already the shortest');
+}
+function dayText(iso){
+  var list=dayPlaces(iso);
+  var out=[dayLabel(iso,true)+', '+dayHint(iso)];
+  list.forEach(function(p,i){
+    var line=(i+1)+'. '+(p.time?p.time+' ':'')+p.name+(p.jp?' ('+p.jp+')':'');
+    if(p.when)line+=' | '+p.when;
+    out.push(line);
+    if(i<list.length-1)out.push('   '+fmtDist(distM([p.lat,p.lng],[list[i+1].lat,list[i+1].lng]))+' to next');
+  });
+  if(!list.length)out.push('Nothing planned yet.');
+  return out.join('\n');
+}
+function shareDay(iso){
+  var text=dayText(iso);
+  if(navigator.share){navigator.share({title:'Japan '+dayLabel(iso,true),text:text}).catch(function(){});return;}
+  copyText(text,function(ok){toast(ok?'Day copied as text':'Could not copy here');});
 }
 function swapOrder(list,i,j){
   if(j<0||j>=list.length)return;
@@ -2402,7 +2535,7 @@ function openForm(p){
   $('#fIcon').value=p?(p.icon||''):'';markEmoji();
   $('#fLat').value=p?p.lat:'';$('#fLng').value=p?p.lng:'';
   $('#fWhen').value=p?(p.when||''):'';$('#fNotes').value=p?(p.notes||''):'';
-  $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';
+  $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';$('#fTime').value=p?(p.time||''):'';
   $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#imgErr').textContent='';
   $('#deleteWrap').style.display=p?'':'none';$('#deleteBtn').textContent='Delete this place';pendingDelete=null;
   formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderPhotoPreview();renderLib();
@@ -2415,7 +2548,7 @@ function saveFormData(){
   var name=$('#fName').value.trim(),lat=parseFloat($('#fLat').value),lng=parseFloat($('#fLng').value);
   if(!name){$('#formErr').textContent='Give the place a name.';return;}
   if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){$('#formErr').textContent='Set where it is: pick on map, use map centre, or enter coordinates.';return;}
-  var data={name:name,jp:$('#fJp').value.trim(),area:$('#fArea').value,cat:$('#fCat').value,icon:$('#fIcon').value.trim()||CATS[$('#fCat').value].icon,lat:+lat.toFixed(5),lng:+lng.toFixed(5),when:$('#fWhen').value.trim(),notes:$('#fNotes').value,img:formImg||'',photo:formPhoto||'',day:$('#fDay').value||''};
+  var data={name:name,jp:$('#fJp').value.trim(),area:$('#fArea').value,cat:$('#fCat').value,icon:$('#fIcon').value.trim()||CATS[$('#fCat').value].icon,lat:+lat.toFixed(5),lng:+lng.toFixed(5),when:$('#fWhen').value.trim(),notes:$('#fNotes').value,img:formImg||'',photo:formPhoto||'',day:$('#fDay').value||'',time:$('#fTime').value||''};
   var id,wasEdit=!!editingId;
   var prevDay=editingId?(byId(editingId).day||''):'';
   if(editingId){var p=byId(editingId);Object.assign(p,data);id=p.id;}
@@ -2605,7 +2738,7 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
@@ -2613,13 +2746,14 @@ function importJson(text){
   var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
   if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';
   $('#importErr').textContent='';$('#importText').value='';
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
 
 function bind(){
-  $('#menuBtn').addEventListener('click',function(){renderList();renderDays();renderGuides();openDrawer();});
+  $('#menuBtn').addEventListener('click',function(){renderList();renderDays();renderGuides();renderChecks();openDrawer();});
+  bindTools();
   $('#closeDrawer').addEventListener('click',closeDrawer);
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
@@ -2664,6 +2798,13 @@ function bind(){
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
   $('#sheetDay').addEventListener('change',function(){var p=byId(selectedId);if(p)assignDay(p,this.value);});
+  $('#sheetTime').addEventListener('change',function(){var p=byId(selectedId);if(!p)return;p.time=this.value||'';persist();renderDays();});
+  $('#prioBtn').addEventListener('click',function(){
+    var p=byId(selectedId);if(!p)return;
+    p.prio=p.prio?0:1;persist();
+    this.classList.toggle('on',!!p.prio);this.textContent=p.prio?'★ Must do':'☆ Must do';
+    refreshMarker(p.id);renderList();toast(p.prio?'Marked as must do':'Removed from must do');
+  });
   $('#noteSave').addEventListener('click',function(){closeTipEditor(true);});
   $('#guideBack').addEventListener('click',closeGuide);
   $('#guideEdit').addEventListener('click',function(){editGuide(viewingGuide);});
@@ -2739,7 +2880,7 @@ function bind(){
     if(pendingReset===null){pendingReset=1;$('#resetBtn').textContent='Tap again to replace everything';setTimeout(function(){pendingReset=null;$('#resetBtn').textContent='Reset to starter list';},3000);return;}
     pendingReset=null;$('#resetBtn').textContent='Reset to starter list';
     state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
-    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();
+    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();state.checks=[];state.removedChecks=[];mergeChecks();
     persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('tokyo');toast('Starter list restored');
   });
   document.addEventListener('keydown',function(e){
