@@ -231,6 +231,16 @@ body.dark .who-seg button.on,body.dark .bar i{color:#0F1220}
 .hours-note{font-size:12px;color:var(--muted);margin:0 0 8px}
 .toast button{margin-left:10px;color:#FFD9A8;font-weight:700;text-decoration:underline;pointer-events:auto;padding:4px 2px}
 .tabbar button .dot{position:absolute;margin-left:22px;margin-top:-30px;width:9px;height:9px;border-radius:50%;background:var(--shu)}
+.pinwrap .nm{position:absolute;top:36px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:600;color:var(--ink);background:rgba(255,255,255,.85);padding:1px 6px;border-radius:6px;pointer-events:none;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+body.dark .pinwrap .nm{background:rgba(24,27,34,.85);color:#EDEDF0}
+.pin.dim + .nm{opacity:.35}
+.hotelbtn{position:absolute;right:14px;bottom:calc(140px + var(--tb));z-index:20;width:44px;height:44px;border-radius:50%;background:var(--paper);border:1px solid var(--line);box-shadow:0 2px 8px rgba(27,31,42,.2);display:flex;align-items:center;justify-content:center;font-size:19px}
+@media (min-width:700px){.hotelbtn{right:16px;bottom:calc(134px + var(--tb))}}
+.chip.util{background:var(--washi)}
+.notehead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.notehead label{margin:0}
+.notehead button{font-size:12px;font-weight:600;color:var(--indigo);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--paper)}
+.notestat{font-size:12px;color:var(--muted);margin-top:4px;min-height:14px}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
 .sort-row button{padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12px}
 .sort-row button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -458,6 +468,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="daybar" id="dayBar"><b id="dayLabel"></b><span id="dayCount"></span><span class="wx" id="dayWx"></span><span class="spacer"></span><button id="dayPrev" type="button">&lsaquo;</button><button id="dayNext" type="button">&rsaquo;</button><button id="dayClear" type="button">Clear</button></div>
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
+  <button class="hotelbtn" id="hotelBtn" type="button" aria-label="Tonight's hotel">🏨</button>
   <div class="searchwrap" id="searchWrap">
     <div class="row"><input id="mapSearch" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off"><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
     <div class="sres" id="searchRes"></div>
@@ -481,6 +492,9 @@ body.picking .top,body.picking .fab{display:none}
     <hr>
     <button type="button" data-overlay="TransitLayer"><span class="tick"></span>Train lines</button>
     <button type="button" data-overlay="TrafficLayer"><span class="tick"></span>Traffic</button>
+    <hr>
+    <button type="button" data-opt="clean"><span class="tick"></span>Hide Google's own pins</button>
+    <button type="button" data-opt="lines"><span class="tick">✓</span>Yamanote and Hakone lines</button>
   </div>
 
   <section class="sheet" id="sheet" aria-live="polite">
@@ -531,7 +545,7 @@ body.picking .top,body.picking .fab{display:none}
       <button data-panel="tools" role="tab">Tools</button>
       <button data-panel="bookings" role="tab">Bookings</button>
       <button data-panel="journal" role="tab">Journal</button>
-      <button data-panel="tips" role="tab">Nice to know</button>
+
       <button data-panel="data" role="tab">Backup</button>
     </div>
     <div class="panel on" id="panel-places">
@@ -547,6 +561,7 @@ body.picking .top,body.picking .fab{display:none}
     <div class="panel" id="panel-guides">
       <p class="note">Longer reads. Open one, edit it, or write your own.</p>
       <button type="button" class="guide-row" id="signOpen"><span class="g">🈁</span><div><b>Signs you will see</b><small>136 words from stations, menus, shops and onsen. Search in English or Japanese.</small></div><span style="color:var(--muted)">&rsaquo;</span></button>
+      <button type="button" class="guide-row" id="tipsOpen"><span class="g">💡</span><div><b>Nice to know</b><small>Short notes by type: food, shrines, shopping, onsen, and your own.</small></div><span style="color:var(--muted)">&rsaquo;</span></button>
       <button type="button" class="guide-row" id="phraseOpen"><span class="g">🗣️</span><div><b>Phrasebook</b><small>55 phrases. Tap one and it fills the screen in Japanese.</small></div><span style="color:var(--muted)">&rsaquo;</span></button>
       <div id="guideList"></div>
       <div class="inline-btns" style="margin-top:14px"><button class="btn" id="guideNew" type="button">Write a new guide</button></div>
@@ -599,10 +614,7 @@ body.picking .top,body.picking .fab{display:none}
         <div class="addr">Royal Danish Embassy<br>29-6 Sarugaku-cho, Shibuya-ku, Tokyo 150-0033<br>デンマーク大使館 東京都渋谷区猿楽町29-6</div>
       </div>
     </div>
-    <div class="panel" id="panel-tips">
-      <p class="note">Starter notes to edit. Nothing here is verified, so check the official site before relying on hours, prices or rules.</p>
-      <div id="tipList"></div>
-    </div>
+
     <div class="panel" id="panel-data">
       <p class="note" id="storageNote">Checking where notes are saved.</p>
       <p class="note">Use this page to move the list to another phone or to keep a copy.</p>
@@ -654,6 +666,13 @@ body.picking .top,body.picking .fab{display:none}
     </div>
   </aside>
 
+  <div class="guide-view" id="tipsView" role="dialog" aria-modal="true">
+    <div class="modal-head"><button class="btn" id="tipsBack" type="button">Back</button><h2 style="font-size:15px;text-align:center;flex:1">Nice to know</h2><span style="width:60px"></span></div>
+    <div class="guide-body" style="white-space:normal">
+      <p class="note">Short notes by type. Tap Edit on a section to change it; nothing here is verified, so check the official site before relying on hours, prices or rules.</p>
+      <div id="tipList"></div>
+    </div>
+  </div>
   <div class="guide-view" id="sgView" role="dialog" aria-modal="true">
     <div class="modal-head"><button class="btn" id="sgBack" type="button">Back</button><h2 style="font-size:15px;text-align:center;flex:1">Signs you will see</h2><span style="width:60px"></span></div>
     <div style="padding:10px 16px 0"><input class="sg-search" id="sgSearch" type="search" placeholder="Search: exit, 出口, reserved seat" autocomplete="off"></div>
@@ -787,7 +806,7 @@ body.picking .top,body.picking .fab{display:none}
       <div class="field"><label for="fWhen">When or status (optional)</label><input id="fWhen" placeholder="12 Nov, tickets booked"></div>
       <div class="field"><label for="fHours">Opening hours (optional)</label><input id="fHours" placeholder="09:00 to 17:00, last entry 16:30"></div>
       <div class="field"><label>Closed on</label><div class="dayseg" id="fClosed"></div></div>
-      <div class="field"><label for="fNotes">Notes</label><textarea id="fNotes"></textarea></div>
+      <div class="field"><div class="notehead"><label for="fNotes">Notes</label><button type="button" id="autoNoteBtn">Write a note for me</button></div><textarea id="fNotes"></textarea><div class="notestat" id="noteStat"></div></div>
       <div class="field" id="deleteWrap" style="display:none"><button class="btn danger" id="deleteBtn" type="button">Delete this place</button></div>
     </div>
   </div>
@@ -1897,7 +1916,8 @@ function pinHtml(p,extra,onMap){
   return '<div class="pin'+(p.visited?' visited':'')+(p.img?' has-img':'')+cls+(extra||'')+'" style="--c:'+c.color+'">'+inner+'<em class="chk">✓</em>'+num+(p.prio?'<em class="star">★</em>':'')+'</div>';
 }
 function iconFor(p){
-  return L.divIcon({className:'pinwrap',iconSize:[34,34],iconAnchor:[17,17],html:pinHtml(p,p.id===selectedId?' sel':'',true)});
+  var z=map?map.getZoom():12;var label=(z>=15||(activeDay&&p.day===activeDay&&z>=13))?'<span class="nm">'+esc(p.name)+'</span>':'';
+  return L.divIcon({className:'pinwrap',iconSize:[34,34],iconAnchor:[17,17],html:pinHtml(p,p.id===selectedId?' sel':'',true)+label});
 }
 
 function init(){
@@ -1948,6 +1968,14 @@ function buildMap(){
   if(getGoogleKey()) setTimeout(enableGoogle,50);
   layer=L.layerGroup().addTo(map);
   map.on('click',onMapClick);
+  map.on('contextmenu',function(e){
+    if(pickMode)return;
+    closeSheet();
+    openForm(null);
+    $('#fLat').value=e.latlng.lat.toFixed(5);$('#fLng').value=e.latlng.lng.toFixed(5);
+    $('#fArea').value=guessArea(e.latlng.lat,e.latlng.lng);
+    $('#geoResults').innerHTML='<p>Spot taken from the map. Give it a name, or Search by name to fill in the rest.</p>';
+  });
   map.on('zoomend',function(){ renderMarkers(); });
 }
 
@@ -1955,7 +1983,8 @@ function buildMap(){
    a "Street detail" toggle appears that overlays live OpenStreetMap tiles. Those tiles are drawn in the local
    language (Japanese), so the English station and ward labels from the embedded map stay on top of them. */
 var tilesOn=false,tileLayer=null,tilesAvailable=false;
-var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={};
+var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={},gClean=false,linesOn=true;
+var CLEAN_STYLE=[{featureType:'poi',stylers:[{visibility:'off'}]},{featureType:'transit.station',elementType:'labels.icon',stylers:[{visibility:'simplified'}]}];
 function getGoogleKey(){ if(GOOGLE_MAPS_KEY)return GOOGLE_MAPS_KEY; try{return window.localStorage.getItem(GKEY_STORE)||'';}catch(e){return '';} }
 function setGoogleKey(k){ try{ if(k)window.localStorage.setItem(GKEY_STORE,k); else window.localStorage.removeItem(GKEY_STORE); return true; }catch(e){ return false; } }
 function gStatus(msg){ var el=$('#gStatus'); if(el)el.textContent=msg; }
@@ -1982,7 +2011,7 @@ function enableGoogle(){
       return;
     }
     try{
-      if(!googleLayer) googleLayer=L.gridLayer.googleMutant({type:gType,maxZoom:20});
+      if(!googleLayer) googleLayer=L.gridLayer.googleMutant({type:gType,maxZoom:20,styles:gClean?CLEAN_STYLE:[]});
       if(tilesOn) setTiles(false);
       googleLayer.addTo(map); googleOn=true; map.setMaxZoom(20);
       baseGroups.forEach(function(g){ g.hidden=!g.keep; });
@@ -1997,24 +2026,29 @@ function enableGoogle(){
   });
 }
 function setMapType(t){
-  if(!googleOn||!googleLayer)return;
+  if(!googleOn||!googleLayer){toast('Needs Google Maps: More, Backup, Google Maps.');return;}
   gType=t;
   var keep=gOverlays;
   map.removeLayer(googleLayer);
-  googleLayer=L.gridLayer.googleMutant({type:gType,maxZoom:20});
+  googleLayer=L.gridLayer.googleMutant({type:gType,maxZoom:20,styles:gClean?CLEAN_STYLE:[]});
   googleLayer.addTo(map);
   Object.keys(keep).forEach(function(k){ if(keep[k]) try{ googleLayer.addGoogleLayer(k); }catch(e){} });
   syncMapMenu();
 }
 function toggleOverlay(name){
-  if(!googleOn||!googleLayer){toast('Turn on Google Maps first (List, Backup, Google Maps).');return;}
+  if(!googleOn||!googleLayer){toast('Needs Google Maps: More, Backup, Google Maps.');return;}
   if(gOverlays[name]){ try{ googleLayer.removeGoogleLayer(name); }catch(e){} gOverlays[name]=false; }
   else { try{ googleLayer.addGoogleLayer(name); gOverlays[name]=true; }catch(e){ toast('That layer could not be added.'); } }
   syncMapMenu();
 }
+function setOption(name){
+  if(name==='clean'){gClean=!gClean;if(googleOn)setMapType(gType);}
+  if(name==='lines'){linesOn=!linesOn;baseGroups.forEach(function(g){if(g.keep)g.forceHide=!linesOn;});syncBaseGroups();}
+  syncMapMenu();
+}
 function syncMapMenu(){
   document.querySelectorAll('#mapMenu button').forEach(function(b){
-    var on=b.dataset.type?(b.dataset.type===gType):!!gOverlays[b.dataset.overlay];
+    var on=b.dataset.type?(b.dataset.type===gType):b.dataset.opt?(b.dataset.opt==='clean'?gClean:linesOn):!!gOverlays[b.dataset.overlay];
     b.classList.toggle('on',on);
     b.querySelector('.tick').textContent=on?'✓':'';
   });
@@ -2025,7 +2059,7 @@ function disableGoogle(clearKey){
   googleOn=false; map.setMaxZoom(17);
   baseGroups.forEach(function(g){ g.hidden=false; }); syncBaseGroups();
   $('#streetsBtn').style.display='';
-  $('#mapBtn').classList.remove('avail');$('#mapMenu').classList.remove('on');
+  $('#mapMenu').classList.remove('on');
   map.getContainer().style.background='#C6DBE7';
   gStatus(clearKey?'Key removed. The built-in map is in use.':'The built-in map is in use.');
 }
@@ -2033,6 +2067,7 @@ function probeTiles(){
   var img=new Image(),done=false;
   var t=setTimeout(function(){done=true;},6000);
   img.onload=function(){if(done)return;done=true;clearTimeout(t);tilesAvailable=true;$('#streetsBtn').classList.add('avail');};
+  $('#mapBtn').classList.add('avail');
   img.onerror=function(){done=true;clearTimeout(t);};
   img.src='https://tile.openstreetmap.org/12/3638/1612.png';
 }
@@ -2055,7 +2090,7 @@ function setTiles(on){
 function syncBaseGroups(){
   var z=map.getZoom();
   baseGroups.forEach(function(g){
-    var want=!g.hidden&&z>=g.min&&(!g.max||z<=g.max);
+    var want=!g.hidden&&!g.forceHide&&z>=g.min&&(!g.max||z<=g.max);
     if(want&&!g.on){map.addLayer(g.layer);g.on=true;}
     else if(!want&&g.on){map.removeLayer(g.layer);g.on=false;}
   });
@@ -2236,8 +2271,12 @@ function setArea(k){
 }
 
 var chipsBound=false;
+var hideVisited=false;
 function buildChips(){
   var box=$('#chips');box.innerHTML='';
+  var hv=document.createElement('button');hv.className='chip util'+(hideVisited?'':' off');hv.dataset.util='visited';hv.innerHTML='<i style="background:var(--shu)"></i>Hide visited';
+  hv.addEventListener('click',function(){hideVisited=!hideVisited;hv.classList.toggle('off',!hideVisited);renderMarkers();toast(hideVisited?'Visited places hidden on the map':'Showing everything');});
+  box.appendChild(hv);
   CAT_ORDER.forEach(function(k){
     var b=document.createElement('button');b.className='chip'+(state.hidden.indexOf(k)>-1?' off':'');b.dataset.cat=k;
     b.style.setProperty('--c',CATS[k].color);b.innerHTML='<i></i>'+esc(CATS[k].label);
@@ -2293,7 +2332,7 @@ function renderMarkers(){
     });
     return;
   }
-  var shown=state.places.filter(function(p){return state.hidden.indexOf(p.cat)===-1&&typeof p.lat==='number'&&typeof p.lng==='number';});
+  var shown=state.places.filter(function(p){return state.hidden.indexOf(p.cat)===-1&&typeof p.lat==='number'&&typeof p.lng==='number'&&!(hideVisited&&p.visited&&p.id!==selectedId);});
   var z=map.getZoom(),bunches=[];
   if(z<16){
     /* group pins that would overlap on screen; the selected pin and the active day's pins stay single */
@@ -3434,7 +3473,7 @@ function openForm(p){
   $('#fWhen').value=p?(p.when||''):'';$('#fNotes').value=p?(p.notes||''):'';
   $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';$('#fTime').value=p?(p.time||''):'';
   $('#fHours').value=p?(p.hours||''):'';formClosed=(p&&Array.isArray(p.closed))?p.closed.slice():[];renderClosedSeg();
-  $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#formErr').dataset.dupeOk='';$('#imgErr').textContent='';
+  $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#formErr').dataset.dupeOk='';$('#imgErr').textContent='';$('#noteStat').textContent='';if(!p)lastHit=null;
   $('#deleteWrap').style.display=p?'':'none';$('#deleteBtn').textContent='Delete this place';pendingDelete=null;
   formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderPhotoPreview();renderLib();
   closeSheet();closeDrawer();
@@ -3471,7 +3510,7 @@ var geoTimer=null,geoSeq=0;
 function geoLookup(q,cb){
   var seq=++geoSeq;
   var c=map.getCenter();
-  var url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=jp&namedetails=1&accept-language=en&q='+encodeURIComponent(q)
+  var url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=jp&namedetails=1&extratags=1&accept-language=en&q='+encodeURIComponent(q)
     +'&viewbox='+(c.lng-1.2)+','+(c.lat+0.9)+','+(c.lng+1.2)+','+(c.lat-0.9);
   fetch(url,{headers:{'Accept':'application/json'}})
     .then(function(r){return r.json();})
@@ -3482,7 +3521,10 @@ function mapHit(r){
   var nd=r.namedetails||{};
   var name=nd['name:en']||r.name||(r.display_name||'').split(',')[0];
   var addr=(r.display_name||'').split(',').slice(1,4).join(',').trim();
-  return {name:name,jp:nd['name:ja']||'',addr:addr,lat:+r.lat,lng:+r.lon,kind:(r.type||r.category||'')};
+  var x=r.extratags||{};
+  return {name:name,jp:nd['name:ja']||'',addr:addr,lat:+r.lat,lng:+r.lon,kind:(r.type||r.category||''),
+    hours:x.opening_hours||'',cuisine:x.cuisine||'',website:x.website||x['contact:website']||'',phone:x.phone||x['contact:phone']||'',
+    fee:x.fee||'',wikidata:x.wikidata||'',wikipedia:x.wikipedia||''};
 }
 function typeIcon(kind,name){
   var c=guessCat(name+' '+kind);
@@ -3565,6 +3607,7 @@ function runSearch(){
     });
   },450);
 }
+var lastHit=null;
 function addFromHit(hit){
   closeSearch();
   var c=guessCat(hit.name+' '+hit.kind);
@@ -3575,6 +3618,64 @@ function addFromHit(hit){
   $('#fArea').value=guessArea(hit.lat,hit.lng);
   renderImgPreview();
   $('#geoResults').innerHTML='<p>Found on the map of Japan. Check the type and day, then Save.</p>';
+  lastHit=hit;
+  if(hit.hours&&!$('#fHours').value)$('#fHours').value=hit.hours;
+  if(!$('#fNotes').value.trim())setTimeout(autoNote,150);
+}
+/* One-line practical hint per type, appended to generated notes. */
+var CAT_HINT={food:'Likely cash. Go before 12 or after 14 to skip the queue. No tipping.',shrine:'Bow at the gate, rinse hands at the basin, check for photo rules inside. Most close by 17:00.',art:'Check for timed tickets and last entry, usually 30 minutes before closing.',nature:'Best light early or the hour before sunset. Sunset is around 16:40 in November.',shopping:'Bring the passport for tax free. Ask about engraving or gift wrapping.',experience:'Confirm the booking the day before and arrive 10 minutes early.',hotel:'Check in from about 15:00. Ask reception about luggage forwarding.',other:''};
+function firstSentences(t,max){
+  var s=(t||'').replace(/\s+/g,' ').trim();if(!s)return '';
+  var parts=s.match(/[^.!?]+[.!?]+(\s|$)/g)||[s];
+  var out='';for(var i=0;i<parts.length;i++){if((out+parts[i]).length>max&&out)break;out+=parts[i];}
+  return out.trim();
+}
+function wikiTitle(hit,name){
+  if(hit&&hit.wikipedia&&hit.wikipedia.indexOf('en:')===0)return Promise.resolve(hit.wikipedia.slice(3));
+  if(hit&&hit.wikidata){
+    return fetch('https://www.wikidata.org/w/api.php?action=wbgetentities&ids='+encodeURIComponent(hit.wikidata)+'&props=sitelinks&sitefilter=enwiki&format=json&origin=*')
+      .then(function(r){return r.json();}).then(function(js){var e=js.entities&&js.entities[hit.wikidata];var t=e&&e.sitelinks&&e.sitelinks.enwiki&&e.sitelinks.enwiki.title;return t||null;}).catch(function(){return null;});
+  }
+  return Promise.resolve(null);
+}
+function wikiSearch(name){
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch='+encodeURIComponent(name+' Japan')+'&format=json&srlimit=3&origin=*')
+    .then(function(r){return r.json();}).then(function(js){
+      var hits=(js.query&&js.query.search)||[];var n=name.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ');
+      var best=hits.filter(function(h){var t=h.title.toLowerCase();return n.filter(function(w){return w.length>2&&t.indexOf(w)>-1;}).length>=Math.min(2,n.length);})[0];
+      return best?best.title:null;
+    }).catch(function(){return null;});
+}
+function wikiSummary(title){
+  return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(title.replace(/ /g,'_')))
+    .then(function(r){return r.ok?r.json():null;}).then(function(js){return js&&js.type!=='disambiguation'?(js.extract||''):'';}).catch(function(){return '';});
+}
+function autoNote(){
+  var name=$('#fName').value.trim();if(!name){$('#noteStat').textContent='Give the place a name first.';return;}
+  var cat=$('#fCat').value,hit=lastHit&&lastHit.name&&lastHit.name.toLowerCase()===name.toLowerCase()?lastHit:(lastHit||{});
+  var st=$('#noteStat');st.textContent='Writing a note';
+  var btn=$('#autoNoteBtn');btn.disabled=true;
+  wikiTitle(hit,name).then(function(t){return t?t:wikiSearch(name);}).then(function(title){return title?wikiSummary(title):'';}).then(function(extract){
+    var lines=[];
+    var summary=firstSentences(extract,320);
+    if(summary)lines.push(summary);
+    var practical=[];
+    if(hit.cuisine)practical.push(hit.cuisine.split(';').map(function(c){return c.replace(/_/g,' ');}).join(', ').replace(/^./,function(c){return c.toUpperCase();}));
+    if(hit.fee==='no')practical.push('Free entry');else if(hit.fee==='yes')practical.push('Entry fee');
+    if(hit.hours)practical.push('Hours: '+hit.hours);
+    if(hit.website)practical.push(hit.website.replace(/^https?:\/\//,'').replace(/\/$/,''));
+    if(hit.phone)practical.push(hit.phone);
+    if(practical.length)lines.push(practical.join('. ')+'.');
+    if(CAT_HINT[cat])lines.push(CAT_HINT[cat]);
+    if(!lines.length){st.textContent='Nothing found for that name. Try Search by name first so the note has something to work with.';btn.disabled=false;return;}
+    var existing=$('#fNotes').value.trim();
+    $('#fNotes').value=(existing?existing+'\n\n':'')+lines.join('\n');
+    if(hit.hours&&!$('#fHours').value)$('#fHours').value=hit.hours;
+    st.textContent=(summary?'From Wikipedia and OpenStreetMap. ':'From OpenStreetMap and the place type. ')+'Edit anything.';
+    btn.disabled=false;
+  }).catch(function(){
+    st.textContent='Needs the internet. Works in Safari and the home screen app, not inside Claude.';btn.disabled=false;
+  });
 }
 function geocode(){
   var q=$('#fName').value.trim();var box=$('#geoResults');
@@ -3591,8 +3692,10 @@ function geocode(){
         $('#fLat').value=hit.lat.toFixed(5);$('#fLng').value=hit.lng.toFixed(5);
         if(!$('#fName').value.trim()||$('#fName').value.trim().toLowerCase()===q.toLowerCase())$('#fName').value=hit.name;
         if(hit.jp&&!$('#fJp').value.trim())$('#fJp').value=hit.jp;
-        $('#fArea').value=guessArea(hit.lat,hit.lng);
+        $('#fArea').value=guessArea(hit.lat,hit.lng);lastHit=hit;
+        if(hit.hours&&!$('#fHours').value)$('#fHours').value=hit.hours;
         box.innerHTML='<p>Location set from '+esc(hit.name)+'.</p>';
+        if(!$('#fNotes').value.trim())setTimeout(autoNote,150);
       });
       box.appendChild(b);
     });
@@ -3701,7 +3804,7 @@ function bind(){
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click',function(){
-      if(['tools','bookings','journal','tips','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
+      if(['tools','bookings','journal','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
       if(b.dataset.panel==='tools')renderChecks();
       if(b.dataset.panel==='journal')renderJournal();
       if(b.dataset.panel==='bookings')renderBookings();
@@ -3753,6 +3856,17 @@ function bind(){
   });
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
+  $('#hotelBtn').addEventListener('click',function(){
+    var t=todayIso();
+    var stay=bookings().filter(function(b){return b.type==='hotel'&&b.date&&b.end&&t>=b.date&&t<b.end;})[0]
+      ||bookings().filter(function(b){return b.type==='hotel'&&b.date&&b.date>=t;}).sort(function(a,b){return a.date<b.date?-1:1;})[0]
+      ||bookings().filter(function(b){return b.type==='hotel';})[0];
+    var p=stay&&stay.placeId?byId(stay.placeId):null;
+    if(!p)p=state.places.filter(function(q){return q.cat==='hotel';})[0];
+    if(!p){toast('No hotel on the list yet. Add one with the hotel type.');return;}
+    showPage('map');if(state.hidden.indexOf(p.cat)>-1){state.hidden.splice(state.hidden.indexOf(p.cat),1);buildChips();renderMarkers();}
+    map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);
+  });
   $('#sheetDay').addEventListener('change',function(){var p=byId(selectedId);if(p)assignDay(p,this.value);});
   $('#sheetSpent').addEventListener('input',function(){var p=byId(selectedId);if(!p)return;p.spent=this.value.replace(/[^0-9]/g,'');$('#spentDkk').textContent=spentDkk(p.spent);clearTimeout(noteTimer);noteTimer=setTimeout(function(){syncPlaceExpense(p);persist();},400);});
   $('#sheetTime').addEventListener('change',function(){var p=byId(selectedId);if(!p)return;p.time=this.value||'';persist();renderDays();});
@@ -3765,6 +3879,8 @@ function bind(){
   $('#noteSave').addEventListener('click',function(){closeTipEditor(true);});
   $('#guideBack').addEventListener('click',closeGuide);
   $('#phraseOpen').addEventListener('click',function(){renderPhrases();$('#phView').classList.add('open');});
+  $('#tipsOpen').addEventListener('click',function(){renderTips();$('#tipsView').classList.add('open');});
+  $('#tipsBack').addEventListener('click',function(){$('#tipsView').classList.remove('open');window.scrollTo(0,0);});
   $('#phBack').addEventListener('click',function(){$('#phView').classList.remove('open');window.scrollTo(0,0);});
   $('#guideEdit').addEventListener('click',function(){editGuide(viewingGuide);});
   $('#guideNew').addEventListener('click',function(){editGuide(null);});
@@ -3778,7 +3894,7 @@ function bind(){
   $('#mapBtn').addEventListener('click',function(e){e.stopPropagation();$('#mapMenu').classList.toggle('on');});
   $('#mapMenu').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
-    if(b.dataset.type){setMapType(b.dataset.type);$('#mapMenu').classList.remove('on');} else toggleOverlay(b.dataset.overlay);
+    if(b.dataset.type){setMapType(b.dataset.type);$('#mapMenu').classList.remove('on');} else if(b.dataset.opt){setOption(b.dataset.opt);} else toggleOverlay(b.dataset.overlay);
   });
   map.on('click',function(){$('#mapMenu').classList.remove('on');});
   $('#gKey').value=getGoogleKey()&&!GOOGLE_MAPS_KEY?getGoogleKey():'';
@@ -3812,6 +3928,7 @@ function bind(){
   $('#cancelPick').addEventListener('click',function(){endPick();$('#modal').classList.add('open');});
   $('#centerBtn').addEventListener('click',function(){var c=map.getCenter();$('#fLat').value=c.lat.toFixed(5);$('#fLng').value=c.lng.toFixed(5);$('#geoResults').innerHTML='<p>Set to the map centre.</p>';});
   $('#geoBtn').addEventListener('click',geocode);
+  $('#autoNoteBtn').addEventListener('click',autoNote);
   $('#fName').addEventListener('input',function(){
     if($('#fLat').value)return;
     clearTimeout(geoTimer);
@@ -3863,7 +3980,8 @@ function bind(){
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
-    if($('#sgView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#sgView').classList.remove('open');
+    if($('#tipsView').classList.contains('open')&&!$('#noteEditor').classList.contains('open'))$('#tipsView').classList.remove('open');
+    else if($('#sgView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#sgView').classList.remove('open');
     else if($('#phView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#phView').classList.remove('open');
     else if($('#bkModal').classList.contains('open')){$('#bkModal').classList.remove('open');editingBooking=null;}
     else if($('#bkView').classList.contains('open'))closeBooking();

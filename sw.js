@@ -1,5 +1,5 @@
 /* Caches the app shell so the app opens without a connection. Map tiles are fetched live and kept only as a small fallback cache. */
-var SHELL_CACHE='japan-map-shell-v23';
+var SHELL_CACHE='japan-map-shell-v25';
 var TILE_CACHE='japan-map-tiles-v1';
 var SHELL=[
   './',
@@ -45,7 +45,7 @@ self.addEventListener('fetch',function(e){
     );
     return;
   }
-  if(url.indexOf('nominatim.openstreetmap.org')>-1||url.indexOf('open-meteo.com')>-1||url.indexOf('frankfurter')>-1||url.indexOf('google.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('gstatic.com')>-1||url.indexOf('ggpht.com')>-1)return;
+  if(url.indexOf('nominatim.openstreetmap.org')>-1||url.indexOf('open-meteo.com')>-1||url.indexOf('frankfurter')>-1||url.indexOf('wikipedia.org')>-1||url.indexOf('wikidata.org')>-1||url.indexOf('google.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('gstatic.com')>-1||url.indexOf('ggpht.com')>-1)return;
   e.respondWith(
     caches.match(e.request).then(function(hit){
       if(hit)return hit;
