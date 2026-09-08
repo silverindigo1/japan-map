@@ -284,7 +284,16 @@ body.dark .pinwrap .nm{background:rgba(24,27,34,.85);color:#EDEDF0}
 /* header */
 .top{position:absolute;top:0;left:0;right:0;z-index:20;background:linear-gradient(var(--paper) 82%,rgba(255,255,255,0));padding:calc(8px + env(safe-area-inset-top)) 0 16px;pointer-events:none}
 .top > *{pointer-events:auto}
-.title-row{display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.title-row{display:flex;align-items:center;justify-content:space-between;padding:0 14px 6px}
+.title-row h1{font-size:22px}
+.searchbar{padding:2px 14px 4px;pointer-events:auto}
+.searchbar input{width:100%;padding:7px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:13.5px}
+.areas{gap:0;padding:0 8px;justify-content:space-between}
+.areas button{padding:4px 4px 5px;font-size:10.5px;letter-spacing:.04em;font-weight:700;color:var(--muted);display:flex;align-items:baseline;gap:3px;border-bottom-width:3px;border-radius:0}
+.areas button i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--c,var(--line));margin-right:3px;vertical-align:1px}
+.areas button span{display:inline;font-size:9.5px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.areas button.on{color:var(--ink);border-bottom-color:var(--c,var(--shu))}
+.areas button.on span{color:var(--muted)}
 h1{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
 h1 small{font-weight:400;color:var(--muted);font-size:13px;margin-left:8px}
 .menu-btn{font-size:14px;font-weight:600;color:var(--indigo);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper)}
@@ -488,22 +497,23 @@ body.picking .top,body.picking .fab{display:none}
   <div id="map" aria-label="Map of Japan with our places"></div>
 
   <header class="top">
-    <div class="title-row">
-      <h1>Japan 2026 <small id="subTitle">Florian &amp; Lendita, 10 Nov to 1 Dec</small></h1>
+    <div class="title-row" style="display:none">
+      <h1>Japan 2026 <small id="subTitle" style="display:none"></small></h1>
       <span>
-        <button class="nowbtn" id="nowBtn" type="button">What now?</button>
-        <button class="searchbtn" id="searchBtn" type="button" aria-label="Search places">&#9906;</button>
+        <button class="nowbtn" id="nowBtn" type="button" style="display:none">What now?</button>
+        <button class="searchbtn" id="searchBtn" type="button" aria-label="Search places" style="display:none">&#9906;</button>
         <button class="today-btn" id="todayBtn" type="button" style="display:none">Today</button>
         <button class="menu-btn" id="menuBtn" aria-label="Open list and notes" style="display:none">List</button>
       </span>
     </div>
+    <div class="searchbar"><input id="searchField" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off" aria-label="Search"></div>
     <nav class="areas" id="areaTabs" aria-label="Areas"></nav>
-    <div class="chips" id="chips" aria-label="Filter by type"></div>
+    <div class="chips" id="chips" aria-label="Filter by type" style="display:none"></div>
     <div class="nextup" id="nextUp"></div>
     <div class="daybar" id="dayBar"><b id="dayLabel"></b><span id="dayCount"></span><span class="wx" id="dayWx"></span><span class="spacer"></span><button id="dayPrev" type="button">&lsaquo;</button><button id="dayNext" type="button">&rsaquo;</button><button id="dayClear" type="button">Clear</button></div>
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
-  <button class="hotelbtn" id="hotelBtn" type="button" aria-label="Tonight's hotel">🏨</button>
+  <button class="hotelbtn" id="hotelBtn" type="button" aria-label="Tonight's hotel" style="display:none">🏨</button>
   <div class="bunchpop" id="bunchPop"></div>
   <div class="searchwrap" id="searchWrap">
     <div class="row"><input id="mapSearch" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off"><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
@@ -540,6 +550,9 @@ body.picking .top,body.picking .fab{display:none}
     <hr>
     <button type="button" data-opt="clean"><span class="tick"></span>Hide Google's own pins</button>
     <button type="button" data-opt="lines"><span class="tick">✓</span>Yamanote and Hakone lines</button>
+    <button type="button" data-opt="visited"><span class="tick"></span>Hide visited places</button>
+    <hr>
+    <button type="button" data-opt="hotel"><span class="tick"></span>Go to tonight's hotel</button>
   </div>
 
   <section class="sheet" id="sheet" aria-live="polite">
@@ -588,7 +601,7 @@ body.picking .top,body.picking .fab{display:none}
       <button data-panel="days" role="tab">Days</button>
       <button data-panel="guides" role="tab">Guides</button>
       <button data-panel="trip" role="tab">Trip</button>
-      <button data-panel="tools" role="tab">Tools</button>
+      <button data-panel="tools" role="tab">Spending</button>
       <button data-panel="bookings" role="tab">Bookings</button>
       <button data-panel="journal" role="tab">Journal</button>
 
@@ -652,7 +665,7 @@ body.picking .top,body.picking .fab{display:none}
         <div class="rate">Rate, DKK per 100 JPY: <input id="cvRate" inputmode="decimal" placeholder="e.g. 4.2"><button class="btn small" id="rateFetch" type="button">Update</button></div>
         <p class="note" id="cvNote" style="margin:6px 0 0"></p>
       </div>
-      <div class="tool">
+      <div class="tool" style="display:none">
         <h3>Checklist</h3>
         <div class="who-seg" id="whoSeg"><button type="button" data-who="all" class="on">All</button><button type="button" data-who="both">Shared</button><button type="button" data-who="florian">Florian</button><button type="button" data-who="lendita">Lendita</button></div>
         <div class="chk-add"><input id="chkNew" placeholder="Add an item"><select id="chkWho"><option value="both">Shared</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select><button class="btn small" id="chkAdd" type="button">Add</button></div>
@@ -672,7 +685,7 @@ body.picking .top,body.picking .fab{display:none}
         </div>
         <div class="exp-list" id="expList"></div>
       </div>
-      <div class="tool emg">
+      <div class="tool emg" style="display:none">
         <h3>If something goes wrong</h3>
         <div class="inline-btns" style="margin-bottom:8px"><button class="btn primary small" id="shareLoc" type="button">Share my location</button></div>
         <a href="tel:110"><b>110</b><small>Police</small></a>
@@ -739,9 +752,8 @@ body.picking .top,body.picking .fab{display:none}
         <div class="err" id="kmlErr"></div>
       </div>
       <div class="data-block" id="errBlock" style="display:none">
-        <h3>Last error</h3>
-        <p class="note" id="errText"></p>
-        <div class="inline-btns"><button class="btn small" id="errCopy" type="button">Copy for support</button><button class="btn small" id="errClear" type="button">Clear</button></div>
+        <p class="note" id="errText" style="display:none"></p>
+        <div class="inline-btns"><button class="btn small" id="errCopy" type="button">Copy diagnostics</button><button class="btn small" id="errClear" type="button" style="display:none">Clear</button></div>
       </div>
       <div class="data-block">
         <h3>Earlier versions</h3>
@@ -1719,9 +1731,10 @@ var CATS={
   nature:{label:'Nature and views',color:'#2F7D5B',icon:'🍁'},
   experience:{label:'Experiences',color:'#1F7A8C',icon:'🗡️'},
   hotel:{label:'Where we sleep',color:'#3E4C6B',icon:'🏨'},
+  anime:{label:'Pokemon and anime',color:'#E0A400',icon:'⚡'},
   other:{label:'Other',color:'#6B7280',icon:'📍'}
 };
-var CAT_ORDER=['art','shrine','food','shopping','nature','experience','hotel','other'];
+var CAT_ORDER=['art','shrine','food','shopping','nature','experience','anime','hotel','other'];
 
 var AREAS={
   tokyo:{label:'Tokyo',dates:'10 to 15 Nov',center:[35.685,139.755],zoom:12},
@@ -1853,7 +1866,38 @@ var SEED_PLACES=[
   {id:'motohakone',name:'Moto-Hakone port',jp:'元箱根港',area:'hakone',cat:'other',icon:'⛴️',lat:35.20283,lng:139.0306,when:'',notes:'Where the Lake Ashi boat lands. Hakone Shrine\'s water torii is a short walk along the shore.'},
   {id:'togetsukyo',name:'Togetsukyo Bridge',jp:'渡月橋',area:'kyoto',cat:'nature',icon:'🌉',lat:35.01287,lng:135.67776,when:'',notes:'The Arashiyama bridge with the mountains behind. Start of the bamboo grove walk.'},
   {id:'tempozan',name:'Tempozan Ferris Wheel',jp:'天保山大観覧車',area:'osaka',cat:'other',icon:'🎡',lat:34.65627,lng:135.43096,when:'',notes:'Next to the aquarium. See-through gondolas exist if you dare.'},
-  {id:'wakakusa',name:'Mount Wakakusa',jp:'若草山',area:'osaka',cat:'nature',icon:'⛰️',lat:34.69117,lng:135.85426,when:'',notes:'Grass hill above the park, 30 minutes up, view over the whole basin.'}
+  {id:'wakakusa',name:'Mount Wakakusa',jp:'若草山',area:'osaka',cat:'nature',icon:'⛰️',lat:34.69117,lng:135.85426,when:'',notes:'Grass hill above the park, 30 minutes up, view over the whole basin.'},
+  {id:'pc-megatokyo',name:'Pokemon Center Mega Tokyo',jp:'ポケモンセンターメガトウキョー',area:'tokyo',cat:'anime',icon:'⚡',lat:35.72889,lng:139.71918,when:'',notes:'The big one, inside Sunshine City in Ikebukuro. Widest range, Pikachu Sweets cafe next door. Weekday mornings are calmest.'},
+  {id:'pc-tokyodx',name:'Pokemon Center Tokyo DX and Pokemon Cafe',jp:'ポケモンセンタートウキョーDX ポケモンカフェ',area:'tokyo',cat:'anime',icon:'⚡',lat:35.68053,lng:139.77441,when:'',notes:'Nihonbashi Takashimaya, 5th floor. The cafe needs a reservation online, released a month ahead and gone fast.'},
+  {id:'pc-skytree',name:'Pokemon Center Skytree Town',jp:'ポケモンセンタースカイツリータウン',area:'tokyo',cat:'anime',icon:'⚡',lat:35.71002,lng:139.81227,when:'',notes:'In Solamachi at the base of Skytree. Pair with the tower and the aquarium.'},
+  {id:'pc-shibuya',name:'Pokemon Center Shibuya',jp:'ポケモンセンターシブヤ',area:'tokyo',cat:'anime',icon:'⚡',lat:35.66201,lng:139.69898,when:'',notes:'Shibuya Parco, 6th floor, with the huge Mewtwo in a tank. Nintendo Tokyo and the Jump Shop are on the same floor.'},
+  {id:'pc-tokyostation',name:'Pokemon Store Tokyo Station',jp:'ポケモンストア 東京駅店',area:'tokyo',cat:'anime',icon:'⚡',lat:35.68266,lng:139.76886,when:'',notes:'Small shop in Tokyo Character Street under Tokyo Station. Good for a last minute gift before the Shinkansen.'},
+  {id:'pc-kyoto',name:'Pokemon Center Kyoto',jp:'ポケモンセンターキョウト',area:'kyoto',cat:'anime',icon:'⚡',lat:35.00288,lng:135.76801,when:'',notes:'Kyoto Takashimaya, 5th floor, at Shijo Kawaramachi. Kyoto exclusives with kimono Pikachu.'},
+  {id:'pc-osaka',name:'Pokemon Center Osaka',jp:'ポケモンセンターオーサカ',area:'osaka',cat:'anime',icon:'⚡',lat:34.70191,lng:135.49645,when:'',notes:'Daimaru Umeda, 13th floor, next to Nintendo Osaka. Sky Building and the station are steps away.'},
+  {id:'pc-osakadx',name:'Pokemon Center Osaka DX and Pokemon Cafe',jp:'ポケモンセンターオーサカDX ポケモンカフェ',area:'osaka',cat:'anime',icon:'⚡',lat:34.67296,lng:135.50077,when:'',notes:'Daimaru Shinsaibashi, 9th floor. The cafe here is the Osaka twin of the Tokyo one, reservation needed.'},
+  {id:'pl-m1',name:'Poke Lid, Pidgey and Rattata',jp:'ポケふた ポッポ・コラッタ',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54564,lng:139.45489,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-m2',name:'Poke Lid, Charmander',jp:'ポケふた ヒトカゲ',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54817,lng:139.45131,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-m3',name:'Poke Lid, Squirtle',jp:'ポケふた ゼニガメ',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54531,lng:139.455,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-m4',name:'Poke Lid, Bulbasaur',jp:'ポケふた フシギダネ',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54811,lng:139.45033,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-m5',name:'Poke Lid, Poliwag',jp:'ポケふた ニョロモ',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54672,lng:139.45398,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-m6',name:'Poke Lid, Oddish, Weedle and Caterpie',jp:'ポケふた ナゾノクサ・ビードル・キャタピー',area:'tokyo',cat:'anime',icon:'🟡',lat:35.54611,lng:139.45436,when:'',notes:'Painted Pokemon manhole cover in Machida, western Tokyo. Six within a ten minute walk of Machida station; 35 minutes from Shinjuku on the Odakyu line. A small pilgrimage.'},
+  {id:'pl-o1',name:'Poke Lid, Raikou',jp:'ポケふた ライコウ',area:'osaka',cat:'anime',icon:'🟡',lat:34.66767,lng:135.62631,when:'',notes:'Painted Pokemon manhole cover in Higashi-Osaka. Four covers spread over about two kilometres, on the way to Nara by Kintetsu line.'},
+  {id:'pl-o2',name:'Poke Lid, Klink and Klang',jp:'ポケふた ギアル・ギギアル',area:'osaka',cat:'anime',icon:'🟡',lat:34.66772,lng:135.63989,when:'',notes:'Painted Pokemon manhole cover in Higashi-Osaka. Four covers spread over about two kilometres, on the way to Nara by Kintetsu line.'},
+  {id:'pl-o3',name:'Poke Lid, Elekid and Mawile',jp:'ポケふた エレキッド・クチート',area:'osaka',cat:'anime',icon:'🟡',lat:34.68067,lng:135.65078,when:'',notes:'Painted Pokemon manhole cover in Higashi-Osaka. Four covers spread over about two kilometres, on the way to Nara by Kintetsu line.'},
+  {id:'pl-o4',name:'Poke Lid, Yamper and Togedemaru',jp:'ポケふた ワンパチ・トゲデマル',area:'osaka',cat:'anime',icon:'🟡',lat:34.66947,lng:135.63058,when:'',notes:'Painted Pokemon manhole cover in Higashi-Osaka. Four covers spread over about two kilometres, on the way to Nara by Kintetsu line.'},
+  {id:'op-shibuya',name:'One Piece Mugiwara Store Shibuya',jp:'ONE PIECE 麦わらストア 渋谷本店',area:'tokyo',cat:'anime',icon:'🏴‍☠️',lat:35.66091,lng:139.70102,when:'',notes:'The main One Piece shop, near Shibuya Parco. Figures, exclusive merchandise, a wall of wanted posters.'},
+  {id:'op-odaiba',name:'One Piece Mugiwara Store Odaiba',jp:'ONE PIECE 麦わらストア お台場店',area:'tokyo',cat:'anime',icon:'🏴‍☠️',lat:35.62499,lng:139.77574,when:'',notes:'In DiverCity Tokyo Plaza on Odaiba, near the giant Gundam. Twenty minutes from teamLab Planets.'},
+  {id:'op-osaka',name:'One Piece Mugiwara Store Osaka',jp:'ONE PIECE 麦わらストア 大阪店',area:'osaka',cat:'anime',icon:'🏴‍☠️',lat:34.64497,lng:135.51146,when:'',notes:'Abeno, near Tennoji station, on the way to Shinsekai and Tsutenkaku.'},
+  {id:'js-skytree',name:'Jump Shop Skytree Town',jp:'ジャンプショップ 東京スカイツリータウン店',area:'tokyo',cat:'anime',icon:'📚',lat:35.71004,lng:139.81239,when:'',notes:'Shonen Jump shop with One Piece, Naruto, Dragon Ball and the rest, in Solamachi next to the Pokemon Center.'},
+  {id:'js-tokyodome',name:'Jump Shop Tokyo Dome City',jp:'ジャンプショップ 東京ドームシティ店',area:'tokyo',cat:'anime',icon:'📚',lat:35.70489,lng:139.75439,when:'',notes:'At Tokyo Dome. Combine with Akihabara, ten minutes away.'},
+  {id:'js-tokyostation',name:'Jump Shop Tokyo Station',jp:'ジャンプショップ 東京駅店',area:'tokyo',cat:'anime',icon:'📚',lat:35.68052,lng:139.76801,when:'',notes:'Tokyo Character Street under the station, with the Pokemon Store and twenty other character shops in one corridor.'},
+  {id:'js-shibuya',name:'Jump Shop Shibuya',jp:'ジャンプショップ 渋谷店',area:'tokyo',cat:'anime',icon:'📚',lat:35.66205,lng:139.6991,when:'',notes:'Shibuya Parco, 6th floor, same floor as Pokemon Center and Nintendo Tokyo.'},
+  {id:'js-umeda',name:'Jump Shop Osaka Umeda',jp:'ジャンプショップ 大阪梅田店',area:'osaka',cat:'anime',icon:'📚',lat:34.7038,lng:135.49996,when:'',notes:'Umeda, near the station.'},
+  {id:'js-shinsaibashi',name:'Jump Shop Osaka Shinsaibashi',jp:'ジャンプショップ 心斎橋店',area:'osaka',cat:'anime',icon:'📚',lat:34.67329,lng:135.50076,when:'',notes:'Daimaru Shinsaibashi, same building as Pokemon Center Osaka DX.'},
+  {id:'nin-tokyo',name:'Nintendo Tokyo',jp:'Nintendo TOKYO',area:'tokyo',cat:'anime',icon:'🍄',lat:35.66192,lng:139.69899,when:'',notes:'Official Nintendo store, Shibuya Parco 6th floor. Mario, Zelda, Animal Crossing and Pokemon goods.'},
+  {id:'nin-kyoto',name:'Nintendo Kyoto',jp:'Nintendo KYOTO',area:'kyoto',cat:'anime',icon:'🍄',lat:35.00357,lng:135.76809,when:'',notes:'Kyoto Takashimaya, in the company town where Nintendo started as a card maker in 1889.'},
+  {id:'nin-osaka',name:'Nintendo Osaka',jp:'Nintendo OSAKA',area:'osaka',cat:'anime',icon:'🍄',lat:34.70179,lng:135.49689,when:'',notes:'Daimaru Umeda, 13th floor, next to Pokemon Center Osaka.'},
+  {id:'conan-cafe',name:'Detective Conan Cafe Omotesando',jp:'名探偵コナンカフェ 表参道',area:'tokyo',cat:'anime',icon:'🔍',lat:35.66812,lng:139.70571,when:'',notes:'Pop-up cafe that opens for a season most years around spring and summer. Check whether it is running in November before going; the map pin is the usual spot near Omotesando.'}
 ];
 
 var SEED_GUIDES=[
@@ -1873,7 +1917,7 @@ var PHRASES=[
   {g:'Eating',items:[['Table for two','二人です','futari desu'],['Do you have an English menu?','英語のメニューはありますか','eigo no menyū wa arimasu ka'],['This one, please','これをください','kore o kudasai'],['What do you recommend?','おすすめは何ですか','osusume wa nan desu ka'],['Water, please','お水をください','omizu o kudasai'],['The bill, please','お会計をお願いします','okaikei o onegaishimasu'],['Can I pay by card?','カードで払えますか','kādo de haraemasu ka'],['Non smoking seat, please','禁煙席でお願いします','kin\'en seki de onegaishimasu'],['I am allergic to ...','...アレルギーがあります','... arerugī ga arimasu'],['No pork, please','豚肉抜きでお願いします','butaniku nuki de onegaishimasu'],['Delicious','おいしい','oishii'],['Thank you for the meal','ごちそうさまでした','gochisōsama deshita']]},
   {g:'Shopping',items:[['How much is it?','いくらですか','ikura desu ka'],['Tax free, please','免税でお願いします','menzei de onegaishimasu'],['Can you engrave a name?','名前を彫れますか','namae o horemasu ka'],['Is it carbon steel or stainless?','鋼ですか、ステンレスですか','hagane desu ka, sutenresu desu ka'],['Just looking, thank you','見ているだけです','mite iru dake desu'],['Could you wrap it as a gift?','プレゼント用に包んでもらえますか','purezento-yō ni tsutsunde moraemasu ka'],['Do you have a bigger size?','もっと大きいサイズはありますか','motto ōkii saizu wa arimasu ka']]},
   {g:'Hotel and ryokan',items:[['Check in, please','チェックインをお願いします','chekku-in o onegaishimasu'],['Could you keep our luggage?','荷物を預かってもらえますか','nimotsu o azukatte moraemasu ka'],['Luggage forwarding, please','宅急便をお願いします','takkyūbin o onegaishimasu'],['What is the Wi-Fi password?','Wi-Fiのパスワードは何ですか','waifai no pasuwādo wa nan desu ka'],['What time is dinner?','夕食は何時ですか','yūshoku wa nanji desu ka'],['Private bath','貸切風呂','kashikiri-buro'],['Is a tattoo okay?','タトゥーは大丈夫ですか','tatū wa daijōbu desu ka']]},
-  {g:'If something goes wrong',items:[['Help!','助けて！','tasukete'],['Please call an ambulance','救急車を呼んでください','kyūkyūsha o yonde kudasai'],['Where is a hospital?','病院はどこですか','byōin wa doko desu ka'],['I feel sick','気分が悪いです','kibun ga warui desu'],['I lost my passport','パスポートをなくしました','pasupōto o nakushimashita'],['Police','警察','keisatsu'],['I am here (share location)','ここにいます','koko ni imasu']]}
+  {g:'If something goes wrong (110 police, 119 ambulance, Danish embassy +81 3 3496 3001)',items:[['Help!','助けて！','tasukete'],['Please call an ambulance','救急車を呼んでください','kyūkyūsha o yonde kudasai'],['Where is a hospital?','病院はどこですか','byōin wa doko desu ka'],['I feel sick','気分が悪いです','kibun ga warui desu'],['I lost my passport','パスポートをなくしました','pasupōto o nakushimashita'],['Police','警察','keisatsu'],['I am here (share location)','ここにいます','koko ni imasu']]}
 ];
 
 var SIGNS=[
@@ -1887,6 +1931,7 @@ var SIGNS=[
 
 var SEED_CLOSED={ghibli:[2],tnm:[1],nezumuseum:[1],imperial:[1,5],isuien:[2],mori:[],toyosu:[0,3]};
 var SEED_TIPS={
+  anime:'Pokemon Centers: Mega Tokyo in Ikebukuro is the biggest; Shibuya Parco floor 6 has Pokemon Center, Nintendo Tokyo and the Jump Shop together. Pokemon Cafe needs an online reservation released a month ahead. Poke Lids are painted manholes; six sit near Machida station in western Tokyo, four in Higashi-Osaka on the Nara line. The Conan cafe is a seasonal pop-up, check before going.',
   general:'Cash still matters at small shops, shrines and some ramen counters. Keep coins and small notes.\nSuica or PASMO in Apple Wallet covers trains, buses, konbini and vending machines. Top up in the Wallet app.\nTax free shopping needs the passport at the till. Check the current minimum spend before relying on it.\nBins are rare. Carry a small bag for wrappers.\nLuggage forwarding (takkyubin) hotel to hotel is worth it for Tokyo to Kyoto. Ask at reception the day before and keep a small bag for Hakone.',
   art:'teamLab Planets: barefoot through water in parts. Trousers that roll above the knee, or shorts. Free lockers.\nteamLab Biovortex: bags over 50 cm and drinks without lids stay in the lockers. Timed entry, arrive 15 minutes early.\nWeekday mornings are the calm slots at both.',
   shrine:'Bow once at the torii. Walk to the side of the path.\nWater basin: take the ladle in the right hand, rinse left hand, then right, then rinse the mouth from the hand, never from the ladle.\nOffering: coin, bow twice, clap twice, pray, bow once. No clapping at Buddhist temples.\nCheck for photo restrictions inside halls.\nGoshuin stamp books are sold at larger shrines and temples. Ask at the office, a few hundred yen per stamp.',
@@ -1929,12 +1974,19 @@ var DEFAULT_TRIP={id:'japan-2026',name:'Japan 2026',travellers:'Florian & Lendit
   cities:[{key:'tokyo',label:'Tokyo',tab:'Tokyo',dates:'10 to 15 Nov',center:[35.685,139.755],zoom:12},{key:'hakone',label:'Hakone',tab:'Hakone',dates:'15 to 17 Nov',center:[35.235,139.03],zoom:12},{key:'kyoto',label:'Kyoto',tab:'Kyoto',dates:'17 to 22 Nov',center:[35.01,135.75],zoom:12},{key:'osaka',label:'Osaka and Nara',tab:'Osaka, Nara',dates:'22 Nov onward',center:[34.68,135.62],zoom:11}]};
 function trip(){ if(!state.trip)state.trip=JSON.parse(JSON.stringify(DEFAULT_TRIP)); return state.trip; }
 /* Pushes the trip definition into the globals the rest of the app reads. */
+var CITY_CODE={tokyo:'TYO',hakone:'HKN',kyoto:'KYO',osaka:'OSA',nara:'NRA'};
+function cityCode(c){ if(c.code)return c.code; if(CITY_CODE[c.key])return CITY_CODE[c.key]; return (c.label||'').replace(/[^A-Za-z]/g,'').slice(0,3).toUpperCase()||'CTY'; }
+function cityDays(k){
+  var lab=(AREAS[k].label||'').toLowerCase(),n=0;
+  tripDays().forEach(function(d){var h=(dayHint(d)||'').toLowerCase();if(h===lab||h.indexOf(lab.split(' ')[0])===0)n++;});
+  return n;
+}
 function applyTrip(){
   var t=trip();
   TRIP_START=t.start||DEFAULT_TRIP.start;TRIP_END=t.end||DEFAULT_TRIP.end;
   Object.keys(AREAS).forEach(function(k){if(k!=='other')delete AREAS[k];});
   AREA_ORDER.length=0;
-  (t.cities||[]).forEach(function(c){AREAS[c.key]={label:c.label,tab:c.tab||c.label,dates:c.dates||'',center:c.center,zoom:c.zoom||12};AREA_ORDER.push(c.key);});
+  (t.cities||[]).forEach(function(c){AREAS[c.key]={label:c.label,tab:c.tab||c.label,dates:c.dates||'',center:c.center,zoom:c.zoom||12,code:cityCode(c)};AREA_ORDER.push(c.key);});
   AREA_ORDER.push('other');
   var h1=document.querySelector('.top h1');
   if(h1){var small=h1.querySelector('small');h1.childNodes[0].nodeValue=(t.name||'Trip')+' ';}
@@ -2316,13 +2368,15 @@ function toggleOverlay(name){
   syncMapMenu();
 }
 function setOption(name){
+  if(name==='visited'){hideVisited=!hideVisited;renderMarkers();}
+  if(name==='hotel'){$('#mapMenu').classList.remove('on');$('#hotelBtn').click();return;}
   if(name==='clean'){gClean=!gClean;if(googleOn)setMapType(gType);}
   if(name==='lines'){linesOn=!linesOn;baseGroups.forEach(function(g){if(g.keep)g.forceHide=!linesOn;});syncBaseGroups();}
   syncMapMenu();
 }
 function syncMapMenu(){
   document.querySelectorAll('#mapMenu button').forEach(function(b){
-    var on=b.dataset.type?(b.dataset.type===gType):b.dataset.opt?(b.dataset.opt==='clean'?gClean:linesOn):!!gOverlays[b.dataset.overlay];
+    var on=b.dataset.type?(b.dataset.type===gType):b.dataset.opt?(b.dataset.opt==='clean'?gClean:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false):!!gOverlays[b.dataset.overlay];
     b.classList.toggle('on',on);
     b.querySelector('.tick').textContent=on?'✓':'';
   });
@@ -2530,10 +2584,13 @@ function buildBase(){
 
 function buildTabs(){
   var nav=$('#areaTabs');nav.innerHTML='';
-  var all=document.createElement('button');all.dataset.area='all';all.innerHTML='All<span>whole trip</span>';nav.appendChild(all);
-  AREA_ORDER.forEach(function(k){
+  var total=tripDays().length;
+  var AREA_COLORS=['#E04E2B','#1F7A8C','#6B4FBB','#D9772B','#2F7D5B','#B2372A','#3E4C6B'];
+  var all=document.createElement('button');all.dataset.area='all';all.style.setProperty('--c','#1B1F2A');all.innerHTML='ALL<span>'+total+'d</span>';nav.appendChild(all);
+  AREA_ORDER.forEach(function(k,i){
     if(k==='other')return;
-    var b=document.createElement('button');b.dataset.area=k;b.innerHTML=esc(AREAS[k].tab||AREAS[k].label)+'<span>'+esc(AREAS[k].dates)+'</span>';nav.appendChild(b);
+    var n=cityDays(k),col=AREA_COLORS[i%AREA_COLORS.length];
+    var b=document.createElement('button');b.dataset.area=k;b.title=AREAS[k].label;b.style.setProperty('--c',col);b.innerHTML='<i></i>'+esc(AREAS[k].code||AREAS[k].tab)+(n?'<span>'+n+'d</span>':'');nav.appendChild(b);
   });
   nav.addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
@@ -3163,7 +3220,7 @@ function bindWho(){
 var errShown=false;
 function recordError(msg){
   try{window.localStorage.setItem('jm:lasterr',JSON.stringify({t:new Date().toISOString(),m:String(msg).slice(0,600),v:'v27'}));}catch(e){}
-  if(!errShown){errShown=true;toast('Something went wrong, but your data is safe. Details under Backup.');}
+  if(!errShown){errShown=true;toast('Something went wrong, but your data is safe.');}
   renderLastError();
 }
 function renderLastError(){
@@ -4164,6 +4221,7 @@ function geocode(){
 
 function guessCat(name){
   var n=(name||'').toLowerCase().replace(/_/g,' ');
+  if(/pokemon|pokémon|poke lid|ポケ|one piece|mugiwara|jump shop|nintendo|conan|anime|manga|ghibli/.test(n))return 'anime';
   if(/theme park|amusement|aquarium|zoo|attraction|studios|tower|observation|arcade|karaoke|cinema/.test(n))return 'other';
   if(/museum|teamlab|gallery|art gallery|exhibition/.test(n))return 'art';
   if(/hotel|ryokan|hostel|guest house|inn\b|apartment|hospitality/.test(n))return 'hotel';
@@ -4434,6 +4492,8 @@ function bind(){
     geoTimer=setTimeout(geocode,700);
   });
   $('#searchBtn').addEventListener('click',openSearch);
+  $('#searchField').addEventListener('focus',function(){this.blur();openSearch();});
+  $('#searchField').addEventListener('click',function(){openSearch();});
   $('#nowBtn').addEventListener('click',function(){ if(!userPos&&navigator.geolocation){ navigator.geolocation.getCurrentPosition(function(pos){userPos=[pos.coords.latitude,pos.coords.longitude];whatNow();},function(){whatNow();},{timeout:4000,maximumAge:120000}); } else whatNow(); });
   $('#nowClose').addEventListener('click',function(){$('#nowSheet').classList.remove('open');});
   fetchWeather(false);
