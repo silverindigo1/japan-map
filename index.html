@@ -252,6 +252,17 @@ body.dark .pinwrap .nm{background:rgba(24,27,34,.85);color:#EDEDF0}
 .notehead label{margin:0}
 .notehead button{font-size:12px;font-weight:600;color:var(--indigo);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--paper)}
 .notestat{font-size:12px;color:var(--muted);margin-top:4px;min-height:14px}
+.you.follow{box-shadow:0 0 0 4px rgba(30,123,239,.35),0 0 0 8px rgba(30,123,239,.15)}
+.you .hd{position:absolute;left:50%;top:-10px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #1E7BEF;transform:translateX(-50%);display:none}
+.you.heading .hd{display:block}
+.locbtn.follow{background:#1E7BEF;color:#fff;border-color:#1E7BEF}
+.bunchpop{position:absolute;left:12px;right:12px;bottom:calc(14px + var(--tb));z-index:32;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px 6px 4px;display:none;max-height:44vh;overflow:auto}
+.bunchpop.on{display:block}
+.bunchpop button.row{width:100%}
+.bunchpop .zoom{display:block;width:100%;text-align:center;padding:8px;font-size:13px;color:var(--indigo);font-weight:600}
+.hitpin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#5B6478;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.hitpin span{display:block;transform:rotate(45deg);color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:22px}
+@media (min-width:900px){.bunchpop{left:auto;right:calc(520px + 16px);width:400px}}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
 .sort-row button{padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12px}
 .sort-row button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -493,6 +504,7 @@ body.picking .top,body.picking .fab{display:none}
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
   <button class="hotelbtn" id="hotelBtn" type="button" aria-label="Tonight's hotel">🏨</button>
+  <div class="bunchpop" id="bunchPop"></div>
   <div class="searchwrap" id="searchWrap">
     <div class="row"><input id="mapSearch" type="search" placeholder="Search our places or anywhere in Japan" autocomplete="off" autocapitalize="off"><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
     <div class="sres" id="searchRes"></div>
@@ -2225,6 +2237,9 @@ function buildMap(){
   window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();}};
   if(getGoogleKey()) setTimeout(enableGoogle,50);
   layer=L.layerGroup().addTo(map);
+  map.on('click',function(){$('#bunchPop').classList.remove('on');});
+  map.on('movestart',function(){$('#bunchPop').classList.remove('on');});
+  map.on('dragstart',function(){if(followWatch!==null)stopFollow();});
   map.on('click',onMapClick);
   map.on('contextmenu',function(e){
     if(pickMode)return;
@@ -2241,6 +2256,7 @@ function buildMap(){
    a "Street detail" toggle appears that overlays live OpenStreetMap tiles. Those tiles are drawn in the local
    language (Japanese), so the English station and ward labels from the embedded map stay on top of them. */
 var tilesOn=false,tileLayer=null,tilesAvailable=false;
+var followWatch=null,walkRing=null;
 var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={},gClean=false,linesOn=true;
 var CLEAN_STYLE=[{featureType:'poi',stylers:[{visibility:'off'}]},{featureType:'transit.station',elementType:'labels.icon',stylers:[{visibility:'simplified'}]}];
 function getGoogleKey(){ if(GOOGLE_MAPS_KEY)return GOOGLE_MAPS_KEY; try{return window.localStorage.getItem(GKEY_STORE)||'';}catch(e){return '';} }
@@ -2562,19 +2578,44 @@ function buildChips(){
 }
 
 var CLUSTER_BELOW=10,lastClustered=null,dayLine=null;
+/* Street routes between stops from the public OSRM router, cached per pair. Falls back to straight lines. */
+function routeKey(a,b){return a.lat.toFixed(4)+','+a.lng.toFixed(4)+'>'+b.lat.toFixed(4)+','+b.lng.toFixed(4);}
+function legRoute(a,b){ var r=(state.routes||{})[routeKey(a,b)]; return r||null; }
+function legDist(a,b){ var r=legRoute(a,b); return r?r.d:distM([a.lat,a.lng],[b.lat,b.lng]); }
+function fetchRoutes(list,done){
+  state.routes=state.routes||{};
+  var missing=[];for(var i=1;i<list.length;i++){if(!legRoute(list[i-1],list[i]))missing.push([list[i-1],list[i]]);}
+  if(!missing.length||!navigator.onLine){done(false);return;}
+  var got=false,pending=missing.length;
+  missing.forEach(function(pair){
+    var a=pair[0],b=pair[1];
+    fetch('https://router.project-osrm.org/route/v1/foot/'+a.lng+','+a.lat+';'+b.lng+','+b.lat+'?overview=full&geometries=polyline')
+      .then(function(r){return r.json();}).then(function(js){
+        var rt=js&&js.routes&&js.routes[0];
+        if(rt&&rt.geometry){state.routes[routeKey(a,b)]={g:rt.geometry,d:Math.round(rt.distance)};got=true;}
+      }).catch(function(){}).then(function(){pending--;if(!pending){if(got){var keys=Object.keys(state.routes);if(keys.length>400){keys.slice(0,keys.length-400).forEach(function(k){delete state.routes[k];});}persist();}done(got);}});
+  });
+}
 function drawDayRoute(){
   if(dayLine){map.removeLayer(dayLine);dayLine=null;}
   if(!activeDay)return;
   var list=dayPlaces(activeDay).filter(function(p){return state.hidden.indexOf(p.cat)===-1;});
   if(list.length<2)return;
-  var pts=list.map(function(p){return [p.lat,p.lng];});
-  dayLine=L.layerGroup([
-    L.polyline(pts,{color:'#FFFFFF',weight:6,opacity:.9,lineCap:'round',lineJoin:'round',interactive:false}),
-    L.polyline(pts,{color:'#22304D',weight:2.5,opacity:.95,dashArray:'7 6',lineCap:'round',lineJoin:'round',interactive:false})
-  ]).addTo(map);
-  var total=0;for(var i=1;i<pts.length;i++)total+=distM(pts[i-1],pts[i]);
+  var segs=[],routed=0,total=0;
+  for(var i=1;i<list.length;i++){
+    var r=legRoute(list[i-1],list[i]);
+    if(r){segs.push({pts:decodeLine(r.g),real:true});routed++;total+=r.d;}
+    else{segs.push({pts:[[list[i-1].lat,list[i-1].lng],[list[i].lat,list[i].lng]],real:false});total+=distM([list[i-1].lat,list[i-1].lng],[list[i].lat,list[i].lng]);}
+  }
+  var layers=[];
+  segs.forEach(function(s){
+    layers.push(L.polyline(s.pts,{color:'#FFFFFF',weight:6,opacity:.9,lineCap:'round',lineJoin:'round',interactive:false}));
+    layers.push(L.polyline(s.pts,{color:'#22304D',weight:2.8,opacity:.95,dashArray:s.real?null:'7 6',lineCap:'round',lineJoin:'round',interactive:false}));
+  });
+  dayLine=L.layerGroup(layers).addTo(map);
   var el=$('#dayCount');
-  if(el)el.textContent=list.length+' stops, '+(total<1000?Math.round(total)+' m':(total/1000).toFixed(1)+' km')+' end to end';
+  if(el)el.textContent=list.length+' stops, '+(total<1000?Math.round(total)+' m':(total/1000).toFixed(1)+' km')+(routed===segs.length?' on foot':(routed?' partly routed':' as the crow flies'));
+  if(routed<segs.length){var dayAtRequest=activeDay;fetchRoutes(list,function(got){if(got&&activeDay===dayAtRequest){drawDayRoute();renderDays();}});}
 }
 function renderMarkers(){
   layer.clearLayers();markers={};
@@ -2630,9 +2671,9 @@ function renderMarkers(){
     var first=list[0],must=list.some(function(p){return p.prio;});
     var ico=first.img?'📌':(first.icon||CATS[first.cat].icon);
     var m=L.marker([lat,lng],{icon:L.divIcon({className:'pinwrap',iconSize:[38,38],iconAnchor:[19,19],html:'<div class="bunch"><span class="ic">'+esc(ico)+'</span>'+list.length+(must?'<em class="star">★</em>':'')+'</div>'}),title:list.map(function(p){return p.name;}).join(', '),keyboard:true});
-    m.on('click',function(){
-      closeSheet();
-      map.fitBounds(list.map(function(p){return [p.lat,p.lng];}),{padding:[70,70],maxZoom:17});
+    m.on('click',function(e){
+      if(e&&e.originalEvent)L.DomEvent.stopPropagation(e.originalEvent);
+      closeSheet();setTimeout(function(){showBunch(list);},0);
     });
     layer.addLayer(m);
   });
@@ -3526,7 +3567,8 @@ function renderDays(){
       list.forEach(function(p,i){
         if(i>0){
           var leg=document.createElement('div');leg.className='leg';
-          leg.innerHTML='<i></i>'+esc(fmtDist(distM([list[i-1].lat,list[i-1].lng],[p.lat,p.lng])));
+          var lr=legRoute(list[i-1],p);
+          leg.innerHTML='<i></i>'+esc(fmtDist(legDist(list[i-1],p)))+(lr?'':' <span style="opacity:.7">straight line</span>');
           wrap.appendChild(leg);
         }
         var r=document.createElement('div');r.className='stop-row';
@@ -3578,7 +3620,7 @@ function dayText(iso){
     var line=(i+1)+'. '+(p.time?p.time+' ':'')+p.name+(p.jp?' ('+p.jp+')':'');
     if(p.when)line+=' | '+p.when;
     out.push(line);
-    if(i<list.length-1)out.push('   '+fmtDist(distM([p.lat,p.lng],[list[i+1].lat,list[i+1].lng]))+' to next');
+    if(i<list.length-1)out.push('   '+fmtDist(legDist(p,list[i+1]))+' to next');
   });
   if(!list.length)out.push('Nothing planned yet.');
   return out.join('\n');
@@ -3594,17 +3636,51 @@ function swapOrder(list,i,j){
   var a=list[i],b=list[j];var tmp=a.order;a.order=b.order;b.order=tmp;
   persist();renderDays();if(activeDay)renderMarkers();
 }
+function showBunch(list){
+  var pop=$('#bunchPop');pop.innerHTML='';
+  list.forEach(function(p){
+    var r=document.createElement('button');r.type='button';r.className='row';
+    r.innerHTML=pinHtml(p)+'<div><b>'+esc(p.name)+(p.day?'<span class="badge">'+esc(dayLabel(p.day))+'</span>':'')+'</b><small>'+esc((p.jp?p.jp+'  ':'')+(p.when||cat(p).label))+'</small></div>';
+    r.addEventListener('click',function(){pop.classList.remove('on');map.flyTo([p.lat,p.lng],Math.max(map.getZoom(),16),{duration:.6});setTimeout(function(){openSheet(p.id);},680);});
+    pop.appendChild(r);
+  });
+  var z=document.createElement('button');z.type='button';z.className='zoom';z.textContent='Zoom in to see them apart';
+  z.addEventListener('click',function(){pop.classList.remove('on');map.fitBounds(list.map(function(p){return [p.lat,p.lng];}),{padding:[70,70],maxZoom:17});});
+  pop.appendChild(z);pop.classList.add('on');
+}
+function startFollow(){
+  if(!navigator.geolocation||followWatch)return;
+  $('#locBtn').classList.add('follow');
+  followWatch=navigator.geolocation.watchPosition(function(pos){
+    userPos=[pos.coords.latitude,pos.coords.longitude];
+    if(userMarker){userMarker.setLatLng(userPos);userCircle.setLatLng(userPos).setRadius(pos.coords.accuracy||30);if(walkRing)walkRing.setLatLng(userPos);
+      var el=userMarker.getElement()&&userMarker.getElement().querySelector('.you');
+      if(el){el.classList.add('follow');if(pos.coords.heading!==null&&!isNaN(pos.coords.heading)&&pos.coords.speed>0.5){el.classList.add('heading');el.style.transform='rotate('+pos.coords.heading+'deg)';}else{el.classList.remove('heading');el.style.transform='';}}}
+    map.panTo(userPos,{animate:true,duration:.5});
+  },function(){stopFollow();toast('Lost your position.');},{enableHighAccuracy:true,maximumAge:2000,timeout:15000});
+  toast('Following you. Drag the map to stop.');
+}
+function stopFollow(){
+  if(followWatch!==null){navigator.geolocation.clearWatch(followWatch);followWatch=null;}
+  $('#locBtn').classList.remove('follow');
+  var el=userMarker&&userMarker.getElement()&&userMarker.getElement().querySelector('.you');if(el)el.classList.remove('follow');
+}
 function locate(){
+  if(followWatch!==null){stopFollow();toast('Stopped following.');return;}
   if(!navigator.geolocation){toast('Location is not available here.');return;}
   toast('Finding you');
   navigator.geolocation.getCurrentPosition(function(pos){
     userPos=[pos.coords.latitude,pos.coords.longitude];
     var acc=pos.coords.accuracy||50;
     if(!userMarker){
-      userMarker=L.marker(userPos,{icon:L.divIcon({className:'pinwrap',iconSize:[16,16],iconAnchor:[8,8],html:'<div class="you"></div>'}),interactive:false,zIndexOffset:1000}).addTo(map);
+      userMarker=L.marker(userPos,{icon:L.divIcon({className:'pinwrap',iconSize:[16,16],iconAnchor:[8,8],html:'<div class="you"><i class="hd"></i></div>'}),interactive:false,zIndexOffset:1000}).addTo(map);
+      walkRing=L.circle(userPos,{radius:800,color:'#1E7BEF',weight:1,dashArray:'4 6',fill:false,interactive:false}).addTo(map);
       userCircle=L.circle(userPos,{radius:acc,color:'#1E7BEF',weight:1,fillColor:'#1E7BEF',fillOpacity:.12,interactive:false}).addTo(map);
-    }else{userMarker.setLatLng(userPos);userCircle.setLatLng(userPos).setRadius(acc);}
+    }else{userMarker.setLatLng(userPos);userCircle.setLatLng(userPos).setRadius(acc);if(walkRing)walkRing.setLatLng(userPos);}
     map.flyTo(userPos,Math.max(map.getZoom(),14),{duration:.7});
+    var lb=$('#locBtn');
+    if(lb.dataset.armed==='1'&&!followWatch){startFollow();}
+    else{lb.dataset.armed='1';setTimeout(function(){lb.dataset.armed='';},3500);toast('Tap again within 3 s to follow you as you walk');}
     var near=state.places.slice().sort(function(a,b){return distM(userPos,[a.lat,a.lng])-distM(userPos,[b.lat,b.lng]);})[0];
     toast(near?'Nearest: '+near.name+', '+fmtDist(distM(userPos,[near.lat,near.lng])):'Location found');
     renderList();
@@ -3879,7 +3955,17 @@ function saveFormData(){
 }
 /* Live lookup against OpenStreetMap Nominatim, English names where they exist.
    One request per typed pause, as their usage policy asks. */
-var geoTimer=null,geoSeq=0;
+var geoTimer=null,geoSeq=0,hitLayer=null;
+function showHitsOnMap(hits){
+  if(hitLayer){map.removeLayer(hitLayer);hitLayer=null;}
+  if(!hits||!hits.length)return;
+  var ms=hits.slice(0,6).map(function(h,i){
+    var m=L.marker([h.lat,h.lng],{icon:L.divIcon({className:'pinwrap',iconSize:[26,26],iconAnchor:[13,26],html:'<div class="hitpin"><span>'+(i+1)+'</span></div>'}),title:h.name,zIndexOffset:900});
+    m.on('click',function(){addFromHit(h);});
+    return m;
+  });
+  hitLayer=L.layerGroup(ms).addTo(map);
+}
 function geoLookup(q,cb){
   var seq=++geoSeq;
   var c=map.getCenter();
@@ -3942,7 +4028,7 @@ function openSearch(){
   $('#mapSearch').value='';$('#searchRes').innerHTML='';
   setTimeout(function(){$('#mapSearch').focus();},80);
 }
-function closeSearch(){$('#searchWrap').classList.remove('on');window.scrollTo(0,0);}
+function closeSearch(){$('#searchWrap').classList.remove('on');window.scrollTo(0,0);if(hitLayer){map.removeLayer(hitLayer);hitLayer=null;}}
 function runSearch(){
   var q=$('#mapSearch').value.trim(),box=$('#searchRes');
   box.innerHTML='';
@@ -3971,9 +4057,10 @@ function runSearch(){
       if(err){var e=document.createElement('div');e.className='state';e.textContent='Online search is not available here. It works in Safari and the home screen app.';box.appendChild(e);return;}
       if(!hits.length){var n=document.createElement('div');n.className='state';n.textContent='Nothing found in Japan for that.';box.appendChild(n);return;}
       var h2=document.createElement('div');h2.className='grp';h2.textContent='Add from the map of Japan';box.appendChild(h2);
-      hits.forEach(function(hit){
+      showHitsOnMap(hits);
+      hits.forEach(function(hit,hi){
         var b=document.createElement('button');b.type='button';
-        b.innerHTML='<span class="ico">'+esc(typeIcon(hit.kind,hit.name))+'</span><div><b>'+esc(hit.name)+'</b><small>'+esc(hit.addr||hit.kind)+'</small></div>';
+        b.innerHTML='<span class="ico">'+(hi+1)+'</span><div><b>'+esc(hit.name)+'</b><small>'+esc(hit.addr||hit.kind)+'</small></div>';
         b.addEventListener('click',function(){addFromHit(hit);});
         box.appendChild(b);
       });
@@ -3982,7 +4069,7 @@ function runSearch(){
 }
 var lastHit=null;
 function addFromHit(hit){
-  closeSearch();
+  closeSearch();map.flyTo([hit.lat,hit.lng],15,{duration:.5});
   var c=guessCat(hit.name+' '+hit.kind);
   openForm(null);
   $('#fName').value=hit.name;$('#fJp').value=hit.jp||'';
