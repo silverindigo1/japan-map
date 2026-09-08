@@ -31,7 +31,18 @@ em{font-style:normal}
 #map{position:absolute;left:0;right:0;top:0;bottom:var(--tb);z-index:0;background:#C6DBE7}
 .tabbar{position:absolute;left:0;right:0;bottom:0;height:var(--tb);padding-bottom:env(safe-area-inset-bottom);background:var(--paper);border-top:1px solid var(--line);display:flex;z-index:58}
 .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--muted);font-weight:600;padding:6px 0}
-.tabbar button .ic{font-size:21px;line-height:1}
+.tabbar button .ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button.on .ic{stroke-width:2.3}
+.tabbar button{transition:color .15s ease}
+.tabbar button:active .ic{transform:scale(.92)}
+.welcome{position:absolute;inset:0;z-index:95;background:var(--paper);display:none;flex-direction:column;justify-content:flex-end;padding:0 24px calc(28px + env(safe-area-inset-bottom));background-image:radial-gradient(circle at 20% 15%,var(--shu-soft) 0,transparent 42%),radial-gradient(circle at 85% 35%,var(--washi) 0,transparent 45%)}
+.welcome.on{display:flex}
+.welcome h1{font-size:40px;line-height:1.05;margin:0 0 10px;letter-spacing:-.02em}
+.welcome p{font-size:16px;color:var(--muted);line-height:1.5;margin:0 0 26px;max-width:32ch}
+.welcome .btn{width:100%;justify-content:center;padding:14px;font-size:16px;margin-bottom:10px;border-radius:14px}
+.welcome .fine{font-size:12px;color:var(--muted);margin-top:8px}
+.snap-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.snap-row span{flex:1}
 .tabbar button.on{color:var(--shu)}
 .tabbar button .cnt{position:absolute;margin-left:26px;margin-top:-30px;background:var(--indigo);color:#fff;font-size:10px;border-radius:999px;padding:1px 5px;min-width:16px;text-align:center}
 .leaflet-base-labels-pane{pointer-events:none}
@@ -253,6 +264,7 @@ body.dark .pinwrap .nm{background:rgba(24,27,34,.85);color:#EDEDF0}
 .map-menu button .tick{width:14px;color:var(--shu);font-weight:700}
 .map-menu hr{border:0;border-top:1px solid var(--line);margin:4px 0}
 @media (min-width:700px){.map-btn{left:16px;bottom:calc(52px + var(--tb))}.map-menu{left:16px;bottom:calc(88px + var(--tb))}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 .streets-btn{position:absolute;left:12px;bottom:calc(52px + var(--tb));z-index:20;display:none;font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);box-shadow:0 2px 6px rgba(27,31,42,.15)}
 .streets-btn.avail{display:inline-flex;gap:6px;align-items:center}
 .streets-btn.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -446,6 +458,18 @@ body.picking .top,body.picking .fab{display:none}
   .fab{right:16px;bottom:calc(16px + var(--tb))}
   .toast{bottom:calc(90px + var(--tb))}
 }
+@media (min-width:900px){
+  .drawer{left:auto;right:0;width:520px;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(27,31,42,.08)}
+  .modal,.note-editor,.guide-view,.bk-view,.searchwrap{left:auto;right:0;width:560px;border-left:1px solid var(--line)}
+  .welcome{padding-left:max(24px,calc(50% - 300px));padding-right:max(24px,calc(50% - 300px))}
+  .tabbar{left:auto;right:0;width:520px;border-left:1px solid var(--line)}
+  #map{bottom:0}
+  .fab,.locbtn,.hotelbtn{right:calc(520px + 14px)}
+  .sheet{right:calc(520px + 16px)}
+  .top{right:520px}
+}
+.sheet{visibility:hidden;transition:transform .28s ease,visibility 0s linear .28s}
+.sheet.open{visibility:visible;transition:transform .28s ease}
 </style>
 </head>
 <body>
@@ -476,6 +500,15 @@ body.picking .top,body.picking .fab{display:none}
   <div class="note-editor" id="nowSheet" role="dialog" aria-modal="true" style="z-index:64">
     <div class="modal-head"><button class="btn" id="nowClose" type="button">Close</button><h2>What now?</h2><span style="width:60px"></span></div>
     <div class="form"><p class="note" id="nowIntro"></p><div class="now-list" id="nowList"></div></div>
+  </div>
+  <div class="welcome" id="welcome" role="dialog" aria-modal="true">
+    <div>
+      <h1>Your trip,<br>in your pocket.</h1>
+      <p>Places on a map, days planned, bookings with their QR codes, a phrasebook that speaks, and a journal that writes itself. Works offline.</p>
+      <button class="btn primary" id="wJapan" type="button">Start with the Japan pack</button>
+      <button class="btn" id="wNew" type="button">Plan a different trip</button>
+      <div class="fine">Nothing leaves this phone unless you turn on sync.</div>
+    </div>
   </div>
   <div class="bigjp" id="bigJp" role="dialog"><div class="j" id="bigJpText"></div><div class="e" id="bigJpEn"></div><button class="spk" id="bigSpk" type="button" aria-label="Say it in Japanese">🔊</button><div class="h">Show this to a taxi driver or at a counter. Tap anywhere to close.</div></div>
 
@@ -542,6 +575,7 @@ body.picking .top,body.picking .fab{display:none}
       <button class="on" data-panel="places" role="tab">Places</button>
       <button data-panel="days" role="tab">Days</button>
       <button data-panel="guides" role="tab">Guides</button>
+      <button data-panel="trip" role="tab">Trip</button>
       <button data-panel="tools" role="tab">Tools</button>
       <button data-panel="bookings" role="tab">Bookings</button>
       <button data-panel="journal" role="tab">Journal</button>
@@ -565,6 +599,28 @@ body.picking .top,body.picking .fab{display:none}
       <button type="button" class="guide-row" id="phraseOpen"><span class="g">🗣️</span><div><b>Phrasebook</b><small>55 phrases. Tap one and it fills the screen in Japanese.</small></div><span style="color:var(--muted)">&rsaquo;</span></button>
       <div id="guideList"></div>
       <div class="inline-btns" style="margin-top:14px"><button class="btn" id="guideNew" type="button">Write a new guide</button></div>
+    </div>
+    <div class="panel" id="panel-trip">
+      <div class="tool">
+        <h3>This trip</h3>
+        <div class="field"><label for="tName">Name</label><input id="tName"></div>
+        <div class="field"><label for="tWho">Travellers</label><input id="tWho" placeholder="Florian & Lendita"></div>
+        <div class="two"><div class="field"><label for="tStart">First day</label><input id="tStart" type="date"></div><div class="field"><label for="tEnd">Last day</label><input id="tEnd" type="date"></div></div>
+        <label style="font-size:13px;color:var(--muted)">Where you are, day by day</label>
+        <div id="segList"></div>
+        <div class="inline-btns"><button class="btn small" id="segAdd" type="button">Add a stretch</button></div>
+        <label style="font-size:13px;color:var(--muted);margin-top:10px;display:block">Cities on the map</label>
+        <div id="cityList"></div>
+        <div class="inline-btns"><input id="cityNew" placeholder="Add a city, for example Nara" style="flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)"><button class="btn small" id="cityAdd" type="button">Add</button></div>
+        <p class="note" id="tripStat"></p>
+        <div class="inline-btns"><button class="btn primary" id="tripSave" type="button">Save trip</button></div>
+      </div>
+      <div class="tool">
+        <h3>All trips</h3>
+        <div id="tripList"></div>
+        <div class="inline-btns"><button class="btn" id="tripNew" type="button">New trip</button></div>
+        <p class="note">Each trip keeps its own places, days, bookings and journal. Switching reloads the app.</p>
+      </div>
     </div>
     <div class="panel" id="panel-bookings">
       <p class="note">Flights, hotels, trains, tickets and tables, with the confirmation number and a screenshot of the QR code. Each one also shows on its day in the Days tab.</p>
@@ -620,6 +676,15 @@ body.picking .top,body.picking .fab{display:none}
       <p class="note">Use this page to move the list to another phone or to keep a copy.</p>
       <p class="note" id="dataSize"></p>
       <div class="data-block">
+        <h3>Sync between phones</h3>
+        <p class="note">Both phones enter the same project address, key and trip code. Changes merge within a minute, place by place, newest wins. Needs a free Supabase project, see the setup note in the download.</p>
+        <input id="syUrl" placeholder="https://xxxx.supabase.co" autocomplete="off" autocapitalize="off" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);margin-bottom:6px">
+        <input id="syKey" placeholder="anon public key" autocomplete="off" autocapitalize="off" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);margin-bottom:6px">
+        <div class="inline-btns" style="margin-bottom:6px"><input id="syCode" placeholder="trip code" autocomplete="off" autocapitalize="off" style="flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)"><button class="btn small" id="syGen" type="button">New code</button></div>
+        <div class="inline-btns"><button class="btn primary" id="syOn" type="button">Turn on sync</button><button class="btn" id="syNow" type="button">Sync now</button><button class="btn" id="syOff" type="button">Turn off</button></div>
+        <p class="note" id="syStat"></p>
+      </div>
+      <div class="data-block">
         <h3>Appearance</h3>
         <div class="seg" id="themeSeg"><button type="button" data-theme="auto">Auto</button><button type="button" data-theme="light">Light</button><button type="button" data-theme="dark">Dark</button></div>
       </div>
@@ -644,6 +709,8 @@ body.picking .top,body.picking .fab{display:none}
           <button class="btn" id="downloadBtn" type="button">Download file</button>
         </div>
         <p class="note">Save backup file opens the share sheet: send it to Lendita, or Save to Files. She imports it with "Choose a backup file" below.</p>
+        <div class="inline-btns" style="margin-top:8px"><button class="btn" id="sharePage" type="button">Share a read-only trip page</button></div>
+        <p class="note">A single web page with the plan by day, the places and their notes, and the journal. No booking numbers, no QR codes, nothing editable. Good for parents.</p>
       </div>
       <div class="data-block">
         <h3>Import</h3>
@@ -658,6 +725,16 @@ body.picking .top,body.picking .fab{display:none}
         <input type="file" id="kmlFile" accept=".kml,.geojson,.json,.txt,application/vnd.google-earth.kml+xml,application/json,text/plain">
         <div class="inline-btns"><button class="btn" id="kmlBtn" type="button">Add from file</button></div>
         <div class="err" id="kmlErr"></div>
+      </div>
+      <div class="data-block" id="errBlock" style="display:none">
+        <h3>Last error</h3>
+        <p class="note" id="errText"></p>
+        <div class="inline-btns"><button class="btn small" id="errCopy" type="button">Copy for support</button><button class="btn small" id="errClear" type="button">Clear</button></div>
+      </div>
+      <div class="data-block">
+        <h3>Earlier versions</h3>
+        <p class="note">The app keeps a copy of your data from each of the last seven days you used it. Restore one if something went wrong.</p>
+        <div id="snapList"></div>
       </div>
       <div class="data-block">
         <h3>Start over</h3>
@@ -689,6 +766,18 @@ body.picking .top,body.picking .fab{display:none}
       <button class="btn" id="bkEdit" type="button">Edit</button>
     </div>
     <div class="bk-body" id="bkBody"></div>
+  </div>
+  <div class="modal" id="tripModal" role="dialog" aria-modal="true" style="z-index:69">
+    <div class="modal-head"><button class="btn" id="tripCancel" type="button">Cancel</button><h2>New trip</h2><button class="btn primary" id="tripCreate" type="button">Create</button></div>
+    <div class="form">
+      <div class="field"><label for="nName">Name</label><input id="nName" placeholder="Portugal spring 2027"></div>
+      <div class="field"><label for="nWho">Travellers</label><input id="nWho" placeholder="Florian & Lendita"></div>
+      <div class="two"><div class="field"><label for="nStart">First day</label><input id="nStart" type="date"></div><div class="field"><label for="nEnd">Last day</label><input id="nEnd" type="date"></div></div>
+      <div class="field"><label for="nCities">Cities, separated by commas</label><input id="nCities" placeholder="Lisbon, Porto, Sintra"></div>
+      <div class="field"><label class="chk-row" style="border:0"><input type="checkbox" id="nPack"><span>Start with the Japan starter pack (119 places, guides, phrasebook)</span></label></div>
+      <p class="note">Guides, the phrasebook and the signs dictionary are about Japan. They come along with every trip, so use them or ignore them.</p>
+      <div class="err" id="nErr"></div>
+    </div>
   </div>
   <div class="modal" id="bkModal" role="dialog" aria-modal="true" style="z-index:68">
     <div class="modal-head">
@@ -812,11 +901,11 @@ body.picking .top,body.picking .fab{display:none}
   </div>
 
   <nav class="tabbar" id="tabbar" aria-label="Sections">
-    <button type="button" data-page="map" class="on"><span class="ic">🗺️</span>Map</button>
-    <button type="button" data-page="places"><span class="ic">📍</span>Places</button>
-    <button type="button" data-page="days"><span class="ic">📅</span>Days</button>
-    <button type="button" data-page="guides"><span class="ic">📖</span>Guides</button>
-    <button type="button" data-page="more"><span class="ic">⋯</span>More</button>
+    <button type="button" data-page="map" class="on"><svg class="ic" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4zM8 2v16M16 6v16"/></svg>Map</button>
+    <button type="button" data-page="places"><svg class="ic" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Places</button>
+    <button type="button" data-page="days"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Days</button>
+    <button type="button" data-page="guides"><svg class="ic" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Guides</button>
+    <button type="button" data-page="more"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/><circle cx="5" cy="12" r="1.6"/></svg>More</button>
   </nav>
   <div class="toast" id="toast"></div>
 </div>
@@ -1604,6 +1693,7 @@ body.picking .top,body.picking .fab{display:none}
 'use strict';
 
 var KEY='japan-map:v1';
+(function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
 var GOOGLE_MAPS_KEY='';
 var GKEY_STORE='japan-map:gkey';
@@ -1797,8 +1887,8 @@ var SEED_TIPS={
 };
 
 var state={places:[],tips:{},hidden:[]};
-var map,layer,attribution,markers={},selectedId=null,editingId=null,pickMode=false,activeArea='tokyo';
-var noteTimer=null,tipTimers={},pendingDelete=null,pendingReset=null,saveWarned=false,mergedCount=0;
+var map,layer,attribution,markers={},selectedId=null,editingId=null,pickMode=false,activeArea='all';
+var noteTimer=null,tipTimers={},pendingDelete=null,pendingReset=null,saveWarned=false,mergedCount=0,freshInstall=false;
 var formImg='',formPhoto='';
 function library(){ if(!state.library)state.library=[]; return state.library; }
 function removedSeeds(){ if(!state.removedSeeds)state.removedSeeds=[]; return state.removedSeeds; }
@@ -1822,6 +1912,22 @@ function mergeSeeds(){
   return added;
 }
 var TRIP_START='2026-11-10',TRIP_END='2026-12-01';
+var DEFAULT_TRIP={id:'japan-2026',name:'Japan 2026',travellers:'Florian & Lendita',start:'2026-11-10',end:'2026-12-01',pack:'japan',
+  segments:[{from:'2026-11-10',to:'2026-11-14',label:'Tokyo'},{from:'2026-11-15',to:'2026-11-16',label:'Hakone'},{from:'2026-11-17',to:'2026-11-21',label:'Kyoto'},{from:'2026-11-22',to:'2026-11-30',label:'Osaka, Kyoto or Tokyo'},{from:'2026-12-01',to:'2026-12-01',label:'Flight home'}],
+  cities:[{key:'tokyo',label:'Tokyo',tab:'Tokyo',dates:'10 to 15 Nov',center:[35.685,139.755],zoom:12},{key:'hakone',label:'Hakone',tab:'Hakone',dates:'15 to 17 Nov',center:[35.235,139.03],zoom:12},{key:'kyoto',label:'Kyoto',tab:'Kyoto',dates:'17 to 22 Nov',center:[35.01,135.75],zoom:12},{key:'osaka',label:'Osaka and Nara',tab:'Osaka, Nara',dates:'22 Nov onward',center:[34.68,135.62],zoom:11}]};
+function trip(){ if(!state.trip)state.trip=JSON.parse(JSON.stringify(DEFAULT_TRIP)); return state.trip; }
+/* Pushes the trip definition into the globals the rest of the app reads. */
+function applyTrip(){
+  var t=trip();
+  TRIP_START=t.start||DEFAULT_TRIP.start;TRIP_END=t.end||DEFAULT_TRIP.end;
+  Object.keys(AREAS).forEach(function(k){if(k!=='other')delete AREAS[k];});
+  AREA_ORDER.length=0;
+  (t.cities||[]).forEach(function(c){AREAS[c.key]={label:c.label,tab:c.tab||c.label,dates:c.dates||'',center:c.center,zoom:c.zoom||12};AREA_ORDER.push(c.key);});
+  AREA_ORDER.push('other');
+  var h1=document.querySelector('.top h1');
+  if(h1){var small=h1.querySelector('small');h1.childNodes[0].nodeValue=(t.name||'Trip')+' ';}
+  document.title=(t.name||'Trip')+', our map';
+}
 var activeDay=null,expandedDay=null,userPos=null,userMarker=null,userCircle=null,sortNear=false;
 function pad2(n){return (n<10?'0':'')+n;}
 function isoLocal(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
@@ -1830,11 +1936,9 @@ function tripDays(){var out=[],d=TRIP_START,guard=0;while(d<=TRIP_END&&guard<120
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function dayLabel(iso,long){var p=iso.split('-');var d=new Date(+p[0],+p[1]-1,+p[2],12,0,0);return (long?WD[d.getDay()]+' ':'')+d.getDate()+' '+MO[d.getMonth()];}
 function dayHint(iso){
-  if(iso<'2026-11-15')return 'Tokyo';
-  if(iso<'2026-11-17')return 'Hakone';
-  if(iso<'2026-11-22')return 'Kyoto';
-  if(iso<'2026-12-01')return 'Osaka, Kyoto or Tokyo';
-  return 'Flight home';
+  var segs=(state.trip&&state.trip.segments)||DEFAULT_TRIP.segments;
+  for(var i=0;i<segs.length;i++){if(iso>=segs[i].from&&iso<=segs[i].to)return segs[i].label;}
+  return '';
 }
 function todayIso(){return isoLocal(new Date());}
 function dayPlaces(iso){return state.places.filter(function(p){return p.day===iso;}).sort(function(a,b){return (a.order||0)-(b.order||0);});}
@@ -1849,11 +1953,32 @@ function cat(p){return CATS[p.cat]||CATS.other;}
 function area(p){return AREAS[p.area]||AREAS.other;}
 
 /* storage: artifact storage when published, otherwise browser storage, otherwise memory only */
+/* IndexedDB key value store: far larger quota than localStorage, needed for photos. */
+function idbOpen(){
+  return new Promise(function(res,rej){
+    if(!window.indexedDB){rej(new Error('no idb'));return;}
+    var r=indexedDB.open('japan-map',1);
+    r.onupgradeneeded=function(){r.result.createObjectStore('kv');};
+    r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};r.onblocked=function(){rej(new Error('blocked'));};
+  });
+}
+function idbGet(k){return idbOpen().then(function(db){return new Promise(function(res,rej){var t=db.transaction('kv','readonly').objectStore('kv').get(k);t.onsuccess=function(){res(t.result===undefined?null:t.result);};t.onerror=function(){rej(t.error);};});});}
+function idbSet(k,v){return idbOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=function(){res(true);};tx.onerror=function(){rej(tx.error);};});});}
+function idbDel(k){return idbOpen().then(function(db){return new Promise(function(res){var tx=db.transaction('kv','readwrite');tx.objectStore('kv').delete(k);tx.oncomplete=function(){res(true);};tx.onerror=function(){res(false);};});}).catch(function(){return false;});}
 var store={
   mode:'memory',
   load:function(){
     var self=this;
     function local(){ try{ var v=window.localStorage.getItem(KEY); self.mode='local'; return v?JSON.parse(v):null; }catch(e){ self.mode='memory'; return null; } }
+    if(!(window.storage&&window.storage.get)&&window.indexedDB){
+      return idbGet(KEY).then(function(v){
+        if(v){self.mode='idb';return JSON.parse(v);}
+        var l=local();
+        if(l){self.mode='idb';idbSet(KEY,JSON.stringify(l)).catch(function(){self.mode='local';});}
+        else self.mode='idb';
+        return l;
+      }).catch(function(){return local();});
+    }
     if(window.storage&&window.storage.get){
       return window.storage.get(KEY,false).then(function(r){ self.mode='artifact'; return r&&r.value?JSON.parse(r.value):null; }).catch(function(){ return local(); });
     }
@@ -1863,6 +1988,9 @@ var store={
     var self=this,s=JSON.stringify(data);
     function local(){ try{ window.localStorage.setItem(KEY,s); self.mode='local'; return true; }catch(e){ if(e&&(e.name==='QuotaExceededError'||e.code===22)){ self.quota=true; return false; } self.mode='memory'; return false; } }
     self.quota=false;
+    if(self.mode==='idb'){
+      return idbSet(KEY,s).then(function(){return true;}).catch(function(){return local();});
+    }
     if(window.storage&&window.storage.set&&self.mode!=='local'){
       return window.storage.set(KEY,s,false).then(function(r){ if(r){ self.mode='artifact'; return true; } return local(); }).catch(function(){ return local(); });
     }
@@ -1870,12 +1998,135 @@ var store={
   },
   describe:function(){
     if(this.mode==='artifact') return 'Notes are saved in Claude artifact storage for your account.';
+    if(this.mode==='idb') return 'Saved on this device (IndexedDB). '+(syncState.on?'Sync is on.':'Turn on sync below to share with another phone.');
     if(this.mode==='local') return 'Notes are saved in this browser on this device.';
     return 'Notes are NOT kept between sessions in this view. Artifact storage only works once the artifact is published and opened on web or desktop. Use Copy as text before closing.';
   }
 };
+function nowHM(){var d=new Date();return pad2(d.getHours())+':'+pad2(d.getMinutes());}
+var syncState={on:false,url:'',key:'',code:'',busy:false,last:0,pushTimer:null,pulling:false};
+var SYNC_COLLECTIONS=['places','bookings','expenses','checks','guides','library','customCats'];
+var lastSnap={};
+function stampChanges(){
+  /* give every changed entity a timestamp and remember deletions, so two phones can merge */
+  var now=Date.now();
+  SYNC_COLLECTIONS.forEach(function(c){
+    var arr=state[c]||[];var seen={};
+    arr.forEach(function(e){
+      if(!e||!e.id)return;seen[e.id]=1;
+      var body=JSON.stringify(e,function(k,v){return k==='_u'?undefined:v;});
+      var key=c+':'+e.id;
+      if(lastSnap[key]!==body){e._u=now;lastSnap[key]=body;}
+    });
+    Object.keys(lastSnap).forEach(function(k){
+      if(k.indexOf(c+':')===0&&!seen[k.slice(c.length+1)]){state.gone=state.gone||{};state.gone[k.slice(c.length+1)]=now;delete lastSnap[k];}
+    });
+  });
+  var tk=JSON.stringify(state.tips);if(lastSnap['tips']!==tk){state.tipsU=now;lastSnap['tips']=tk;}
+}
+function snapshotNow(){lastSnap={};SYNC_COLLECTIONS.forEach(function(c){(state[c]||[]).forEach(function(e){if(e&&e.id)lastSnap[c+':'+e.id]=JSON.stringify(e,function(k,v){return k==='_u'?undefined:v;});});});lastSnap['tips']=JSON.stringify(state.tips);}
+function syncPayload(){
+  var out={};SYNC_COLLECTIONS.forEach(function(c){out[c]=state[c]||[];});
+  out.tips=state.tips;out.tipsU=state.tipsU||0;out.trip=trip();out.gone=state.gone||{};
+  out.removedSeeds=removedSeeds();out.removedGuides=removedGuides();out.removedChecks=removedChecks();out.removedBookings=removedBookings();
+  out.budget=state.budget||'';out.rate=state.rate||'';
+  return out;
+}
+function mergeRemote(rem){
+  if(!rem)return false;var changed=false;var gone=Object.assign({},state.gone||{},rem.gone||{});
+  SYNC_COLLECTIONS.forEach(function(c){
+    var local=state[c]||[],remote=rem[c]||[],byId={};
+    local.forEach(function(e){if(e&&e.id)byId[e.id]=e;});
+    remote.forEach(function(e){
+      if(!e||!e.id)return;var l=byId[e.id];
+      if(!l){ if(!(gone[e.id]&&gone[e.id]>(e._u||0))){byId[e.id]=e;changed=true;} }
+      else if((e._u||0)>(l._u||0)){byId[e.id]=e;changed=true;}
+    });
+    var merged=Object.keys(byId).map(function(k){return byId[k];}).filter(function(e){return !(gone[e.id]&&gone[e.id]>(e._u||0));});
+    if(merged.length!==local.length)changed=true;
+    if(c==='places')merged.sort(function(a,b){return (a._u||0)-(b._u||0);});
+    state[c]=merged;
+  });
+  if((rem.tipsU||0)>(state.tipsU||0)&&rem.tips){state.tips=Object.assign({},SEED_TIPS,rem.tips);state.tipsU=rem.tipsU;changed=true;}
+  if(rem.trip&&(rem.trip._u||0)>(trip()._u||0)){state.trip=rem.trip;applyTrip();buildTabs();changed=true;}
+  ['removedSeeds','removedGuides','removedChecks','removedBookings'].forEach(function(k){var a=state[k]||[];(rem[k]||[]).forEach(function(id){if(a.indexOf(id)===-1){a.push(id);changed=true;}});state[k]=a;});
+  if(rem.budget&&!state.budget){state.budget=rem.budget;changed=true;}
+  if(rem.rate&&!state.rate){state.rate=rem.rate;changed=true;}
+  state.gone=gone;
+  return changed;
+}
+function syncHeaders(){return {'apikey':syncState.key,'Authorization':'Bearer '+syncState.key,'Content-Type':'application/json'};}
+function syncStatus(msg){var el=$('#syStat');if(el)el.textContent=msg;}
+function syncPull(){
+  if(!syncState.on||syncState.busy)return Promise.resolve(false);
+  syncState.busy=true;
+  return fetch(syncState.url+'/rest/v1/trips?id=eq.'+encodeURIComponent(syncState.code)+'&select=data,updated_at',{headers:syncHeaders()})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(rows){
+      syncState.busy=false;
+      var row=rows&&rows[0];
+      if(!row){return syncPush(true);}
+      var changed=mergeRemote(row.data);
+      if(changed){syncState.pulling=true;snapshotNow();persist().then(function(){syncState.pulling=false;});renderMarkers();renderList();renderDays();if(currentPage!=='map')showPage(currentPage);}
+      syncState.last=Date.now();syncStatus('Synced '+nowHM()+(changed?', changes received.':'.'));
+      return changed;
+    }).catch(function(e){syncState.busy=false;syncStatus('Sync failed: '+e.message);return false;});
+}
+function syncPush(force){
+  if(!syncState.on)return Promise.resolve(false);
+  var body=[{id:syncState.code,data:syncPayload(),updated_at:new Date().toISOString()}];
+  return fetch(syncState.url+'/rest/v1/trips',{method:'POST',headers:Object.assign(syncHeaders(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(body)})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);syncState.last=Date.now();syncStatus('Synced '+nowHM()+'.');return true;})
+    .catch(function(e){syncStatus('Sync failed: '+e.message);return false;});
+}
+function scheduleSyncPush(){if(!syncState.on||syncState.pulling)return;clearTimeout(syncState.pushTimer);syncState.pushTimer=setTimeout(function(){syncPull().then(function(){syncPush();});},2500);}
+function loadSyncSettings(){
+  try{var s=JSON.parse(window.localStorage.getItem('jm:sync:'+KEY)||'null');if(s){syncState.on=!!s.on;syncState.url=s.url||'';syncState.key=s.key||'';syncState.code=s.code||'';}}catch(e){}
+}
+function saveSyncSettings(){try{window.localStorage.setItem('jm:sync:'+KEY,JSON.stringify({on:syncState.on,url:syncState.url,key:syncState.key,code:syncState.code}));}catch(e){}}
+function bindSync(){
+  loadSyncSettings();
+  $('#syUrl').value=syncState.url;$('#syKey').value=syncState.key;$('#syCode').value=syncState.code;
+  syncStatus(syncState.on?'Sync is on.':'Sync is off.');
+  $('#syGen').addEventListener('click',function(){var a='abcdefghjkmnpqrstuvwxyz23456789',c='';for(var i=0;i<20;i++)c+=a[Math.floor(Math.random()*a.length)];$('#syCode').value=c;});
+  $('#syOn').addEventListener('click',function(){
+    syncState.url=$('#syUrl').value.trim().replace(/\/+$/,'');syncState.key=$('#syKey').value.trim();syncState.code=$('#syCode').value.trim();
+    if(!/^https:\/\/.+/.test(syncState.url)||!syncState.key||syncState.code.length<8){syncStatus('Address, key and a code of at least 8 characters are needed.');return;}
+    syncState.on=true;saveSyncSettings();snapshotNow();syncStatus('Connecting');
+    syncPull().then(function(){return syncPush();}).then(function(ok){if(ok)toast('Sync is on');});
+  });
+  $('#syNow').addEventListener('click',function(){if(!syncState.on){syncStatus('Turn on sync first.');return;}syncPull().then(function(){return syncPush();});});
+  $('#syOff').addEventListener('click',function(){syncState.on=false;saveSyncSettings();syncStatus('Sync is off. Data stays on this phone.');});
+  if(syncState.on){snapshotNow();setTimeout(syncPull,1500);setInterval(function(){if(document.visibilityState==='visible')syncPull();},60000);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')syncPull();});}
+}
+var snapDone='';
+function takeSnapshot(){
+  var d=todayIso();if(snapDone===d)return;snapDone=d;
+  var key='jm:snap:'+KEY+':'+d;
+  idbSet(key,JSON.stringify(state)).then(function(){
+    return idbGet('jm:snaps:'+KEY).then(function(v){var list=v?JSON.parse(v):[];if(list.indexOf(d)===-1)list.push(d);list.sort();var drop=list.slice(0,Math.max(0,list.length-7));list=list.slice(-7);drop.forEach(function(x){idbDel('jm:snap:'+KEY+':'+x);});return idbSet('jm:snaps:'+KEY,JSON.stringify(list));});
+  }).catch(function(){});
+}
+function renderSnapshots(){
+  var box=$('#snapList');if(!box)return;
+  idbGet('jm:snaps:'+KEY).then(function(v){
+    var list=v?JSON.parse(v):[];box.innerHTML='';
+    if(!list.length){box.innerHTML='<div class="empty">No earlier versions yet.</div>';return;}
+    list.slice().reverse().forEach(function(d){
+      var r=document.createElement('div');r.className='snap-row';
+      r.innerHTML='<span>'+esc(dayLabel(d,true))+(d===todayIso()?' (today, before the first change)':'')+'</span><button class="btn small" type="button">Restore</button>';
+      r.querySelector('button').addEventListener('click',function(){
+        var b=this;if(b.dataset.armed!==d){b.dataset.armed=d;b.textContent='Tap again to restore';setTimeout(function(){b.dataset.armed='';b.textContent='Restore';},4000);return;}
+        idbGet('jm:snap:'+KEY+':'+d).then(function(s){if(!s){toast('That version is gone.');return;}return idbSet(KEY,s).then(function(){toast('Restored '+dayLabel(d)+'. Reloading.');setTimeout(function(){location.reload();},600);});});
+      });
+      box.appendChild(r);
+    });
+  }).catch(function(){box.innerHTML='<div class="empty">Earlier versions need IndexedDB, not available here.</div>';});
+}
 function persist(){
+  if(store.mode==='idb')takeSnapshot();
   state.changedSince=(state.changedSince||0)+1;
+  if(syncState.on&&!syncState.pulling){stampChanges();scheduleSyncPush();}
   var more=document.querySelector('#tabbar button[data-page=more]');
   if(more){var dot=more.querySelector('.dot');var due=(state.changedSince>15)&&(!state.lastBackup||Date.now()-new Date(state.lastBackup).getTime()>5*86400000);if(due&&!dot){dot=document.createElement('span');dot.className='dot';more.appendChild(dot);}else if(!due&&dot)dot.remove();}
   return store.save(state).then(function(ok){
@@ -1933,7 +2184,7 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
-      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';state.lastBackup=saved.lastBackup||'';state.changedSince=saved.changedSince||0;
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';state.lastBackup=saved.lastBackup||'';state.changedSince=saved.changedSince||0;state.trip=saved.trip||null;state.gone=saved.gone||{};
       state.bookings=Array.isArray(saved.bookings)?saved.bookings:[];state.removedBookings=Array.isArray(saved.removedBookings)?saved.removedBookings:[];state.expenses=Array.isArray(saved.expenses)?saved.expenses:[];state.budget=saved.budget||'';mergeBookings();
       if(!state.expMigrated){state.places.forEach(function(p){if(p.spent)syncPlaceExpense(p);});state.expMigrated=1;}
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
@@ -1947,24 +2198,31 @@ function init(){
       state.tips=Object.assign({},SEED_TIPS);
       state.guides=[];mergeGuides();state.checks=[];mergeChecks();state.bookings=[];mergeBookings();state.expenses=[];
       state.places.forEach(function(p){if(SEED_CLOSED[p.id])p.closed=SEED_CLOSED[p.id].slice();});state.closedSeeded=1;
+      freshInstall=true;
     }
+    applyTrip();activeArea=AREA_ORDER[0]||'all';
     buildMap();buildTabs();buildChips();buildForm();
     renderMarkers();renderList();renderTips();bind();
     $('#storageNote').textContent=store.describe();
     if(mergedCount) setTimeout(function(){toast(mergedCount+' new places added to the list. Your own places and notes are untouched.');},900);
-    renderBackupNote();
+    renderBackupNote();renderSnapshots();
+    if(freshInstall&&!(window.storage&&window.storage.get)){
+      $('#welcome').classList.add('on');
+      $('#wJapan').addEventListener('click',function(){$('#welcome').classList.remove('on');persist();toast('The Japan pack is loaded. Add your own places with + or search.');});
+      $('#wNew').addEventListener('click',function(){$('#welcome').classList.remove('on');showPage('more');document.querySelector('.tabs button[data-panel=trip]').click();$('#tripNew').click();});
+    }
     if(!getGoogleKey()) gStatus('No key saved. The built-in map is in use.');
   });
 }
 
 function buildMap(){
-  map=L.map('map',{zoomControl:false,attributionControl:false,tap:true,minZoom:5,maxZoom:17,preferCanvas:true}).setView(AREAS.tokyo.center,AREAS.tokyo.zoom);
+  map=L.map('map',{zoomControl:false,attributionControl:false,tap:true,minZoom:5,maxZoom:17,preferCanvas:true}).setView((AREAS[AREA_ORDER[0]]||AREAS.other).center,(AREAS[AREA_ORDER[0]]||AREAS.other).zoom);
   attribution=L.control.attribution({position:'bottomleft',prefix:false}).addTo(map);
   attribution.addAttribution('<span class="attrib">Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://openmaptiles.org/">OpenMapTiles</a> via OpenFreeMap. Land: Natural Earth</span>');
   L.control.scale({position:'bottomleft',imperial:false}).addTo(map);
   buildBase();
   probeTiles();
-  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);}};
+  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();}};
   if(getGoogleKey()) setTimeout(enableGoogle,50);
   layer=L.layerGroup().addTo(map);
   map.on('click',onMapClick);
@@ -2181,7 +2439,7 @@ function buildBase(){
   }
   [3,2,0,1].forEach(function(t){pg(t);});
   var citiesMajor=group(5),citiesMinor=group(11),suburbs=group(12),stations=group(14),stationDots=group(13),waters=group(12);
-  Object.keys(BASE.areas||{}).forEach(function(a){
+  function buildArea(a){
     var d=BASE.areas[a];
     (d.polys||[]).forEach(function(p){addPoly(p[0],p[1]);});
     (d.lines||[]).forEach(function(l){addLine(l[0],l[1]);});
@@ -2200,8 +2458,18 @@ function buildBase(){
         L.marker(ll,{icon:L.divIcon({className:'lbl',html:esc(name),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(suburbs.layer);
       }
     });
-  });
-  (BASE.local||[]).forEach(function(l){addLine(l[0],l[1]);});
+  }
+  var areaKeys=Object.keys(BASE.areas||{});
+  var firstArea=areaKeys.indexOf(activeArea)>-1?activeArea:areaKeys[0];
+  if(firstArea)buildArea(firstArea);
+  var restAreas=areaKeys.filter(function(a){return a!==firstArea;});
+  function buildNext(){
+    var a=restAreas.shift();
+    if(a){buildArea(a);syncBaseGroups();setTimeout(buildNext,0);return;}
+    (BASE.local||[]).forEach(function(l){addLine(l[0],l[1]);});
+    syncBaseGroups();
+  }
+  setTimeout(buildNext,80);
   if(BASE.regional){
     (BASE.regional.labels||[]).forEach(function(lb){
       var major=lb[4]<=3||MAJOR[lb[2]]===1;
@@ -2725,6 +2993,93 @@ function bindExpenses(){
     $('#exAmt').value='';$('#exNote').value='';persist();renderExpenses();toast('Expense added');
   });
 }
+/* ---------- trips index: which trips exist, which is active ---------- */
+var TRIPS_KEY='jm:trips';
+function tripsIndex(){ try{ var v=JSON.parse(window.localStorage.getItem(TRIPS_KEY)||'null'); if(v&&Array.isArray(v.list))return v; }catch(e){} return {active:'japan-2026',list:[{id:'japan-2026',name:'Japan 2026',start:'2026-11-10',end:'2026-12-01'}]}; }
+function saveTripsIndex(ix){ try{ window.localStorage.setItem(TRIPS_KEY,JSON.stringify(ix)); }catch(e){} }
+function renderTripPanel(){
+  var t=trip();
+  $('#tName').value=t.name||'';$('#tWho').value=t.travellers||'';$('#tStart').value=t.start||'';$('#tEnd').value=t.end||'';
+  var sl=$('#segList');sl.innerHTML='';
+  (t.segments||[]).forEach(function(s,i){
+    var r=document.createElement('div');r.className='two';r.style.marginBottom='6px';
+    r.innerHTML='<input type="date" value="'+esc(s.from)+'" data-i="'+i+'" data-f="from"><input type="date" value="'+esc(s.to)+'" data-i="'+i+'" data-f="to"><input value="'+esc(s.label)+'" placeholder="Where" data-i="'+i+'" data-f="label" style="grid-column:1/2"><button type="button" class="btn small" data-rm="'+i+'">Remove</button>';
+    sl.appendChild(r);
+  });
+  var cl=$('#cityList');cl.innerHTML='';
+  (t.cities||[]).forEach(function(c,i){
+    var r=document.createElement('div');r.className='chk-row';
+    r.innerHTML='<label style="flex:1">'+esc(c.label)+' <small style="color:var(--muted)">'+esc(c.dates||'')+'</small></label><button type="button" class="rm" data-city="'+i+'" aria-label="Remove">&times;</button>';
+    cl.appendChild(r);
+  });
+  var ix=tripsIndex(),tl=$('#tripList');tl.innerHTML='';
+  ix.list.forEach(function(x){
+    var r=document.createElement('div');r.className='chk-row';
+    r.innerHTML='<label style="flex:1"><b>'+esc(x.name)+'</b><br><small style="color:var(--muted)">'+esc(dayLabel(x.start,true)+' to '+dayLabel(x.end,true))+'</small></label>'+(x.id===ix.active?'<span class="who">Open</span>':'<button type="button" class="btn small" data-open="'+esc(x.id)+'">Open</button>')+(x.id!==ix.active?'<button type="button" class="rm" data-del="'+esc(x.id)+'" aria-label="Delete">&times;</button>':'');
+    tl.appendChild(r);
+  });
+}
+function readTripPanel(){
+  var t=trip();
+  t.name=$('#tName').value.trim()||t.name;t.travellers=$('#tWho').value.trim();
+  if($('#tStart').value)t.start=$('#tStart').value;if($('#tEnd').value)t.end=$('#tEnd').value;
+  if(t.end<t.start)t.end=t.start;
+  var segs=[];document.querySelectorAll('#segList .two').forEach(function(r){var f=r.querySelector('[data-f=from]').value,to=r.querySelector('[data-f=to]').value,l=r.querySelector('[data-f=label]').value.trim();if(f&&to&&l)segs.push({from:f,to:to<f?f:to,label:l});});
+  segs.sort(function(a,b){return a.from<b.from?-1:1;});t.segments=segs;
+  t._u=Date.now();
+}
+function bindTripPanel(){
+  $('#tripSave').addEventListener('click',function(){
+    readTripPanel();applyTrip();buildTabs();persist();renderDays();renderTripPanel();
+    var ix=tripsIndex();ix.list.forEach(function(x){if(x.id===ix.active){x.name=trip().name;x.start=trip().start;x.end=trip().end;}});saveTripsIndex(ix);
+    $('#subTitle').textContent=tripStatus();$('#tripStat').textContent='Saved.';toast('Trip saved');
+  });
+  $('#segAdd').addEventListener('click',function(){readTripPanel();var t=trip();var last=t.segments[t.segments.length-1];var from=last?addDays(last.to,1):t.start;t.segments.push({from:from,to:from,label:''});renderTripPanel();});
+  $('#segList').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;readTripPanel();trip().segments.splice(+b.dataset.rm,1);renderTripPanel();});
+  $('#cityList').addEventListener('click',function(e){var b=e.target.closest('[data-city]');if(!b)return;trip().cities.splice(+b.dataset.city,1);renderTripPanel();});
+  $('#cityAdd').addEventListener('click',function(){
+    var q=$('#cityNew').value.trim();if(!q)return;
+    $('#tripStat').textContent='Looking up '+q;
+    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=en&q='+encodeURIComponent(q)).then(function(r){return r.json();}).then(function(js){
+      if(!js||!js.length){$('#tripStat').textContent='Could not find '+q+'.';return;}
+      var r=js[0];var key='c_'+q.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')+'_'+uid().slice(0,3);
+      trip().cities.push({key:key,label:r.name||q,tab:r.name||q,dates:'',center:[+r.lat,+r.lon],zoom:12});
+      $('#cityNew').value='';$('#tripStat').textContent='Added '+(r.name||q)+'. Save trip to apply.';renderTripPanel();
+    }).catch(function(){$('#tripStat').textContent='City lookup needs the internet.';});
+  });
+  $('#tripNew').addEventListener('click',function(){$('#nName').value='';$('#nWho').value=trip().travellers||'';$('#nStart').value='';$('#nEnd').value='';$('#nCities').value='';$('#nPack').checked=false;$('#nErr').textContent='';$('#tripModal').classList.add('open');});
+  $('#tripCancel').addEventListener('click',function(){$('#tripModal').classList.remove('open');});
+  $('#tripCreate').addEventListener('click',createTrip);
+  $('#tripList').addEventListener('click',function(e){
+    var o=e.target.closest('[data-open]'),d=e.target.closest('[data-del]');
+    if(o){var ix=tripsIndex();ix.active=o.dataset.open;saveTripsIndex(ix);location.reload();}
+    if(d){var b=d;if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='!';toast('Tap again to delete that trip');setTimeout(function(){b.dataset.armed='';b.innerHTML='&times;';},4000);return;}
+      var ix2=tripsIndex();ix2.list=ix2.list.filter(function(x){return x.id!==d.dataset.del;});saveTripsIndex(ix2);
+      try{window.localStorage.removeItem('jm:trip:'+d.dataset.del);}catch(e2){} idbDel('jm:trip:'+d.dataset.del);renderTripPanel();toast('Trip deleted');}
+  });
+}
+function createTrip(){
+  var name=$('#nName').value.trim(),start=$('#nStart').value,end=$('#nEnd').value;
+  if(!name||!start||!end){$('#nErr').textContent='Name, first day and last day are needed.';return;}
+  if(end<start){$('#nErr').textContent='The last day is before the first day.';return;}
+  var cities=$('#nCities').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+  var id=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+'-'+uid().slice(0,4);
+  $('#nErr').textContent=cities.length?'Looking up cities':'';
+  var lookups=cities.map(function(c,i){return new Promise(function(res){setTimeout(function(){
+    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=en&q='+encodeURIComponent(c)).then(function(r){return r.json();}).then(function(js){
+      var r=js&&js[0];res(r?{key:'c_'+c.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'_'+i,label:r.name||c,tab:r.name||c,dates:'',center:[+r.lat,+r.lon],zoom:12}:null);
+    }).catch(function(){res(null);});},i*1100);});});
+  Promise.all(lookups).then(function(found){
+    var t={id:id,name:name,travellers:$('#nWho').value.trim(),start:start,end:end,pack:$('#nPack').checked?'japan':'',segments:[{from:start,to:end,label:found.filter(Boolean).map(function(c){return c.label;}).join(', ')||name}],cities:found.filter(Boolean),_u:Date.now()};
+    var fresh={places:[],tips:Object.assign({},SEED_TIPS),hidden:[],library:[],removedSeeds:[],guides:[],checks:[],bookings:[],expenses:[],trip:t,gone:{},photoSplit:1,closedSeeded:1,expMigrated:1};
+    if(t.pack==='japan'){fresh.places=SEED_PLACES.map(function(p){var np=Object.assign({visited:false},p);if(SEED_CLOSED[p.id])np.closed=SEED_CLOSED[p.id].slice();return np;});fresh.removedSeeds=[];}
+    else{fresh.removedSeeds=SEED_PLACES.map(function(p){return p.id;});fresh.removedBookings=SEED_BOOKINGS.map(function(b){return b.id;});fresh.removedChecks=[];}
+    var key='jm:trip:'+id;
+    return idbSet(key,JSON.stringify(fresh)).catch(function(){try{window.localStorage.setItem(key,JSON.stringify(fresh));}catch(e){}}).then(function(){
+      var ix=tripsIndex();ix.list.push({id:id,name:name,start:start,end:end});ix.active=id;saveTripsIndex(ix);location.reload();
+    });
+  });
+}
 function renderChecks(){
   var box=$('#chkList');if(!box)return;box.innerHTML='';
   var list=checks().filter(function(c){return whoFilter==='all'||(c.who||'both')===whoFilter;}).slice().sort(function(a,b){return (a.done===b.done)?0:(a.done?1:-1);});
@@ -2764,8 +3119,24 @@ function bindWho(){
   $('#shareLoc').addEventListener('click',shareLocation);
   $('#whoSeg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;whoFilter=b.dataset.who;document.querySelectorAll('#whoSeg button').forEach(function(x){x.classList.toggle('on',x===b);});if(whoFilter!=='all')$('#chkWho').value=whoFilter;renderChecks();});
 }
+var errShown=false;
+function recordError(msg){
+  try{window.localStorage.setItem('jm:lasterr',JSON.stringify({t:new Date().toISOString(),m:String(msg).slice(0,600),v:'v27'}));}catch(e){}
+  if(!errShown){errShown=true;toast('Something went wrong, but your data is safe. Details under Backup.');}
+  renderLastError();
+}
+function renderLastError(){
+  var b=$('#errBlock');if(!b)return;var v=null;try{v=JSON.parse(window.localStorage.getItem('jm:lasterr')||'null');}catch(e){}
+  if(!v){b.style.display='none';return;}
+  b.style.display='';$('#errText').textContent=v.t.slice(0,16).replace('T',' ')+': '+v.m;
+}
+window.addEventListener('error',function(e){recordError(e.message+' @'+(e.lineno||'')+':'+(e.colno||''));});
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;recordError('promise: '+(r&&r.message?r.message:String(r)));});
 function bindTools(){
-  bindWho();bindBookings();bindExpenses();
+  bindWho();bindBookings();bindExpenses();bindTripPanel();bindSync();
+  renderLastError();
+  $('#errCopy').addEventListener('click',function(){copyText($('#errText').textContent+' | '+navigator.userAgent,function(ok){toast(ok?'Copied':'Could not copy');});});
+  $('#errClear').addEventListener('click',function(){try{window.localStorage.removeItem('jm:lasterr');}catch(e){}renderLastError();});
   $('#voiceSel').addEventListener('change',function(){state.voiceName=this.value;persist();pickVoice();});
   $('#voiceTest').addEventListener('click',function(){speakJa('こんにちは。新婚旅行で日本に来ました。');});
   renderVoicePicker();
@@ -3042,7 +3413,7 @@ function renderNearby(p){
 }
 /* Weather: Open-Meteo, free for personal use, no key. Cached per area for three hours. */
 var WX_ICON=function(c){ if(c===0)return '☀️'; if(c===1)return '🌤️'; if(c===2)return '⛅'; if(c===3)return '☁️'; if(c===45||c===48)return '🌫️'; if(c>=51&&c<=57)return '🌦️'; if(c>=61&&c<=67)return '🌧️'; if(c>=71&&c<=77)return '🌨️'; if(c>=80&&c<=82)return '🌦️'; if(c>=85&&c<=86)return '🌨️'; if(c>=95)return '⛈️'; return ''; };
-function wxAreaFor(iso){ var h=dayHint(iso); if(h==='Tokyo')return 'tokyo'; if(h==='Hakone')return 'hakone'; if(h==='Kyoto')return 'kyoto'; if(h.indexOf('Osaka')===0)return 'osaka'; return null; }
+function wxAreaFor(iso){ var h=(dayHint(iso)||'').toLowerCase(); var hit=null; AREA_ORDER.forEach(function(k){ if(k==='other'||hit)return; var lab=(AREAS[k].label||'').toLowerCase(); if(h===lab||h.indexOf(lab.split(' ')[0])===0)hit=k; }); return hit; }
 function wxFor(iso,areaKey){
   var w=state.weather&&state.weather[areaKey]; if(!w||!w.days)return null;
   return w.days[iso]||null;
@@ -3051,7 +3422,7 @@ function fetchWeather(force){
   if(!navigator.onLine&&navigator.onLine!==undefined)return;
   state.weather=state.weather||{};
   var now=Date.now();
-  ['tokyo','hakone','kyoto','osaka'].forEach(function(k){
+  AREA_ORDER.filter(function(k){return k!=='other';}).forEach(function(k){
     var w=state.weather[k];
     if(!force&&w&&w.fetched&&now-w.fetched<3*3600*1000)return;
     var c=AREAS[k].center;
@@ -3116,8 +3487,8 @@ function tripStatus(){
   var d0=new Date(TRIP_START+'T12:00:00'),d1=new Date(TRIP_END+'T12:00:00'),dn=new Date(t+'T12:00:00');
   var daysTo=Math.round((d0-dn)/86400000),total=Math.round((d1-d0)/86400000)+1;
   if(t<TRIP_START)return daysTo===1?'Tomorrow':daysTo+' days to go';
-  if(t<=TRIP_END)return 'Day '+(Math.round((dn-d0)/86400000)+1)+' of '+total+', '+dayHint(t);
-  return 'Florian & Lendita, 10 Nov to 1 Dec';
+  if(t<=TRIP_END)return 'Day '+(Math.round((dn-d0)/86400000)+1)+' of '+total+(dayHint(t)?', '+dayHint(t):'');
+  return (trip().travellers||'')+(trip().travellers?', ':'')+dayLabel(TRIP_START)+' to '+dayLabel(TRIP_END);
 }
 function bindDays(){
   $('#subTitle').textContent=tripStatus();
@@ -3261,6 +3632,7 @@ function showPage(name){
   if(panel==='tools')renderChecks();
   if(panel==='journal')renderJournal();
   if(panel==='bookings')renderBookings();
+  if(panel==='trip')renderTripPanel();
   if(panel==='days')fetchWeather(false);
   activatePanel(panel);
   $('#drawerTitle').textContent=PAGE_TITLE[name]||'';
@@ -3430,6 +3802,7 @@ function installCustomCats(){
     if(!CATS[c.key]){CATS[c.key]={label:c.label,color:c.color,icon:c.icon,custom:true};CAT_ORDER.splice(CAT_ORDER.length-1,0,c.key);}
   });
 }
+function fillAreaSelect(){var fa=$('#fArea');var cur=fa.value;fa.innerHTML='';AREA_ORDER.forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=AREAS[k].label;fa.appendChild(o);});if(cur&&AREAS[cur])fa.value=cur;}
 function fillCatSelect(){
   var fc=$('#fCat');var cur=fc.value;fc.innerHTML='';
   CAT_ORDER.forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=CATS[k].icon+'  '+CATS[k].label;fc.appendChild(o);});
@@ -3452,7 +3825,7 @@ function buildForm(){
     $('#newCat').classList.remove('on');$('#ncName').value='';$('#ncIcon').value='';
     toast('Type "'+name+'" created');
   });
-  var fa=$('#fArea');AREA_ORDER.forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=AREAS[k].label;fa.appendChild(o);});
+  fillAreaSelect();
   fillCatSelect();var fc=$('#fCat');
   var g=$('#emojiGrid');
   EMOJI.forEach(function(e){var b=document.createElement('button');b.type='button';b.textContent=e;b.addEventListener('click',function(){$('#fIcon').value=e;markEmoji();});g.appendChild(b);});
@@ -3465,8 +3838,8 @@ function openForm(p){
   editingId=p?p.id:null;
   $('#formTitle').textContent=p?'Edit place':'New place';
   $('#fName').value=p?p.name:'';$('#fJp').value=p?(p.jp||''):'';
-  $('#fArea').value=p?(AREAS[p.area]?p.area:'other'):(activeArea==='all'?'tokyo':activeArea);
-  fillCatSelect();$('#newCat').classList.remove('on');
+  $('#fArea').value=p?(AREAS[p.area]?p.area:'other'):(activeArea==='all'?(AREA_ORDER[0]||'other'):activeArea);
+  fillCatSelect();fillAreaSelect();$('#newCat').classList.remove('on');
   $('#fCat').value=p?(CATS[p.cat]?p.cat:'other'):'other';
   $('#fIcon').value=p?(p.icon||''):'';markEmoji();
   $('#fLat').value=p?p.lat:'';$('#fLng').value=p?p.lng:'';
@@ -3777,6 +4150,41 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
+function tripPageHtml(){
+  var t=trip();
+  function e(s){return esc(String(s||''));}
+  var css='body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px 18px;color:#1B1F2A;line-height:1.5}h1{font-size:30px;margin:0 0 4px}h2{font-size:20px;margin:28px 0 8px;border-bottom:2px solid #E04E2B;padding-bottom:4px}h3{font-size:15px;margin:16px 0 4px}.m{color:#6B7280;font-size:14px}.stop{padding:6px 0;border-bottom:1px solid #eee}.stop b{display:block}.stop small{color:#6B7280}p{margin:4px 0}.pl{margin:6px 0 12px}.pl small{color:#6B7280;display:block}';
+  var out=['<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+e(t.name)+'</title><style>'+css+'</style></head><body>'];
+  out.push('<h1>'+e(t.name)+'</h1><div class="m">'+e(t.travellers)+(t.travellers?', ':'')+e(dayLabel(TRIP_START,true))+' to '+e(dayLabel(TRIP_END,true))+'</div>');
+  out.push('<h2>Day by day</h2>');
+  tripDays().forEach(function(d){
+    var stops=dayPlaces(d),bks=bookingsForDay(d).filter(function(b){return b.type!=='hotel';}),hotel=bookingsForDay(d).filter(function(b){return b.type==='hotel';})[0];
+    if(!stops.length&&!bks.length&&!hotel)return;
+    out.push('<h3>'+e(dayLabel(d,true))+(dayHint(d)?', '+e(dayHint(d)):'')+'</h3>');
+    if(hotel)out.push('<p class="m">Staying at '+e(hotel.title)+'</p>');
+    bks.forEach(function(b){out.push('<div class="stop"><b>'+e((b.time?b.time+' ':'')+b.title)+'</b><small>'+e(b.type)+'</small></div>');});
+    stops.forEach(function(p,i){out.push('<div class="stop"><b>'+(i+1)+'. '+e((p.time?p.time+' ':'')+p.name)+(p.jp?' <span class="m">'+e(p.jp)+'</span>':'')+'</b>'+(p.notes?'<small>'+e(p.notes.split('\n')[0])+'</small>':'')+'</div>');});
+  });
+  out.push('<h2>Places</h2>');
+  AREA_ORDER.forEach(function(k){
+    var arr=state.places.filter(function(p){return (AREAS[p.area]?p.area:'other')===k;}).sort(function(a,b){return a.name.localeCompare(b.name);});
+    if(!arr.length)return;
+    out.push('<h3>'+e(AREAS[k].label)+'</h3>');
+    arr.forEach(function(p){out.push('<div class="pl"><b>'+e(p.name)+'</b>'+(p.visited?' <span class="m">visited</span>':'')+(p.jp?' <span class="m">'+e(p.jp)+'</span>':'')+(p.notes?'<small>'+e(p.notes)+'</small>':'')+'</div>');});
+  });
+  var vis=state.places.filter(function(p){return p.visited;});
+  if(vis.length){out.push('<h2>Journal</h2>');var j=journalGroups();j.order.forEach(function(k){out.push('<h3>'+e(k==='undated'?'Undated':dayLabel(k,true))+'</h3>');j.groups[k].forEach(function(p){out.push('<div class="pl"><b>'+e(p.name)+'</b>'+(p.notes?'<small>'+e(p.notes)+'</small>':'')+'</div>');});});}
+  out.push('<p class="m" style="margin-top:30px">Made with our trip app, '+e(dayLabel(todayIso(),true))+'.</p></body></html>');
+  return out.join('\n');
+}
+function shareTripPage(){
+  var html=tripPageHtml(),name=(trip().name||'trip').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.html';
+  try{
+    var file=new File([html],name,{type:'text/html'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:trip().name}).catch(function(){});return;}
+  }catch(e){}
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+}
 function markBackup(){state.lastBackup=new Date().toISOString();state.changedSince=-1;persist();renderBackupNote();}
 function renderBackupNote(){
   var el=$('#lastBackup');if(!el)return;
@@ -3784,7 +4192,7 @@ function renderBackupNote(){
   var d=new Date(state.lastBackup),days=Math.floor((Date.now()-d.getTime())/86400000);
   el.textContent='Last backup '+(days===0?'today':days===1?'yesterday':days+' days ago')+(state.changedSince?', '+state.changedSince+' changes since.':'.');
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',trip:trip(),gone:state.gone||{},exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
@@ -3792,7 +4200,7 @@ function importJson(text){
   var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
   if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();state.bookings=Array.isArray(js.bookings)?js.bookings:[];state.removedBookings=Array.isArray(js.removedBookings)?js.removedBookings:[];mergeBookings();state.expenses=Array.isArray(js.expenses)?js.expenses:[];state.budget=js.budget||'';state.customCats=Array.isArray(js.customCats)?js.customCats:[];installCustomCats();
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();state.bookings=Array.isArray(js.bookings)?js.bookings:[];state.removedBookings=Array.isArray(js.removedBookings)?js.removedBookings:[];mergeBookings();state.expenses=Array.isArray(js.expenses)?js.expenses:[];state.budget=js.budget||'';state.customCats=Array.isArray(js.customCats)?js.customCats:[];installCustomCats();if(js.trip)state.trip=js.trip;state.gone=js.gone||{};applyTrip();buildTabs();
   $('#importErr').textContent='';$('#importText').value='';
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
@@ -3804,10 +4212,12 @@ function bind(){
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click',function(){
-      if(['tools','bookings','journal','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
+      if(['trip','tools','bookings','journal','data'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
       if(b.dataset.panel==='tools')renderChecks();
       if(b.dataset.panel==='journal')renderJournal();
       if(b.dataset.panel==='bookings')renderBookings();
+      if(b.dataset.panel==='trip')renderTripPanel();
+      if(b.dataset.panel==='data')renderSnapshots();
       activatePanel(b.dataset.panel);
     });
   });
@@ -3942,6 +4352,7 @@ function bind(){
   fetchWeather(false);
   $('#searchCancel').addEventListener('click',closeSearch);
   $('#mapSearch').addEventListener('input',runSearch);
+  $('#sharePage').addEventListener('click',shareTripPage);
   $('#shareBackup').addEventListener('click',function(){
     var name='japan-2026-backup-'+todayIso()+'.json';
     try{
@@ -3976,13 +4387,14 @@ function bind(){
     pendingReset=null;$('#resetBtn').textContent='Reset to starter list';
     state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
     state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();state.checks=[];state.removedChecks=[];mergeChecks();state.bookings=[];state.removedBookings=[];mergeBookings();state.expenses=[];
-    persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('tokyo');toast('Starter list restored');
+    persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea(AREA_ORDER[0]||'all');toast('Starter list restored');
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
     if($('#tipsView').classList.contains('open')&&!$('#noteEditor').classList.contains('open'))$('#tipsView').classList.remove('open');
     else if($('#sgView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#sgView').classList.remove('open');
     else if($('#phView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#phView').classList.remove('open');
+    else if($('#tripModal').classList.contains('open'))$('#tripModal').classList.remove('open');
     else if($('#bkModal').classList.contains('open')){$('#bkModal').classList.remove('open');editingBooking=null;}
     else if($('#bkView').classList.contains('open'))closeBooking();
     else if($('#nowSheet').classList.contains('open'))$('#nowSheet').classList.remove('open');
