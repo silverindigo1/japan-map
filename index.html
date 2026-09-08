@@ -224,6 +224,13 @@ body.dark .who-seg button.on,body.dark .bar i{color:#0F1220}
 .newcat .two{margin-top:6px}
 .newcat input[type=color]{width:100%;height:38px;padding:2px;border:1px solid var(--line);border-radius:10px;background:var(--washi)}
 .stop-row .dir{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-size:14px;color:var(--indigo);text-decoration:none;display:flex;align-items:center;justify-content:center}
+.dayseg{display:flex;gap:4px;flex-wrap:wrap}
+.dayseg button{width:40px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-size:12px;font-weight:600}
+.dayseg button.on{background:var(--shu-soft);border-color:var(--shu);color:#8F2D1E}
+.closed-note{font-size:12px;color:#8F2D1E;background:var(--shu-soft);border-radius:8px;padding:5px 9px;display:inline-block;margin:0 0 8px}
+.hours-note{font-size:12px;color:var(--muted);margin:0 0 8px}
+.toast button{margin-left:10px;color:#FFD9A8;font-weight:700;text-decoration:underline;pointer-events:auto;padding:4px 2px}
+.tabbar button .dot{position:absolute;margin-left:22px;margin-top:-30px;width:9px;height:9px;border-radius:50%;background:var(--shu)}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
 .sort-row button{padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12px}
 .sort-row button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
@@ -493,6 +500,8 @@ body.picking .top,body.picking .fab{display:none}
       <div class="daypick"><label for="sheetDay">Day</label><select id="sheetDay"></select><input class="timein" id="sheetTime" type="time" aria-label="Time"><button class="prio-btn" id="prioBtn" type="button">☆ Must do</button></div>
       <div class="near-label" id="nearLabel" style="display:none">Close by</div>
       <div class="near" id="nearRow"></div>
+      <div class="closed-note" id="sheetClosed" style="display:none"></div>
+      <div class="hours-note" id="sheetHours" style="display:none"></div>
       <div class="note" id="sheetVisited" style="margin:0 0 6px"></div>
       <div class="spent"><label for="sheetSpent">Spent</label><input id="sheetSpent" inputmode="numeric" placeholder="yen"><span id="spentDkk"></span></div>
       <div class="label">Our notes</div>
@@ -557,7 +566,8 @@ body.picking .top,body.picking .fab{display:none}
       <div class="tool">
         <h3>Yen to kroner</h3>
         <div class="conv"><input id="cvYen" inputmode="decimal" placeholder="JPY"><span class="eq">=</span><input id="cvDkk" inputmode="decimal" placeholder="DKK"></div>
-        <div class="rate">Rate, DKK per 100 JPY: <input id="cvRate" inputmode="decimal" placeholder="e.g. 4.5"><span id="cvNote"></span></div>
+        <div class="rate">Rate, DKK per 100 JPY: <input id="cvRate" inputmode="decimal" placeholder="e.g. 4.2"><button class="btn small" id="rateFetch" type="button">Update</button></div>
+        <p class="note" id="cvNote" style="margin:6px 0 0"></p>
       </div>
       <div class="tool">
         <h3>Checklist</h3>
@@ -614,11 +624,14 @@ body.picking .top,body.picking .fab{display:none}
         <p class="note" id="gStatus"></p>
       </div>
       <div class="data-block">
-        <h3>Export</h3>
+        <h3>Backup</h3>
+        <p class="note" id="lastBackup"></p>
         <div class="inline-btns">
+          <button class="btn primary" id="shareBackup" type="button">Save backup file</button>
           <button class="btn" id="copyBtn" type="button">Copy as text</button>
           <button class="btn" id="downloadBtn" type="button">Download file</button>
         </div>
+        <p class="note">Save backup file opens the share sheet: send it to Lendita, or Save to Files. She imports it with "Choose a backup file" below.</p>
       </div>
       <div class="data-block">
         <h3>Import</h3>
@@ -772,6 +785,8 @@ body.picking .top,body.picking .fab{display:none}
       </div>
       <div class="two"><div class="field"><label for="fDay">Day</label><select id="fDay"></select></div><div class="field"><label for="fTime">Time (optional)</label><input id="fTime" type="time"></div></div>
       <div class="field"><label for="fWhen">When or status (optional)</label><input id="fWhen" placeholder="12 Nov, tickets booked"></div>
+      <div class="field"><label for="fHours">Opening hours (optional)</label><input id="fHours" placeholder="09:00 to 17:00, last entry 16:30"></div>
+      <div class="field"><label>Closed on</label><div class="dayseg" id="fClosed"></div></div>
       <div class="field"><label for="fNotes">Notes</label><textarea id="fNotes"></textarea></div>
       <div class="field" id="deleteWrap" style="display:none"><button class="btn danger" id="deleteBtn" type="button">Delete this place</button></div>
     </div>
@@ -1749,6 +1764,7 @@ var SIGNS=[
   {g:'Temples and sights',items:[['神社','jinja','Shrine'],['寺','tera','Temple'],['鳥居','torii','Shrine gate'],['御朱印','goshuin','Temple stamp'],['お守り','omamori','Charm, amulet'],['おみくじ','omikuji','Fortune slip'],['拝観料','haikanryō','Entry fee, temple'],['入場券','nyūjōken','Entry ticket'],['休館日','kyūkanbi','Museum closed day'],['紅葉','kōyō','Autumn leaves'],['ライトアップ','raito appu','Evening illumination'],['展望台','tenbōdai','Observation deck'],['ロープウェイ','rōpuwei','Ropeway'],['ケーブルカー','kēburukā','Cable car'],['山頂','sanchō','Summit'],['公園','kōen','Park'],['庭園','teien','Garden']]}
 ];
 
+var SEED_CLOSED={ghibli:[2],tnm:[1],nezumuseum:[1],imperial:[1,5],isuien:[2],mori:[],toyosu:[0,3]};
 var SEED_TIPS={
   general:'Cash still matters at small shops, shrines and some ramen counters. Keep coins and small notes.\nSuica or PASMO in Apple Wallet covers trains, buses, konbini and vending machines. Top up in the Wallet app.\nTax free shopping needs the passport at the till. Check the current minimum spend before relying on it.\nBins are rare. Carry a small bag for wrappers.\nLuggage forwarding (takkyubin) hotel to hotel is worth it for Tokyo to Kyoto. Ask at reception the day before and keep a small bag for Hakone.',
   art:'teamLab Planets: barefoot through water in parts. Trousers that roll above the knee, or shorts. Free lockers.\nteamLab Biovortex: bags over 50 cm and drinks without lids stay in the lockers. Timed entry, arrive 15 minutes early.\nWeekday mornings are the calm slots at both.',
@@ -1779,7 +1795,9 @@ function mergeSeeds(){
       return p.name.toLowerCase()===sp.name.toLowerCase()&&distM([p.lat,p.lng],[sp.lat,sp.lng])<120;
     });
     if(dup)return;
-    state.places.push(Object.assign({visited:false,notes:'',img:'',photo:'',day:'',order:0},sp));
+    var np=Object.assign({visited:false,notes:'',img:'',photo:'',day:'',order:0},sp);
+    if(SEED_CLOSED[sp.id])np.closed=SEED_CLOSED[sp.id].slice();
+    state.places.push(np);
     added++;
   });
   return added;
@@ -1838,6 +1856,9 @@ var store={
   }
 };
 function persist(){
+  state.changedSince=(state.changedSince||0)+1;
+  var more=document.querySelector('#tabbar button[data-page=more]');
+  if(more){var dot=more.querySelector('.dot');var due=(state.changedSince>15)&&(!state.lastBackup||Date.now()-new Date(state.lastBackup).getTime()>5*86400000);if(due&&!dot){dot=document.createElement('span');dot.className='dot';more.appendChild(dot);}else if(!due&&dot)dot.remove();}
   return store.save(state).then(function(ok){
     if(!ok&&store.quota){toast('Storage is full. Remove a few pin images, then save again.');}
     else if(!ok&&!saveWarned){saveWarned=true;toast('Not saving in this view. Use Backup to keep a copy.');}
@@ -1853,6 +1874,12 @@ function copyText(txt,cb){
 }
 function fallbackCopy(txt){
   try{var ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}
+}
+var lastDeleted=null,undoTimer=null;
+function toastUndo(msg,onUndo){
+  var t=$('#toast');t.innerHTML=esc(msg)+'<button type="button">Undo</button>';t.classList.add('on');
+  t.querySelector('button').addEventListener('click',function(){clearTimeout(t._h);t.classList.remove('on');onUndo();});
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on');lastDeleted=null;},7000);
 }
 function toast(msg){
   var t=$('#toast');t.textContent=msg;t.classList.add('on');
@@ -1886,23 +1913,26 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
-      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';state.lastBackup=saved.lastBackup||'';state.changedSince=saved.changedSince||0;
       state.bookings=Array.isArray(saved.bookings)?saved.bookings:[];state.removedBookings=Array.isArray(saved.removedBookings)?saved.removedBookings:[];state.expenses=Array.isArray(saved.expenses)?saved.expenses:[];state.budget=saved.budget||'';mergeBookings();
       if(!state.expMigrated){state.places.forEach(function(p){if(p.spent)syncPlaceExpense(p);});state.expMigrated=1;}
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
       state.removedGuides=Array.isArray(saved.removedGuides)?saved.removedGuides:[];
       mergeGuides();
       mergedCount=mergeSeeds();
+      if(!state.closedSeeded){state.places.forEach(function(p){if(SEED_CLOSED[p.id]&&!p.closed)p.closed=SEED_CLOSED[p.id].slice();});state.closedSeeded=1;}
       persist();
     }else{
       state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
       state.tips=Object.assign({},SEED_TIPS);
       state.guides=[];mergeGuides();state.checks=[];mergeChecks();state.bookings=[];mergeBookings();state.expenses=[];
+      state.places.forEach(function(p){if(SEED_CLOSED[p.id])p.closed=SEED_CLOSED[p.id].slice();});state.closedSeeded=1;
     }
     buildMap();buildTabs();buildChips();buildForm();
     renderMarkers();renderList();renderTips();bind();
     $('#storageNote').textContent=store.describe();
     if(mergedCount) setTimeout(function(){toast(mergedCount+' new places added to the list. Your own places and notes are untouched.');},900);
+    renderBackupNote();
     if(!getGoogleKey()) gStatus('No key saved. The built-in map is in use.');
   });
 }
@@ -2317,6 +2347,10 @@ function openSheet(id){
   var pb=$('#prioBtn');pb.classList.toggle('on',!!p.prio);pb.textContent=p.prio?'★ Must do':'☆ Must do';
   renderNearby(p);
   $('#sheetVisited').textContent=p.visited&&p.visitedAt?'Visited '+fmtStamp(p.visitedAt):'';
+  var cl=closedLabel(p),warn='';
+  if(cl){ if(p.day&&closedOn(p,p.day))warn=cl+'. It is planned for '+dayLabel(p.day,true)+', which is a closed day.'; else if(closedOn(p,todayIso()))warn=cl+'. Closed today.'; else warn=cl+'.'; }
+  $('#sheetClosed').textContent=warn;$('#sheetClosed').style.display=warn?'':'none';
+  $('#sheetHours').textContent=p.hours?'Hours: '+p.hours:'';$('#sheetHours').style.display=p.hours?'':'none';
   $('#sheetSpent').value=p.spent||'';$('#spentDkk').textContent=spentDkk(p.spent);
   var ph=$('#sheetPhoto'); if(p.photo){ph.src=p.photo;ph.className='photo'+(p.photo.indexOf('data:image/png')===0?' logo':'');ph.style.display='block';} else {ph.removeAttribute('src');ph.style.display='none';}
   $('#visitBtn').textContent=p.visited?'Visited, undo':'Mark as visited';
@@ -2712,9 +2746,17 @@ function bindTools(){
   var yen=$('#cvYen'),dkk=$('#cvDkk'),rate=$('#cvRate');
   function r(){var v=parseFloat(String(rate.value).replace(',','.'));return isNaN(v)||v<=0?null:v;}
   rate.value=state.rate||'';
-  function note(){$('#cvNote').textContent=r()?'':'Enter the rate once, for example from a bank app';}
+  function note(){$('#cvNote').textContent=r()?(state.rateDate?'Rate from '+state.rateDate+', European Central Bank via Frankfurter.':'Rate entered by hand.'):'Tap Update to fetch today\'s rate, or type it.';}
+  $('#rateFetch').addEventListener('click',function(){
+    $('#cvNote').textContent='Fetching';
+    fetch('https://api.frankfurter.dev/v1/latest?from=JPY&to=DKK').then(function(x){return x.json();}).then(function(js){
+      var v=js&&js.rates&&js.rates.DKK;if(!v)throw new Error('no rate');
+      rate.value=(v*100).toFixed(3);state.rate=rate.value;state.rateDate=js.date||todayIso();persist();note();
+      if(yen.value)yen.dispatchEvent(new Event('input'));toast('Rate updated');
+    }).catch(function(){$('#cvNote').textContent='Could not fetch the rate here. Type it from a bank app instead.';});
+  });
   note();
-  rate.addEventListener('input',function(){state.rate=rate.value;persist();note();if(yen.value)yen.dispatchEvent(new Event('input'));});
+  rate.addEventListener('input',function(){state.rate=rate.value;state.rateDate='';persist();note();if(yen.value)yen.dispatchEvent(new Event('input'));});
   yen.addEventListener('input',function(){var v=parseFloat(String(yen.value).replace(',','.')),k=r();dkk.value=(isNaN(v)||!k)?'':(v*k/100).toFixed(2);});
   dkk.addEventListener('input',function(){var v=parseFloat(String(dkk.value).replace(',','.')),k=r();yen.value=(isNaN(v)||!k)?'':Math.round(v/k*100);});
 }
@@ -3051,6 +3093,7 @@ function bindDays(){
 }
 function renderDays(){
   var box=$('#dayList');box.innerHTML='';var t=todayIso();
+  if(expandedDay===null&&t>=TRIP_START&&t<=TRIP_END)expandedDay=t;
   var planned=state.places.filter(function(p){return p.day;}).length;
   var tb=document.querySelector('#tabbar button[data-page=days]');
   if(tb){var c=tb.querySelector('.cnt');if(!c){c=document.createElement('span');c.className='cnt';tb.appendChild(c);}c.textContent=planned;c.style.display=planned?'':'none';}
@@ -3078,7 +3121,7 @@ function renderDays(){
         }
         var r=document.createElement('div');r.className='stop-row';
         var dirHref=i>0?'https://www.google.com/maps/dir/?api=1&origin='+list[i-1].lat+','+list[i-1].lng+'&destination='+p.lat+','+p.lng+'&travelmode=transit':'https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'&travelmode=transit';
-        r.innerHTML='<span class="n">'+(i+1)+'</span><span class="t">'+esc(p.time||'')+'</span><button type="button" class="name">'+esc(p.name)+(p.visited?' ✓':'')+'</button><a class="dir" href="'+dirHref+'" target="_blank" rel="noopener" title="Directions">➜</a><button type="button" class="mv up" '+(i===0?'disabled':'')+'>▲</button><button type="button" class="mv down" '+(i===list.length-1?'disabled':'')+'>▼</button>';
+        r.innerHTML='<span class="n">'+(i+1)+'</span><span class="t">'+esc(p.time||'')+'</span><button type="button" class="name">'+esc(p.name)+(p.visited?' ✓':'')+(closedOn(p,d)?' <span style="color:#8F2D1E;font-size:12px">closed this day</span>':'')+'</button><a class="dir" href="'+dirHref+'" target="_blank" rel="noopener" title="Directions">➜</a><button type="button" class="mv up" '+(i===0?'disabled':'')+'>▲</button><button type="button" class="mv down" '+(i===list.length-1?'disabled':'')+'>▼</button>';
         r.querySelector('.name').addEventListener('click',function(){closeDrawer();setDay(d,false);map.flyTo([p.lat,p.lng],15,{duration:.7});setTimeout(function(){openSheet(p.id);},780);});
         r.querySelector('.up').addEventListener('click',function(){swapOrder(list,i,i-1);});
         r.querySelector('.down').addEventListener('click',function(){swapOrder(list,i,i+1);});
@@ -3216,6 +3259,27 @@ function renderLib(){
     });
     box.appendChild(w);
   });
+}
+var formClosed=[];
+var WD_SHORT=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function renderClosedSeg(){
+  var box=$('#fClosed');if(!box)return;box.innerHTML='';
+  WD_SHORT.forEach(function(d,i){
+    var idx=(i+1)%7; /* JS getDay: 0 Sun .. 6 Sat */
+    var b=document.createElement('button');b.type='button';b.textContent=d;b.classList.toggle('on',formClosed.indexOf(idx)>-1);
+    b.addEventListener('click',function(){var k=formClosed.indexOf(idx);if(k>-1)formClosed.splice(k,1);else formClosed.push(idx);renderClosedSeg();});
+    box.appendChild(b);
+  });
+}
+function closedOn(p,iso){
+  if(!p.closed||!p.closed.length)return false;
+  var q=iso.split('-');var d=new Date(+q[0],+q[1]-1,+q[2],12,0,0).getDay();
+  return p.closed.indexOf(d)>-1;
+}
+function closedLabel(p){
+  if(!p.closed||!p.closed.length)return '';
+  var names=['Sundays','Mondays','Tuesdays','Wednesdays','Thursdays','Fridays','Saturdays'];
+  return 'Closed '+p.closed.slice().sort().map(function(d){return names[d];}).join(' and ');
 }
 function renderImgPreview(){
   var box=$('#imgPreview');
@@ -3369,7 +3433,8 @@ function openForm(p){
   $('#fLat').value=p?p.lat:'';$('#fLng').value=p?p.lng:'';
   $('#fWhen').value=p?(p.when||''):'';$('#fNotes').value=p?(p.notes||''):'';
   $('#fDay').value=p?(p.day||''):(activeDay||'');$('#fLink').value='';$('#fTime').value=p?(p.time||''):'';
-  $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#imgErr').textContent='';
+  $('#fHours').value=p?(p.hours||''):'';formClosed=(p&&Array.isArray(p.closed))?p.closed.slice():[];renderClosedSeg();
+  $('#geoResults').innerHTML='';$('#formErr').textContent='';$('#formErr').dataset.dupeOk='';$('#imgErr').textContent='';
   $('#deleteWrap').style.display=p?'':'none';$('#deleteBtn').textContent='Delete this place';pendingDelete=null;
   formImg=p?(p.img||''):'';formPhoto=p?(p.photo||''):'';renderImgPreview();renderPhotoPreview();renderLib();
   closeSheet();closeDrawer();
@@ -3381,7 +3446,12 @@ function saveFormData(){
   var name=$('#fName').value.trim(),lat=parseFloat($('#fLat').value),lng=parseFloat($('#fLng').value);
   if(!name){$('#formErr').textContent='Give the place a name.';return;}
   if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){$('#formErr').textContent='Set where it is: pick on map, use map centre, or enter coordinates.';return;}
-  var data={name:name,jp:$('#fJp').value.trim(),area:$('#fArea').value,cat:$('#fCat').value,icon:$('#fIcon').value.trim()||CATS[$('#fCat').value].icon,lat:+lat.toFixed(5),lng:+lng.toFixed(5),when:$('#fWhen').value.trim(),notes:$('#fNotes').value,img:formImg||'',photo:formPhoto||'',day:$('#fDay').value||'',time:$('#fTime').value||''};
+  if(!editingId){
+    var dupe=state.places.filter(function(q){return q.name.toLowerCase()===name.toLowerCase()||distM([q.lat,q.lng],[lat,lng])<40;})[0];
+    if(dupe&&!$('#formErr').dataset.dupeOk){$('#formErr').textContent='Looks like '+dupe.name+' already, '+fmtDist(distM([dupe.lat,dupe.lng],[lat,lng])).split(',')[0]+' away. Tap Save again to add it anyway.';$('#formErr').dataset.dupeOk='1';return;}
+  }
+  $('#formErr').dataset.dupeOk='';
+  var data={name:name,jp:$('#fJp').value.trim(),area:$('#fArea').value,cat:$('#fCat').value,icon:$('#fIcon').value.trim()||CATS[$('#fCat').value].icon,lat:+lat.toFixed(5),lng:+lng.toFixed(5),when:$('#fWhen').value.trim(),notes:$('#fNotes').value,img:formImg||'',photo:formPhoto||'',day:$('#fDay').value||'',time:$('#fTime').value||'',hours:$('#fHours').value.trim(),closed:formClosed.slice()};
   var id,wasEdit=!!editingId;
   var prevDay=editingId?(byId(editingId).day||''):'';
   if(editingId){var p=byId(editingId);Object.assign(p,data);id=p.id;}
@@ -3426,7 +3496,7 @@ function whatNow(){
   var origin=userPos||[map.getCenter().lat,map.getCenter().lng];
   var meal=(h>=11&&h<14.5)||(h>=17.5&&h<21.5);
   var late=h>=17;var early=h<10.5;
-  var cands=state.places.filter(function(p){return !p.visited;}).map(function(p){
+  var cands=state.places.filter(function(p){return !p.visited&&!closedOn(p,today);}).map(function(p){
     var d=distM(origin,[p.lat,p.lng]);var score=0,why=[];
     if(p.day===today){score+=40;why.push('planned today');}
     if(p.prio){score+=25;why.push('must do');}
@@ -3604,6 +3674,13 @@ function importExternal(text){
   toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
   if(n){closeDrawer();setArea('all');}
 }
+function markBackup(){state.lastBackup=new Date().toISOString();state.changedSince=-1;persist();renderBackupNote();}
+function renderBackupNote(){
+  var el=$('#lastBackup');if(!el)return;
+  if(!state.lastBackup){el.textContent='No backup saved yet from this phone.';return;}
+  var d=new Date(state.lastBackup),days=Math.floor((Date.now()-d.getTime())/86400000);
+  el.textContent='Last backup '+(days===0?'today':days===1?'yesterday':days+' days ago')+(state.changedSince?', '+state.changedSince+' changes since.':'.');
+}
 function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',exported:new Date().toISOString()},null,2);}
 function importJson(text){
   var js;
@@ -3665,8 +3742,14 @@ function bind(){
     var p=byId(editingId);if(!p)return;
     if(pendingDelete!==p.id){pendingDelete=p.id;$('#deleteBtn').textContent='Tap again to delete '+p.name;setTimeout(function(){if(pendingDelete===p.id){pendingDelete=null;$('#deleteBtn').textContent='Delete this place';}},4000);return;}
     if(SEED_PLACES.some(function(sp){return sp.id===p.id;})) removedSeeds().push(p.id);
+    lastDeleted=JSON.parse(JSON.stringify(p));
     state.places=state.places.filter(function(x){return x.id!==p.id;});
-    pendingDelete=null;closeForm();closeSheet();persist();renderMarkers();renderList();renderDays();if(activeDay)setDay(activeDay,false);toast('Deleted '+p.name);
+    pendingDelete=null;closeForm();closeSheet();persist();renderMarkers();renderList();renderDays();if(activeDay)setDay(activeDay,false);
+    toastUndo('Deleted '+p.name,function(){
+      if(!lastDeleted)return;
+      state.places.push(lastDeleted);state.removedSeeds=removedSeeds().filter(function(id){return id!==lastDeleted.id;});
+      persist();renderMarkers();renderList();renderDays();toast(lastDeleted.name+' is back');lastDeleted=null;
+    });
   });
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
@@ -3742,9 +3825,20 @@ function bind(){
   fetchWeather(false);
   $('#searchCancel').addEventListener('click',closeSearch);
   $('#mapSearch').addEventListener('input',runSearch);
+  $('#shareBackup').addEventListener('click',function(){
+    var name='japan-2026-backup-'+todayIso()+'.json';
+    try{
+      var file=new File([exportJson()],name,{type:'application/json'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'Japan 2026 backup'}).then(function(){markBackup();}).catch(function(){});
+        return;
+      }
+    }catch(e){}
+    $('#downloadBtn').click();markBackup();
+  });
   $('#copyBtn').addEventListener('click',function(){
     var txt=exportJson();
-    copyText(txt,function(ok){ if(ok){toast('Copied. Paste it into Notes or a message.');} else {$('#importText').value=txt;toast('Copy blocked. The text is in the Import box, select and copy it.');} });
+    copyText(txt,function(ok){ if(ok){toast('Copied. Paste it into Notes or a message.');markBackup();} else {$('#importText').value=txt;toast('Copy blocked. The text is in the Import box, select and copy it.');} });
   });
   $('#downloadBtn').addEventListener('click',function(){
     try{
