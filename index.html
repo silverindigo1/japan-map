@@ -12,7 +12,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.7.1/maplibre-gl.css">
 <style>
 :root{
   --tb:calc(56px + env(safe-area-inset-bottom));
@@ -55,6 +55,11 @@ em{font-style:normal}
 .lbl.yam{font-size:10.5px;font-weight:700;color:#2F6B1F;transform:translate(-50%,6px);text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
 a.btn{color:inherit}
 .attrib{font-size:9px}
+.maplibregl-marker{will-change:transform}
+.maplibregl-marker.pinwrap{width:auto;height:auto}
+.maplibregl-ctrl-bottom-right,.maplibregl-ctrl-attrib{display:none}
+.maplibregl-ctrl-bottom-left{bottom:calc(16px + var(--tb)) !important;left:6px}
+.maplibregl-ctrl-scale{font-size:10px;background:rgba(255,255,255,.6);border-color:#555}
 .pin .num{position:absolute;left:-7px;top:-7px;width:19px;height:19px;border-radius:50%;background:var(--indigo);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;font-style:normal}
 .pin.dim{opacity:.32}
 .rarrow{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #22304D;margin:1px 1px;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 1px #fff)}
@@ -531,7 +536,7 @@ body.picking .top,body.picking .fab{display:none}
   </header>
   <button class="locbtn" id="locBtn" type="button" aria-label="Where am I">&#9673;</button>
   <button class="hotelbtn" id="hotelBtn" type="button" aria-label="Tonight's hotel" style="display:none">🏨</button>
-  <div class="covnote" id="covNote">Street detail is not stored for this area. Turn on Google Maps or Street detail, or zoom out for the overview.</div>
+  <div class="covnote" id="covNote">Offline, and street detail is not stored for this area. Zoom out for the overview, or reconnect.</div>
   <div class="bunchpop" id="bunchPop"></div>
   <div class="searchwrap" id="searchWrap">
     <div class="row"><input id="mapSearch" type="search" placeholder="Our places instantly, Japan on Enter" autocomplete="off" autocapitalize="off" enterkeyhint="search"><button class="cancel" id="searchGo" type="button">Search</button><button class="cancel" id="searchCancel" type="button">Cancel</button></div>
@@ -555,18 +560,12 @@ body.picking .top,body.picking .fab{display:none}
   <div class="banner" id="banner"><span>Tap the map where the place is</span><button id="cancelPick" type="button">Cancel</button></div>
 
   <button class="fab" id="addBtn" aria-label="Add a place">+</button>
-  <button class="streets-btn" id="streetsBtn" type="button" aria-pressed="false">Street detail</button>
+  <button class="streets-btn" id="streetsBtn" type="button" aria-pressed="false" style="display:none">Street detail</button>
   <button class="map-btn" id="mapBtn" type="button" aria-haspopup="true">Map style</button>
   <div class="map-menu" id="mapMenu" role="menu">
-    <button type="button" data-type="roadmap"><span class="tick">✓</span>Map</button>
-    <button type="button" data-type="satellite"><span class="tick"></span>Satellite</button>
-    <button type="button" data-type="hybrid"><span class="tick"></span>Satellite + names</button>
-    <button type="button" data-type="terrain"><span class="tick"></span>Terrain</button>
+    <button type="button" data-opt="3d"><span class="tick"></span>3D buildings and tilt</button>
+    <button type="button" data-opt="north"><span class="tick"></span>Face north, flat</button>
     <hr>
-    <button type="button" data-overlay="TransitLayer"><span class="tick"></span>Train lines</button>
-    <button type="button" data-overlay="TrafficLayer"><span class="tick"></span>Traffic</button>
-    <hr>
-    <button type="button" data-opt="clean"><span class="tick"></span>Hide Google's own pins</button>
     <button type="button" data-opt="lines"><span class="tick">✓</span>Yamanote and Hakone lines</button>
     <button type="button" data-opt="visited"><span class="tick"></span>Hide visited places</button>
     <hr>
@@ -729,6 +728,11 @@ body.picking .top,body.picking .fab{display:none}
         <p class="note" id="syStat"></p>
       </div>
       <div class="data-block">
+        <h3>About</h3>
+        <p class="note" id="aboutNote"></p>
+        <div class="inline-btns"><button class="btn small" id="checkUpdate" type="button">Check for update</button></div>
+      </div>
+      <div class="data-block">
         <h3>Appearance</h3>
         <div class="seg" id="themeSeg"><button type="button" data-theme="auto">Auto</button><button type="button" data-theme="light">Light</button><button type="button" data-theme="dark">Dark</button></div>
       </div>
@@ -737,7 +741,7 @@ body.picking .top,body.picking .fab{display:none}
         <div class="inline-btns"><select id="voiceSel" style="flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:14px"></select><button class="btn" id="voiceTest" type="button">Test</button></div>
         <p class="note" id="voiceHint"></p>
       </div>
-      <div class="data-block">
+      <div class="data-block" style="display:none">
         <h3>Google Maps</h3>
         <p class="note">With your own Maps JavaScript API key the map switches to Google Maps with English labels. Needs a Google Cloud project with billing enabled; usage for two phones stays inside the free monthly allowance. Does not work inside Claude, only in Safari or the home screen app.</p>
         <input id="gKey" placeholder="Paste API key" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)">
@@ -753,7 +757,7 @@ body.picking .top,body.picking .fab{display:none}
           <button class="btn" id="downloadBtn" type="button">Download file</button>
         </div>
         <p class="note">Save backup file opens the share sheet: send it to Lendita, or Save to Files. She imports it with "Choose a backup file" below.</p>
-        <div class="inline-btns" style="margin-top:8px"><button class="btn" id="sharePage" type="button">Share a read-only trip page</button></div>
+        <div class="inline-btns" style="margin-top:8px"><button class="btn" id="sharePage" type="button">Share a read-only trip page</button><button class="btn" id="printPage" type="button">Print the plan</button></div>
         <p class="note">A single web page with the plan by day, the places and their notes, and the journal. No booking numbers, no QR codes, nothing editable. Good for parents.</p>
       </div>
       <div class="data-block">
@@ -809,6 +813,15 @@ body.picking .top,body.picking .fab{display:none}
       <button class="btn" id="bkEdit" type="button">Edit</button>
     </div>
     <div class="bk-body" id="bkBody"></div>
+  </div>
+  <div class="modal" id="previewModal" role="dialog" aria-modal="true" style="z-index:70">
+    <div class="modal-head"><button class="btn" id="pvCancel" type="button">Cancel</button><h2 id="pvTitle">Import</h2><button class="btn primary" id="pvApply" type="button">Apply</button></div>
+    <div class="form">
+      <p class="note" id="pvIntro"></p>
+      <div class="stats" id="pvStats"></div>
+      <div id="pvDetail" style="font-size:13px;line-height:1.5"></div>
+      <p class="note" id="pvSafety"></p>
+    </div>
   </div>
   <div class="modal" id="tripModal" role="dialog" aria-modal="true" style="z-index:69">
     <div class="modal-head"><button class="btn" id="tripCancel" type="button">Cancel</button><h2>New trip</h2><button class="btn primary" id="tripCreate" type="button">Create</button></div>
@@ -953,788 +966,200 @@ body.picking .top,body.picking .fab{display:none}
   <div class="toast" id="toast"></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.7.1/maplibre-gl.js"></script>
 <script>
-/* Leaflet.GridLayer.GoogleMutant 0.14.1, inlined. Renders the official Google Maps JavaScript API underneath Leaflet. */
-(function () {
-	'use strict';
-
-	/**
-	 * Patched locally: guarded access to the undocumented _mutant.__gm internal, so a Google internal
-	 * rename degrades to skipped attribution repositioning instead of throwing on every map frame.
-	 *
-	 * GoogleMutant by Iván Sánchez Ortega <ivan@sanchezortega.es> https://ivan.sanchezortega.es
-	 * Source and issue tracking: https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant/
-	 *
-	 * Based on techniques from https://github.com/shramov/leaflet-plugins
-	 * and https://avinmathew.com/leaflet-and-google-maps/ , but relying on MutationObserver.
-	 *
-	 * "THE BEER-WARE LICENSE":
-	 * <ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
-	 * can do whatever you want with this stuff. If we meet some day, and you think
-	 * this stuff is worth it, you can buy me a beer in return.
-	 *
-	 * Uses MIT-licensed code from https://github.com/rsms/js-lru/
-	 */
-
-	// This implementation of LRUMap is a copy of https://github.com/rsms/js-lru/ ,
-	// trivially adapted for ES6 exports.
-
-	/*
-	The MIT License
-
-	Copyright (c) 2010-2020 Rasmus Andersson <https://rsms.me/>
-
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-	*/
-
-	/**
-	 * A doubly linked list-based Least Recently Used (LRU) cache. Will keep most
-	 * recently used items while discarding least recently used items when its limit
-	 * is reached.
-	 *
-	 * Licensed under MIT. Copyright (c) 2010 Rasmus Andersson <http://hunch.se/>
-	 * See README.md for details.
-	 *
-	 * Illustration of the design:
-	 *
-	 *       entry             entry             entry             entry
-	 *       ______            ______            ______            ______
-	 *      | head |.newer => |      |.newer => |      |.newer => | tail |
-	 *      |  A   |          |  B   |          |  C   |          |  D   |
-	 *      |______| <= older.|______| <= older.|______| <= older.|______|
-	 *
-	 *  removed  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  added
-	 */
-
-	var NEWER = Symbol("newer");
-	var OLDER = Symbol("older");
-
-	var LRUMap = function LRUMap(limit, entries) {
-		if (typeof limit !== "number") {
-			// called as (entries)
-			entries = limit;
-			limit = 0;
-		}
-
-		this.size = 0;
-		this.limit = limit;
-		this.oldest = this.newest = undefined;
-		this._keymap = new Map();
-
-		if (entries) {
-			this.assign(entries);
-			if (limit < 1) {
-				this.limit = this.size;
-			}
-		}
-	};
-
-	LRUMap.prototype._markEntryAsUsed = function _markEntryAsUsed (entry) {
-		if (entry === this.newest) {
-			// Already the most recenlty used entry, so no need to update the list
-			return;
-		}
-		// HEAD--------------TAIL
-		//   <.older   .newer>
-		//  <--- add direction --
-		//   A  B  C  <D>  E
-		if (entry[NEWER]) {
-			if (entry === this.oldest) {
-				this.oldest = entry[NEWER];
-			}
-			entry[NEWER][OLDER] = entry[OLDER]; // C <-- E.
-		}
-		if (entry[OLDER]) {
-			entry[OLDER][NEWER] = entry[NEWER]; // C. --> E
-		}
-		entry[NEWER] = undefined; // D --x
-		entry[OLDER] = this.newest; // D. --> E
-		if (this.newest) {
-			this.newest[NEWER] = entry; // E. <-- D
-		}
-		this.newest = entry;
-	};
-
-	LRUMap.prototype.assign = function assign (entries) {
-		var entry,
-			limit = this.limit || Number.MAX_VALUE;
-		this._keymap.clear();
-		var it = entries[Symbol.iterator]();
-		for (var itv = it.next(); !itv.done; itv = it.next()) {
-			var e = new Entry(itv.value[0], itv.value[1]);
-			this._keymap.set(e.key, e);
-			if (!entry) {
-				this.oldest = e;
-			} else {
-				entry[NEWER] = e;
-				e[OLDER] = entry;
-			}
-			entry = e;
-			if (limit-- == 0) {
-				throw new Error("overflow");
-			}
-		}
-		this.newest = entry;
-		this.size = this._keymap.size;
-	};
-
-	LRUMap.prototype.get = function get (key) {
-		// First, find our cache entry
-		var entry = this._keymap.get(key);
-		if (!entry) { return; } // Not cached. Sorry.
-		// As <key> was found in the cache, register it as being requested recently
-		this._markEntryAsUsed(entry);
-		return entry.value;
-	};
-
-	LRUMap.prototype.set = function set (key, value) {
-		var entry = this._keymap.get(key);
-
-		if (entry) {
-			// update existing
-			entry.value = value;
-			this._markEntryAsUsed(entry);
-			return this;
-		}
-
-		// new entry
-		this._keymap.set(key, (entry = new Entry(key, value)));
-
-		if (this.newest) {
-			// link previous tail to the new tail (entry)
-			this.newest[NEWER] = entry;
-			entry[OLDER] = this.newest;
-		} else {
-			// we're first in -- yay
-			this.oldest = entry;
-		}
-
-		// add new entry to the end of the linked list -- it's now the freshest entry.
-		this.newest = entry;
-		++this.size;
-		if (this.size > this.limit) {
-			// we hit the limit -- remove the head
-			this.shift();
-		}
-
-		return this;
-	};
-
-	LRUMap.prototype.shift = function shift () {
-		// todo: handle special case when limit == 1
-		var entry = this.oldest;
-		if (entry) {
-			if (this.oldest[NEWER]) {
-				// advance the list
-				this.oldest = this.oldest[NEWER];
-				this.oldest[OLDER] = undefined;
-			} else {
-				// the cache is exhausted
-				this.oldest = undefined;
-				this.newest = undefined;
-			}
-			// Remove last strong reference to <entry> and remove links from the purged
-			// entry being returned:
-			entry[NEWER] = entry[OLDER] = undefined;
-			this._keymap.delete(entry.key);
-			--this.size;
-			return [entry.key, entry.value];
-		}
-	};
-
-	// -------------------------------------------------------------------------------------
-	// Following code (until end of class definition) is optional and can be removed without
-	// breaking the core functionality.
-
-	LRUMap.prototype.find = function find (key) {
-		var e = this._keymap.get(key);
-		return e ? e.value : undefined;
-	};
-
-	LRUMap.prototype.has = function has (key) {
-		return this._keymap.has(key);
-	};
-
-	LRUMap.prototype.delete = function delete$1 (key) {
-		var entry = this._keymap.get(key);
-		if (!entry) { return; }
-		this._keymap.delete(entry.key);
-		if (entry[NEWER] && entry[OLDER]) {
-			// relink the older entry with the newer entry
-			entry[OLDER][NEWER] = entry[NEWER];
-			entry[NEWER][OLDER] = entry[OLDER];
-		} else if (entry[NEWER]) {
-			// remove the link to us
-			entry[NEWER][OLDER] = undefined;
-			// link the newer entry to head
-			this.oldest = entry[NEWER];
-		} else if (entry[OLDER]) {
-			// remove the link to us
-			entry[OLDER][NEWER] = undefined;
-			// link the newer entry to head
-			this.newest = entry[OLDER];
-		} else {
-			// if(entry[OLDER] === undefined && entry.newer === undefined) {
-			this.oldest = this.newest = undefined;
-		}
-
-		this.size--;
-		return entry.value;
-	};
-
-	LRUMap.prototype.clear = function clear () {
-		// Not clearing links should be safe, as we don't expose live links to user
-		this.oldest = this.newest = undefined;
-		this.size = 0;
-		this._keymap.clear();
-	};
-
-	LRUMap.prototype.keys = function keys () {
-		return new KeyIterator(this.oldest);
-	};
-
-	LRUMap.prototype.values = function values () {
-		return new ValueIterator(this.oldest);
-	};
-
-	LRUMap.prototype.entries = function entries () {
-		return this;
-	};
-
-	LRUMap.prototype[Symbol.iterator] = function () {
-		return new EntryIterator(this.oldest);
-	};
-
-	LRUMap.prototype.forEach = function forEach (fun, thisObj) {
-		if (typeof thisObj !== "object") {
-			thisObj = this;
-		}
-		var entry = this.oldest;
-		while (entry) {
-			fun.call(thisObj, entry.value, entry.key, this);
-			entry = entry[NEWER];
-		}
-	};
-
-	/** Returns a JSON (array) representation */
-	LRUMap.prototype.toJSON = function toJSON () {
-		var s = new Array(this.size),
-			i = 0,
-			entry = this.oldest;
-		while (entry) {
-			s[i++] = { key: entry.key, value: entry.value };
-			entry = entry[NEWER];
-		}
-		return s;
-	};
-
-	/** Returns a String representation */
-	LRUMap.prototype.toString = function toString () {
-		var s = "",
-			entry = this.oldest;
-		while (entry) {
-			s += String(entry.key) + ":" + entry.value;
-			entry = entry[NEWER];
-			if (entry) {
-				s += " < ";
-			}
-		}
-		return s;
-	};
-
-	function Entry(key, value) {
-		this.key = key;
-		this.value = value;
-		this[NEWER] = undefined;
-		this[OLDER] = undefined;
-	}
-
-	function EntryIterator(oldestEntry) {
-		this.entry = oldestEntry;
-	}
-	EntryIterator.prototype[Symbol.iterator] = function () {
-		return this;
-	};
-	EntryIterator.prototype.next = function () {
-		var ent = this.entry;
-		if (ent) {
-			this.entry = ent[NEWER];
-			return { done: false, value: [ent.key, ent.value] };
-		} else {
-			return { done: true, value: undefined };
-		}
-	};
-
-	function KeyIterator(oldestEntry) {
-		this.entry = oldestEntry;
-	}
-	KeyIterator.prototype[Symbol.iterator] = function () {
-		return this;
-	};
-	KeyIterator.prototype.next = function () {
-		var ent = this.entry;
-		if (ent) {
-			this.entry = ent[NEWER];
-			return { done: false, value: ent.key };
-		} else {
-			return { done: true, value: undefined };
-		}
-	};
-
-	function ValueIterator(oldestEntry) {
-		this.entry = oldestEntry;
-	}
-	ValueIterator.prototype[Symbol.iterator] = function () {
-		return this;
-	};
-	ValueIterator.prototype.next = function () {
-		var ent = this.entry;
-		if (ent) {
-			this.entry = ent[NEWER];
-			return { done: false, value: ent.value };
-		} else {
-			return { done: true, value: undefined };
-		}
-	};
-
-	// GoogleMutant by Iván Sánchez Ortega <ivan@sanchezortega.es>
-
-	function waitForAPI(callback, context) {
-		var checkCounter = 0,
-			intervalId = null;
-
-		intervalId = setInterval(function () {
-			if (checkCounter >= 20) {
-				clearInterval(intervalId);
-				throw new Error("window.google not found after 10 seconds");
-			}
-			if (!!window.google && !!window.google.maps && !!window.google.maps.Map) {
-				clearInterval(intervalId);
-				callback.call(context);
-			}
-			++checkCounter;
-		}, 500);
-	}
-
-	// 🍂class GridLayer.GoogleMutant
-	// 🍂extends GridLayer
-	L.GridLayer.GoogleMutant = L.GridLayer.extend({
-		options: {
-			maxZoom: 21, // can be 23, but ugly if more than maxNativeZoom
-			// 🍂option type: String = 'roadmap'
-			// Google's map type. Valid values are 'roadmap', 'satellite', 'terrain' or 'hybrid'.
-			type: "roadmap",
-			maxNativeZoom: 21,
-		},
-
-		initialize: function (options) {
-			L.GridLayer.prototype.initialize.call(this, options);
-
-			// Couple data structures indexed by tile key
-			this._tileCallbacks = {}; // Callbacks for promises for tiles that are expected
-			this._lru = new LRUMap(100); // Tile LRU cache
-
-			this._imagesPerTile = this.options.type === "hybrid" ? 2 : 1;
-
-			this._boundOnMutatedImage = this._onMutatedImage.bind(this);
-		},
-
-		onAdd: function (map) {
-			var this$1 = this;
-
-			L.GridLayer.prototype.onAdd.call(this, map);
-			this._initMutantContainer();
-
-			// Attribution and logo nodes are not mutated a second time if the
-			// mutant is removed and re-added to the map, hence they are
-			// not cleaned up on layer removal, so they can be added here.
-			if (this._logoContainer) {
-				map._controlCorners.bottomleft.appendChild(this._logoContainer);
-			}
-			if (this._attributionContainer) {
-				map._controlCorners.bottomright.appendChild(this._attributionContainer);
-			}
-
-			waitForAPI(function () {
-				if (!this$1._map) {
-					return;
-				}
-				this$1._initMutant();
-
-				//handle layer being added to a map for which there are no Google tiles at the given zoom
-				google.maps.event.addListenerOnce(this$1._mutant, "idle", function () {
-					if (!this$1._map) {
-						return;
-					}
-					this$1._checkZoomLevels();
-					this$1._mutantIsReady = true;
-				});
-			});
-		},
-
-		onRemove: function (map) {
-			L.GridLayer.prototype.onRemove.call(this, map);
-			this._observer.disconnect();
-			map._container.removeChild(this._mutantContainer);
-			if (this._logoContainer) {
-				L.DomUtil.remove(this._logoContainer);
-			}
-			if (this._attributionContainer) {
-				L.DomUtil.remove(this._attributionContainer);
-			}
-			if (this._mutant) {
-				google.maps.event.clearListeners(this._mutant, "idle");
-			}
-		},
-
-		// 🍂method addGoogleLayer(name: String, options?: Object): this
-		// Adds layer with the given name and options to the google Map instance.
-		// `name`: one of the google maps API layers, with it's constructor available in `google.maps` object.
-		// currently following values supported: 'TrafficLayer', 'TransitLayer', 'BicyclingLayer'.
-		// `options`: see https://developers.google.com/maps/documentation/javascript/reference/map
-		addGoogleLayer: function (googleLayerName, options) {
-			var this$1 = this;
-
-			if (!this._subLayers) { this._subLayers = {}; }
-			this.whenReady(function () {
-				var Constructor = google.maps[googleLayerName];
-				var googleLayer = new Constructor(options);
-				googleLayer.setMap(this$1._mutant);
-				this$1._subLayers[googleLayerName] = googleLayer;
-			});
-			return this;
-		},
-
-		// 🍂method removeGoogleLayer(name: String): this
-		// Removes layer with the given name from the google Map instance.
-		removeGoogleLayer: function (googleLayerName) {
-			var this$1 = this;
-
-			this.whenReady(function () {
-				var googleLayer = this$1._subLayers && this$1._subLayers[googleLayerName];
-				if (googleLayer) {
-					googleLayer.setMap(null);
-					delete this$1._subLayers[googleLayerName];
-				}
-			});
-			return this;
-		},
-
-		_initMutantContainer: function () {
-			if (!this._mutantContainer) {
-				this._mutantContainer = L.DomUtil.create(
-					"div",
-					"leaflet-google-mutant leaflet-top leaflet-left"
-				);
-				this._mutantContainer.id = "_MutantContainer_" + L.Util.stamp(this._mutantContainer);
-				this._mutantContainer.style.pointerEvents = "none";
-				this._mutantContainer.style.visibility = "hidden";
-
-				L.DomEvent.off(this._mutantContainer);
-			}
-			this._map.getContainer().appendChild(this._mutantContainer);
-
-			this.setOpacity(this.options.opacity);
-			var style = this._mutantContainer.style;
-			if (this._map.options.zoomSnap < 1) {
-				// Fractional zoom needs a bigger mutant container in order to load more (smaller) tiles
-				style.width = "180%";
-				style.height = "180%";
-			} else {
-				style.width = "100%";
-				style.height = "100%";
-			}
-			style.zIndex = -1;
-
-			this._attachObserver(this._mutantContainer);
-		},
-
-		_initMutant: function () {
-			if (this._mutant) {
-				return;
-			}
-
-			var map = new google.maps.Map(this._mutantContainer, {
-				center: { lat: 0, lng: 0 },
-				zoom: 0,
-				tilt: 0,
-				mapTypeId: this.options.type,
-				disableDefaultUI: true,
-				keyboardShortcuts: false,
-				draggable: false,
-				disableDoubleClickZoom: true,
-				scrollwheel: false,
-				styles: this.options.styles || [],
-				backgroundColor: "transparent",
-			});
-
-			this._mutant = map;
-
-			this._update();
-
-			// 🍂event spawned
-			// Fired when the mutant has been created.
-			this.fire("spawned", { mapObject: map });
-
-			this._waitControls();
-			this.once('controls_ready', this._setupAttribution);
-		},
-
-		_attachObserver: function _attachObserver(node) {
-			if (!this._observer) { this._observer = new MutationObserver(this._onMutations.bind(this)); }
-
-			// pass in the target node, as well as the observer options
-			this._observer.observe(node, { childList: true, subtree: true });
-
-			// if we are reusing an old _mutantContainer, we must manually detect
-			// all existing tiles in it
-			Array.prototype.forEach.call(node.querySelectorAll("img"), this._boundOnMutatedImage);
-		},
-
-		_waitControls: function () {
-			var this$1 = this;
-
-			var id = setInterval(function () {
-				var layoutManager = (this$1._mutant && this$1._mutant.__gm) ? this$1._mutant.__gm.layoutManager : null;
-				if (!layoutManager) { return; }
-				clearInterval(id);
-				var positions;
-				// iterate through obfuscated key names to find positions set (atm: layoutManager.o)
-				Object.keys(layoutManager).forEach(function(key) {
-					var el = layoutManager[key];
-					if (el.get) {
-						if (el.get(1) instanceof Node) {
-							positions = el;
-						}
-					}
-				});
-				// 🍂event controls_ready
-				// Fired when controls positions get available (passed in `positions` property).
-				this$1.fire("controls_ready", { positions: positions });
-			}, 50);
-		},
-
-		_setupAttribution: function (ev) {
-			if (!this._map) {
-				return;
-			}
-			// https://developers.google.com/maps/documentation/javascript/reference/control#ControlPosition
-			var pos = google.maps.ControlPosition;
-			var ctr = this._attributionContainer = ev.positions.get(pos.BOTTOM_RIGHT);
-			L.DomUtil.addClass(ctr, "leaflet-control leaflet-control-attribution");
-			L.DomEvent.disableClickPropagation(ctr);
-			ctr.style.height = "14px";
-			this._map._controlCorners.bottomright.appendChild(ctr);
-
-			this._logoContainer = ev.positions.get(pos.BOTTOM_LEFT);
-			this._logoContainer.style.pointerEvents = "auto";
-			this._map._controlCorners.bottomleft.appendChild(this._logoContainer);
-		},
-
-		_onMutations: function _onMutations(mutations) {
-			for (var i = 0; i < mutations.length; ++i) {
-				var mutation = mutations[i];
-				for (var j = 0; j < mutation.addedNodes.length; ++j) {
-					var node = mutation.addedNodes[j];
-
-					if (node instanceof HTMLImageElement) {
-						this._onMutatedImage(node);
-					} else if (node instanceof HTMLElement) {
-						Array.prototype.forEach.call(
-							node.querySelectorAll("img"),
-							this._boundOnMutatedImage
-						);
-					}
-				}
-			}
-		},
-
-		// Only images which 'src' attrib match this will be considered for moving around.
-		// Looks like some kind of string-based protobuf, maybe??
-		// Only the roads (and terrain, and vector-based stuff) match this pattern
-		_roadRegexp: /!1i(\d+)!2i(\d+)!3i(\d+|VinaFnapurmBegrtn)!/,
-
-		// On the other hand, raster imagery matches this other pattern
-		_satRegexp: /x=(\d+)&y=(\d+)&z=(\d+|VinaFnapurmBegrtn)/,
-
-		_onMutatedImage: function _onMutatedImage(imgNode) {
-			var coords;
-			var match = imgNode.src.match(this._roadRegexp);
-			var sublayer = 0;
-
-			if (match) {
-				coords = {
-					z: match[1],
-					x: match[2],
-					y: match[3],
-				};
-				if (this._imagesPerTile > 1) {
-					imgNode.style.zIndex = 1;
-					sublayer = 1;
-				}
-			} else {
-				match = imgNode.src.match(this._satRegexp);
-				if (match) {
-					coords = {
-						x: match[1],
-						y: match[2],
-						z: match[3],
-					};
-				}
-				// imgNode.style.zIndex = 0;
-				sublayer = 0;
-			}
-
-			if (coords) {
-				var tileKey = this._tileCoordsToKey(coords);
-				imgNode.style.position = "absolute";
-
-				var key = tileKey + "/" + sublayer;
-				// Cache img so it can also be used in subsequent tile requests
-				this._lru.set(key, imgNode);
-
-				if (key in this._tileCallbacks && this._tileCallbacks[key]) {
-					// Use the tile for *all* pending callbacks. They'll be cloned anyway.
-					this._tileCallbacks[key].forEach(function (callback) { return callback(imgNode); });
-					delete this._tileCallbacks[key];
-				}
-			}
-		},
-
-		createTile: function (coords, done) {
-			var key = this._tileCoordsToKey(coords),
-				tileContainer = L.DomUtil.create("div");
-
-			tileContainer.style.textAlign = "left";
-			tileContainer.dataset.pending = this._imagesPerTile;
-			done = done.bind(this, null, tileContainer);
-
-			for (var i = 0; i < this._imagesPerTile; ++i) {
-				var key2 = key + "/" + i,
-					imgNode = this._lru.get(key2);
-				if (imgNode) {
-					tileContainer.appendChild(this._clone(imgNode));
-					--tileContainer.dataset.pending;
-				} else {
-					this._tileCallbacks[key2] = this._tileCallbacks[key2] || [];
-					this._tileCallbacks[key2].push(
-						function (c /*, k2*/) {
-							return function (imgNode) {
-								c.appendChild(this._clone(imgNode));
-								--c.dataset.pending;
-								if (!parseInt(c.dataset.pending)) {
-									done();
-								}
-							}.bind(this);
-						}.bind(this)(tileContainer /*, key2*/)
-					);
-				}
-			}
-
-			if (!parseInt(tileContainer.dataset.pending)) {
-				L.Util.requestAnimFrame(done);
-			}
-			return tileContainer;
-		},
-
-		_clone: function (imgNode) {
-			var clonedImgNode = imgNode.cloneNode(true);
-			clonedImgNode.style.visibility = "visible";
-			return clonedImgNode;
-		},
-
-		_checkZoomLevels: function () {
-			//setting the zoom level on the Google map may result in a different zoom level than the one requested
-			//(it won't go beyond the level for which they have data).
-			var zoomLevel = this._map.getZoom(),
-				gMapZoomLevel = this._mutant.getZoom();
-
-			if (!zoomLevel || !gMapZoomLevel) { return; }
-
-			if (
-				gMapZoomLevel !== zoomLevel || //zoom levels are out of sync, Google doesn't have data
-				gMapZoomLevel > this.options.maxNativeZoom
-			) {
-				//at current location, Google does have data (contrary to maxNativeZoom)
-				//Update maxNativeZoom
-				this._setMaxNativeZoom(gMapZoomLevel);
-			}
-		},
-
-		_setMaxNativeZoom: function (zoomLevel) {
-			if (zoomLevel !== this.options.maxNativeZoom) {
-				this.options.maxNativeZoom = zoomLevel;
-				this._resetView();
-			}
-		},
-
-		_update: function (center) {
-			// zoom level check needs to happen before super's implementation (tile addition/creation)
-			// otherwise tiles may be missed if maxNativeZoom is not yet correctly determined
-			if (this._mutant) {
-				center = center || this._map.getCenter();
-				var _center = new google.maps.LatLng(center.lat, center.lng),
-					zoom = Math.round(this._map.getZoom()),
-					mutantZoom = this._mutant.getZoom();
-
-				this._mutant.setCenter(_center);
-
-				//ignore fractional zoom levels
-				if (zoom !== mutantZoom) {
-					this._mutant.setZoom(zoom);
-
-					if (this._mutantIsReady) { this._checkZoomLevels(); }
-					//else zoom level check will be done later by 'idle' handler
-				}
-			}
-
-			L.GridLayer.prototype._update.call(this, center);
-		},
-
-		// @method whenReady(fn: Function, context?: Object): this
-		// Runs the given function `fn` when the mutant gets initialized, or immediately
-		// if it's already initialized, optionally passing a function context.
-		whenReady: function (callback, context) {
-			if (this._mutant) {
-				callback.call(context || this, { target: this });
-			} else {
-				this.on("spawned", callback, context);
-			}
-			return this;
-		},
-	});
-
-	// 🍂factory gridLayer.googleMutant(options)
-	// Returns a new `GridLayer.GoogleMutant` given its options
-	L.gridLayer.googleMutant = function (options) {
-		return new L.GridLayer.GoogleMutant(options);
-	};
-
-}());
-//# sourceMappingURL=Leaflet.GoogleMutant.js.map
+/* Leaflet-shaped API on top of MapLibre GL. Only what this app uses. */
+(function(){
+var MLGL=window.maplibregl;
+var uid=0;function nid(){return 'sh'+(++uid);}
+function toLngLat(ll){ if(Array.isArray(ll))return [ll[1],ll[0]]; if(ll&&ll.lng!==undefined)return [ll.lng,ll.lat]; return [0,0]; }
+function toLatLng(ll){ if(Array.isArray(ll))return {lat:ll[0],lng:ll[1]}; return {lat:ll.lat,lng:ll.lng}; }
+function LPoint(x,y){this.x=x;this.y=y;}
+LPoint.prototype.subtract=function(p){return new LPoint(this.x-p.x,this.y-p.y);};
+LPoint.prototype.add=function(p){return new LPoint(this.x+p.x,this.y+p.y);};
+function Bounds(b){this.b=b;} /* maplibre LngLatBounds */
+Bounds.prototype.contains=function(ll){if(ll instanceof Bounds){var sw=ll.b.getSouthWest(),ne=ll.b.getNorthEast();return this.b.contains(sw)&&this.b.contains(ne);}var p=toLatLng(ll);if(typeof p.lat!=='number'||isNaN(p.lat))return false;return this.b.contains([p.lng,p.lat]);};
+Bounds.prototype.pad=function(f){var sw=this.b.getSouthWest(),ne=this.b.getNorthEast();var dx=(ne.lng-sw.lng)*f,dy=(ne.lat-sw.lat)*f;return new Bounds(new MLGL.LngLatBounds([sw.lng-dx,sw.lat-dy],[ne.lng+dx,ne.lat+dy]));};
+Bounds.prototype.getSouth=function(){return this.b.getSouth();};Bounds.prototype.getNorth=function(){return this.b.getNorth();};
+Bounds.prototype.getWest=function(){return this.b.getWest();};Bounds.prototype.getEast=function(){return this.b.getEast();};
+
+/* ---------- geometry objects: polylines, polygons, circles. Batched per group into GeoJSON sources ---------- */
+function Geom(type,latlngs,opts){this.id=nid();this.type=type;this.latlngs=latlngs;this.options=opts||{};this._map=null;this._group=null;}
+Geom.prototype.addTo=function(target){target.addLayer(this);return this;};
+Geom.prototype.setStyle=function(st){Object.assign(this.options,st);if(this._map)this._map._restyleGeom(this);return this;};
+Geom.prototype.setLatLng=function(ll){this.latlngs=ll;if(this._map)this._map._refreshGeom(this);return this;};
+Geom.prototype.setRadius=function(r){this.options.radius=r;if(this._map)this._map._refreshGeom(this);return this;};
+Geom.prototype.getLatLng=function(){return toLatLng(this.latlngs);};
+function ringCoords(arr){return arr.map(function(ll){return toLngLat(ll);});}
+function isMulti(a){return Array.isArray(a)&&Array.isArray(a[0])&&Array.isArray(a[0][0]);}
+function isMultiPoly(a){return Array.isArray(a)&&Array.isArray(a[0])&&Array.isArray(a[0][0])&&Array.isArray(a[0][0][0]);}
+function circlePoly(ll,r,n){var c=toLatLng(ll);var out=[];var kx=111320*Math.cos(c.lat*Math.PI/180),ky=110574;for(var i=0;i<=n;i++){var a=i/n*2*Math.PI;out.push([c.lng+r*Math.cos(a)/kx,c.lat+r*Math.sin(a)/ky]);}return out;}
+Geom.prototype.toFeature=function(){
+  var t=this.type,a=this.latlngs,o=this.options,g;
+  if(t==='polyline'){g=isMulti(a)?{type:'MultiLineString',coordinates:a.map(ringCoords)}:{type:'LineString',coordinates:ringCoords(a)};}
+  else if(t==='polygon'){ if(isMultiPoly(a))g={type:'MultiPolygon',coordinates:a.map(function(poly){return poly.map(ringCoords);})}; else if(isMulti(a))g={type:'Polygon',coordinates:a.map(ringCoords)}; else g={type:'Polygon',coordinates:[ringCoords(a)]}; }
+  else if(t==='rectangle'){var s=toLatLng(a[0]),n=toLatLng(a[1]);g={type:'Polygon',coordinates:[[[s.lng,s.lat],[n.lng,s.lat],[n.lng,n.lat],[s.lng,n.lat],[s.lng,s.lat]]]};}
+  else if(t==='circle'){g={type:'Polygon',coordinates:[circlePoly(a,o.radius||50,48)]};}
+  else if(t==='circleMarker'){g={type:'Point',coordinates:toLngLat(a)};}
+  return {type:'Feature',id:this.id,properties:{gid:this.id},geometry:g};
+};
+
+/* ---------- markers ---------- */
+function Marker(latlng,opts){
+  this.id=nid();this.latlng=toLatLng(latlng);this.options=opts||{};this._map=null;this._group=null;this._handlers={};this._z=0;
+  var ic=(this.options.icon&&this.options.icon.options)||{};
+  var el=document.createElement('div');el.className=(ic.className||'')+' leaflet-marker-icon';el.innerHTML=ic.html||'';
+  if(ic.iconSize){el.style.width=ic.iconSize[0]+'px';el.style.height=ic.iconSize[1]+'px';}
+  el.style.pointerEvents=this.options.interactive===false?'none':'auto';
+  if(this.options.title)el.title=this.options.title;
+  this._icon=el;this._el=el;
+  var anchor='center',offset=[0,0];
+  if(ic.iconSize&&ic.iconAnchor){offset=[ic.iconSize[0]/2-ic.iconAnchor[0],ic.iconSize[1]/2-ic.iconAnchor[1]];}
+  this._ml=new MLGL.Marker({element:el,anchor:anchor,offset:offset});
+  this._ml.setLngLat([this.latlng.lng,this.latlng.lat]);
+  var self=this;
+  el.addEventListener('click',function(ev){var hs=self._handlers.click||[];if(!hs.length)return;ev.stopPropagation();hs.forEach(function(h){h({originalEvent:ev,target:self,latlng:self.latlng});});});
+}
+Marker.prototype.addTo=function(target){target.addLayer(this);return this;};
+Marker.prototype.remove=function(){if(this._group)this._group.removeLayer(this);else if(this._map)this._map.removeLayer(this);return this;};
+Marker.prototype.on=function(ev,fn){(this._handlers[ev]=this._handlers[ev]||[]).push(fn);return this;};
+Marker.prototype.setLatLng=function(ll){this.latlng=toLatLng(ll);this._ml.setLngLat([this.latlng.lng,this.latlng.lat]);return this;};
+Marker.prototype.getLatLng=function(){return this.latlng;};
+Marker.prototype.getElement=function(){return this._el;};
+Marker.prototype.setIcon=function(icon){this.options.icon=icon;var ic=icon.options||{};this._el.className=(ic.className||'')+' leaflet-marker-icon';this._el.innerHTML=ic.html||'';if(ic.iconSize){this._el.style.width=ic.iconSize[0]+'px';this._el.style.height=ic.iconSize[1]+'px';}return this;};
+Marker.prototype.setZIndexOffset=function(z){this._z=z;this._el.style.zIndex=z?String(z):'';return this;};
+Marker.prototype._attach=function(map){if(this._map)return;this._map=map;this._ml.addTo(map._ml);};
+Marker.prototype._detach=function(){if(!this._map)return;this._ml.remove();this._map=null;};
+
+/* ---------- layer group: batches geometry into sources per style key ---------- */
+function Group(items){this.id=nid();this.items=[];this._map=null;this._sources={};(items||[]).forEach(this.addLayer,this);}
+Group.prototype.addLayer=function(l){this.items.push(l);l._group=this;if(this._map){if(l instanceof Marker)l._attach(this._map);else this._map._addGeom(l,this);}return this;};
+Group.prototype.removeLayer=function(l){var i=this.items.indexOf(l);if(i>-1)this.items.splice(i,1);l._group=null;if(l instanceof Marker)l._detach();else if(this._map)this._map._removeGeom(l);return this;};
+Group.prototype.eachLayer=function(fn){this.items.slice().forEach(fn);return this;};
+Group.prototype.getLayers=function(){return this.items.slice();};
+Group.prototype.clearLayers=function(){var self=this;this.items.slice().forEach(function(l){self.removeLayer(l);});return this;};
+Group.prototype.addTo=function(map){map.addLayer(this);return this;};
+Group.prototype._attach=function(map){if(this._map)return;this._map=map;var self=this;this.items.forEach(function(l){if(l instanceof Marker)l._attach(map);else map._addGeom(l,self);});};
+Group.prototype._detach=function(){if(!this._map)return;var map=this._map;this.items.forEach(function(l){if(l instanceof Marker)l._detach();else map._removeGeom(l);});this._map=null;};
+
+/* ---------- raster tile layer ---------- */
+function TileLayer(url,opts){this.id=nid();this.url=url;this.options=opts||{};this._map=null;}
+TileLayer.prototype.addTo=function(map){map.addLayer(this);return this;};
+TileLayer.prototype.setOpacity=function(o){this.options.opacity=o;if(this._map&&this._map._ml.getLayer(this.id))this._map._ml.setPaintProperty(this.id,'raster-opacity',o);return this;};
+TileLayer.prototype._attach=function(map){if(this._map)return;this._map=map;var ml=map._ml;if(!ml.getSource(this.id))ml.addSource(this.id,{type:'raster',tiles:[this.url.replace('{s}.','')],tileSize:256,maxzoom:this.options.maxZoom||19,attribution:''});ml.addLayer({id:this.id,type:'raster',source:this.id,paint:{'raster-opacity':this.options.opacity===undefined?1:this.options.opacity}},map._firstOwnLayer());};
+TileLayer.prototype._detach=function(){if(!this._map)return;var ml=this._map._ml;if(ml.getLayer(this.id))ml.removeLayer(this.id);this._map=null;};
+
+/* ---------- the map ---------- */
+function LMap(id,opts){
+  this.options=opts||{};var self=this;
+  this._container=typeof id==='string'?document.getElementById(id):id;
+  this._geoms={};this._handlers={};this._ready=false;this._pending=[];
+  this._ml=new MLGL.Map({container:this._container,style:window.__mlStyle||{version:8,sources:{},layers:[]},center:[139.75,35.68],zoom:12,minZoom:this.options.minZoom||3,maxZoom:this.options.maxZoom||20,attributionControl:false,pitchWithRotate:true,dragRotate:true,touchPitch:true,fadeDuration:0});
+  this._ml.on('load',function(){self._ready=true;self._pending.forEach(function(f){f();});self._pending=[];});
+  ['moveend','zoomend','movestart','zoomstart','dragstart','click','contextmenu','load'].forEach(function(ev){
+    self._ml.on(ev,function(e){var hs=self._handlers[ev]||[];if(!hs.length)return;var arg=e&&e.lngLat?{latlng:{lat:e.lngLat.lat,lng:e.lngLat.lng},containerPoint:new LPoint(e.point.x,e.point.y),originalEvent:e.originalEvent}:e;hs.forEach(function(h){h(arg);});});
+  });
+  /* long press on touch devices behaves like a right click */
+  var pressTimer=null,pressStart=null;
+  var cv=this._ml.getCanvasContainer();
+  cv.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;var t=e.touches[0];pressStart=[t.clientX,t.clientY];pressTimer=setTimeout(function(){pressTimer=null;var r=cv.getBoundingClientRect();var pt=[pressStart[0]-r.left,pressStart[1]-r.top];var ll=self._ml.unproject(pt);var hs=self._handlers.contextmenu||[];hs.forEach(function(h){h({latlng:{lat:ll.lat,lng:ll.lng},containerPoint:new LPoint(pt[0],pt[1])});});},600);},{passive:true});
+  cv.addEventListener('touchmove',function(e){if(!pressTimer||!pressStart)return;var t=e.touches[0];if(Math.hypot(t.clientX-pressStart[0],t.clientY-pressStart[1])>12){clearTimeout(pressTimer);pressTimer=null;}},{passive:true});
+  cv.addEventListener('touchend',function(){if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}},{passive:true});
+}
+LMap.prototype._whenReady=function(fn){if(this._ready)fn();else this._pending.push(fn);};
+LMap.prototype._firstOwnLayer=function(){return undefined;};
+LMap.prototype.setView=function(ll,z,o){var c=toLatLng(ll);this._ml.jumpTo({center:[c.lng,c.lat],zoom:z!==undefined?z:this._ml.getZoom()});return this;};
+LMap.prototype.flyTo=function(ll,z,o){var c=toLatLng(ll);var d=(o&&o.duration!==undefined)?o.duration*1000:700;this._ml.easeTo({center:[c.lng,c.lat],zoom:z!==undefined?z:this._ml.getZoom(),duration:d,essential:true});return this;};
+LMap.prototype.panTo=function(ll,o){var c=toLatLng(ll);this._ml.easeTo({center:[c.lng,c.lat],duration:(o&&o.duration!==undefined)?o.duration*1000:300});return this;};
+LMap.prototype.panBy=function(p,o){this._ml.panBy([p.x,p.y],{duration:(o&&o.animate===false)?0:300});return this;};
+LMap.prototype.fitBounds=function(lls,o){var b=new MLGL.LngLatBounds();lls.forEach(function(ll){var c=toLatLng(ll);b.extend([c.lng,c.lat]);});var pad=(o&&o.padding)?{top:o.padding[1],bottom:o.padding[1],left:o.padding[0],right:o.padding[0]}:40;this._ml.fitBounds(b,{padding:pad,maxZoom:(o&&o.maxZoom)||17,duration:600});return this;};
+LMap.prototype.getZoom=function(){return this._ml.getZoom();};
+LMap.prototype.setMaxZoom=function(z){this._ml.setMaxZoom(z);return this;};
+LMap.prototype.getCenter=function(){var c=this._ml.getCenter();return {lat:c.lat,lng:c.lng};};
+LMap.prototype.getBounds=function(){return new Bounds(this._ml.getBounds());};
+LMap.prototype.getContainer=function(){return this._container;};
+LMap.prototype.getSize=function(){return new LPoint(this._container.clientWidth,this._container.clientHeight);};
+LMap.prototype.invalidateSize=function(){this._ml.resize();return this;};
+LMap.prototype.latLngToContainerPoint=function(ll){var c=toLatLng(ll);var p=this._ml.project([c.lng,c.lat]);return new LPoint(p.x,p.y);};
+LMap.prototype.project=function(ll,z){var c=toLatLng(ll);var s=256*Math.pow(2,z);var x=(c.lng+180)/360*s;var lat=Math.max(-85.05,Math.min(85.05,c.lat))*Math.PI/180;var y=(1-Math.log(Math.tan(lat)+1/Math.cos(lat))/Math.PI)/2*s;return new LPoint(x,y);};
+LMap.prototype.createPane=function(){return document.createElement('div');};
+LMap.prototype.getPane=function(){return document.createElement('div');};
+LMap.prototype.on=function(ev,fn){var self=this;if(ev==='moveend'||ev==='zoomend'||ev==='click'||ev==='contextmenu'||ev==='dragstart'||ev==='movestart'||ev==='zoomstart'||ev==='load'){(this._handlers[ev]=this._handlers[ev]||[]).push(fn);}return this;};
+LMap.prototype.fire=function(ev,arg){(this._handlers[ev]||[]).forEach(function(h){h(arg||{});});return this;};
+LMap.prototype.once=function(ev,fn){var self=this;var w=function(e){var i=(self._handlers[ev]||[]).indexOf(w);if(i>-1)self._handlers[ev].splice(i,1);fn(e);};this.on(ev,w);return this;};
+LMap.prototype.hasLayer=function(l){return !!(l&&(l._map===this||l._pendingMap===this));};
+LMap.prototype.addLayer=function(l){var self=this;l._pendingMap=this;this._whenReady(function(){if(l._pendingMap!==self)return;l._pendingMap=null;if(l instanceof Group||l instanceof Marker||l instanceof TileLayer)l._attach(self);else self._addGeom(l,null);});return this;};
+LMap.prototype.removeLayer=function(l){var self=this;l._pendingMap=null;if(l instanceof Group||l instanceof Marker||l instanceof TileLayer){if(this._ready)l._detach();else this._pending.push(function(){l._detach();});}else{this._whenReady(function(){self._removeGeom(l);});}return this;};
+/* geometry: one source and one or two style layers per geometry object */
+LMap.prototype._addGeom=function(g,group){
+  var ml=this._ml;if(!this._ready){var self=this;this._pending.push(function(){self._addGeom(g,group);});return;}
+  g._map=this;var o=g.options||{};var f=g.toFeature();
+  if(g.type!=='circleMarker'){if(ml.getSource(g.id))ml.getSource(g.id).setData(f);else ml.addSource(g.id,{type:'geojson',data:f});}
+  var before=this._beforeFor(o.pane);
+  if(g.type==='polyline'){
+    if(!ml.getLayer(g.id))ml.addLayer({id:g.id,type:'line',source:g.id,metadata:{pane:o.pane||'own'},layout:{'line-cap':o.lineCap||'round','line-join':o.lineJoin||'round'},paint:{'line-color':o.color||'#333','line-width':o.weight||2,'line-opacity':o.opacity===undefined?1:o.opacity,'line-dasharray':dashOf(o.dashArray)}},before);
+  }else if(g.type==='circleMarker'){
+    /* all circle markers with the same look share one source and one layer */
+    if(ml.getSource(g.id)){ml.removeSource(g.id);}
+    var key='cb:'+[o.radius||4,o.fillColor||o.color||'#333',o.fillOpacity===undefined?1:o.fillOpacity,o.color||'#333',o.weight||1,o.pane||'own'].join('|');
+    this._circleBatches=this._circleBatches||{};
+    var cb=this._circleBatches[key];
+    if(!cb){cb=this._circleBatches[key]={id:nid(),feats:{}};ml.addSource(cb.id,{type:'geojson',data:{type:'FeatureCollection',features:[]}});ml.addLayer({id:cb.id,type:'circle',source:cb.id,metadata:{pane:o.pane||'own'},paint:{'circle-radius':o.radius||4,'circle-color':o.fillColor||o.color||'#333','circle-opacity':o.fillOpacity===undefined?1:o.fillOpacity,'circle-stroke-color':o.color||'#333','circle-stroke-width':o.weight||1}},before);}
+    cb.feats[g.id]=f;g._cb=cb;cb.dirty=true;this._flushCircles();
+  }else{
+    if(!ml.getLayer(g.id+'f')&&(o.fillOpacity===undefined||o.fillOpacity>0)&&o.fill!==false)ml.addLayer({id:g.id+'f',type:'fill',source:g.id,metadata:{pane:o.pane||'own'},paint:{'fill-color':o.fillColor||o.color||'#333','fill-opacity':o.fillOpacity===undefined?0.2:o.fillOpacity}},before);
+    if(!ml.getLayer(g.id)&&o.stroke!==false&&(o.weight===undefined||o.weight>0))ml.addLayer({id:g.id,type:'line',source:g.id,metadata:{pane:o.pane||'own'},paint:{'line-color':o.color||'#333','line-width':o.weight||1,'line-opacity':o.opacity===undefined?1:o.opacity,'line-dasharray':dashOf(o.dashArray)}},before);
+  }
+  this._geoms[g.id]=g;
+};
+LMap.prototype._removeGeom=function(g){var ml=this._ml;if(g._cb){delete g._cb.feats[g.id];g._cb.dirty=true;g._cb=null;this._flushCircles();delete this._geoms[g.id];g._map=null;return;}[g.id,g.id+'f'].forEach(function(id){if(ml.getLayer(id))ml.removeLayer(id);});if(ml.getSource(g.id))ml.removeSource(g.id);delete this._geoms[g.id];g._map=null;};
+LMap.prototype._flushCircles=function(){var self=this;if(this._cbTimer)return;this._cbTimer=setTimeout(function(){self._cbTimer=null;var ml=self._ml;Object.keys(self._circleBatches||{}).forEach(function(k){var cb=self._circleBatches[k];if(!cb.dirty)return;cb.dirty=false;var src=ml.getSource(cb.id);if(src)src.setData({type:'FeatureCollection',features:Object.keys(cb.feats).map(function(id){return cb.feats[id];})});});},0);};
+LMap.prototype._refreshGeom=function(g){var src=this._ml.getSource(g.id);if(src)src.setData(g.toFeature());};
+LMap.prototype._restyleGeom=function(g){var ml=this._ml,o=g.options;if(g.type==='circleMarker'){if(g._cb&&ml.getLayer(g._cb.id)){ml.setPaintProperty(g._cb.id,'circle-color',o.fillColor||o.color);ml.setPaintProperty(g._cb.id,'circle-stroke-color',o.color);}return;}if(g.type==='polyline'){if(ml.getLayer(g.id)){if(o.color)ml.setPaintProperty(g.id,'line-color',o.color);if(o.weight)ml.setPaintProperty(g.id,'line-width',o.weight);}}else if(g.type==='circleMarker'){if(ml.getLayer(g.id)){ml.setPaintProperty(g.id,'circle-color',o.fillColor||o.color);ml.setPaintProperty(g.id,'circle-stroke-color',o.color);}}else{if(ml.getLayer(g.id+'f')&&o.fillColor)ml.setPaintProperty(g.id+'f','fill-color',o.fillColor);if(ml.getLayer(g.id)&&o.color)ml.setPaintProperty(g.id,'line-color',o.color);}};
+function dashOf(d){if(!d)return [1,0];var a=String(d).split(/[ ,]+/).map(Number).filter(function(n){return !isNaN(n);});return a.length>=2?a:[1,0];}
+/* draw order: embedded base under everything the online style draws as labels */
+LMap.prototype._beforeFor=function(pane){
+  var ml=this._ml,layers=ml.getStyle().layers||[];
+  var order={'base-land':0,'base-poly':1,'base-lines':2,'base-road':3,'base-rail':4,'own':5};
+  var mine=order[pane]!==undefined?order[pane]:5;
+  for(var i=0;i<layers.length;i++){
+    var l=layers[i],md=l.metadata||{};
+    if(md.ofm){ if(l.type==='symbol')return l.id; continue; }   /* online labels always on top */
+    if(md.pane&&order[md.pane]!==undefined&&order[md.pane]>mine)return l.id;
+  }
+  return undefined;
+};
+
+window.L={
+  map:function(id,opts){return new LMap(id,opts);},
+  marker:function(ll,o){return new Marker(ll,o);},
+  divIcon:function(o){return {options:o||{}};},
+  layerGroup:function(items){return new Group(items);},
+  polyline:function(ll,o){return new Geom('polyline',ll,o);},
+  polygon:function(ll,o){return new Geom('polygon',ll,o);},
+  rectangle:function(ll,o){return new Geom('rectangle',ll,o);},
+  circle:function(ll,o){return new Geom('circle',ll,o);},
+  circleMarker:function(ll,o){return new Geom('circleMarker',ll,o);},
+  tileLayer:function(u,o){return new TileLayer(u,o);},
+  point:function(x,y){return new LPoint(x,y);},
+  latLng:function(a,b){return Array.isArray(a)?{lat:a[0],lng:a[1]}:{lat:a,lng:b};},
+  canvas:function(){return null;},
+  control:{
+    attribution:function(){var el=null;return {addTo:function(m){el=document.createElement('div');el.className='leaflet-control leaflet-control-attribution';el.style.cssText='position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:9px;padding:2px 6px;background:rgba(255,255,255,.75);pointer-events:auto';m.getContainer().appendChild(el);return this;},addAttribution:function(h){if(el)el.innerHTML=h;return this;}};},
+    scale:function(){return {addTo:function(m){try{m._ml.addControl(new MLGL.ScaleControl({maxWidth:100,unit:'metric'}),'bottom-left');}catch(e){}return this;}};}
+  },
+  gridLayer:{googleMutant:function(){throw new Error('Google Maps layer is not available on this engine');}},
+  DomEvent:{stopPropagation:function(e){if(e&&e.stopPropagation)e.stopPropagation();}}
+};
+window.__mlMap=function(m){return m&&m._ml;};
+})();
 
 </script>
 <script>
 (function(){
 'use strict';
 
+var APP_VERSION='41';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -2297,7 +1722,8 @@ function renderSnapshots(){
     if(!list.length){box.innerHTML='<div class="empty">No earlier versions yet.</div>';return;}
     list.slice().reverse().forEach(function(d){
       var r=document.createElement('div');r.className='snap-row';
-      r.innerHTML='<span>'+esc(dayLabel(d,true))+(d===todayIso()?' (as it was when the app opened today)':'')+'</span><button class="btn small" type="button">Restore</button>';
+      var lab=/-pre-import$/.test(d)?dayLabel(d.slice(0,10),true)+' (just before the import)':dayLabel(d,true)+(d===todayIso()?' (as it was when the app opened today)':'');
+      r.innerHTML='<span>'+esc(lab)+'</span><button class="btn small" type="button">Restore</button>';
       r.querySelector('button').addEventListener('click',function(){
         var b=this;if(b.dataset.armed!==d){b.dataset.armed=d;b.textContent='Tap again to restore';setTimeout(function(){b.dataset.armed='';b.textContent='Restore';},4000);return;}
         idbGet('jm:snap:'+KEY+':'+d).then(function(s){if(!s){toast('That version is gone.');return;}return idbSet(KEY,s).then(function(){toast('Restored '+dayLabel(d)+'. Reloading.');setTimeout(function(){location.reload();},600);});});
@@ -2406,14 +1832,14 @@ function init(){
 }
 
 function buildMap(){
-  map=L.map('map',{zoomControl:false,attributionControl:false,tap:true,minZoom:5,maxZoom:17,preferCanvas:true}).setView((AREAS[AREA_ORDER[0]]||AREAS.other).center,(AREAS[AREA_ORDER[0]]||AREAS.other).zoom);
+  map=L.map('map',{zoomControl:false,attributionControl:false,tap:true,minZoom:4,maxZoom:20,preferCanvas:true}).setView((AREAS[AREA_ORDER[0]]||AREAS.other).center,(AREAS[AREA_ORDER[0]]||AREAS.other).zoom);
   attribution=L.control.attribution({position:'bottomleft',prefix:false}).addTo(map);
   attribution.addAttribution('<span class="attrib">Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://openmaptiles.org/">OpenMapTiles</a> via OpenFreeMap. Land: Natural Earth</span>');
   L.control.scale({position:'bottomleft',imperial:false}).addTo(map);
   buildBase();
-  probeTiles();
-  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();}};
-  if(getGoogleKey()) setTimeout(enableGoogle,50);
+  loadOnlineBase();
+  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();},online:function(){return onlineBase;}};
+
   layer=L.layerGroup().addTo(map);
   map.on('click',function(){$('#bunchPop').classList.remove('on');});
   map.on('movestart',function(){$('#bunchPop').classList.remove('on');});
@@ -2428,7 +1854,7 @@ function buildMap(){
     $('#geoResults').innerHTML='<p>Spot taken from the map. Give it a name, or Search by name to fill in the rest.</p>';
   });
   map.on('zoomend',function(){ renderMarkers(); });
-  map.on('moveend',function(){ baseGroups.forEach(function(g){g.onMap=map.hasLayer(g.layer);}); resolveLabels(); coverageNote(); });
+  map.on('moveend',function(){ baseGroups.forEach(function(g){g.onMap=map.hasLayer(g.layer);}); if(renderBounds&&!renderBounds.contains(map.getBounds()))renderMarkers(); syncLabelMarkers(); resolveLabels(); coverageNote(); });
   map.on('zoomend',coverageNote);
 }
 
@@ -2436,8 +1862,55 @@ function buildMap(){
    a "Street detail" toggle appears that overlays live OpenStreetMap tiles. Those tiles are drawn in the local
    language (Japanese), so the English station and ward labels from the embedded map stay on top of them. */
 var tilesOn=false,tileLayer=null,tilesAvailable=false;
-var followWatch=null,walkRing=null;
+var followWatch=null,walkRing=null,followTimer=null;
 var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={},gClean=false,linesOn=true;
+var onlineBase=false,onlineStyle='',threeD=false,ofmLayers=[],ofmSources=[];
+var OFM={light:'https://tiles.openfreemap.org/styles/liberty',dark:'https://tiles.openfreemap.org/styles/dark'};
+function wantDarkMap(){return document.body.classList.contains('dark');}
+/* Fetch the OpenFreeMap style and add its sources and layers under our own layers. Failure means offline: the embedded map stays. */
+function loadOnlineBase(){
+  var which=wantDarkMap()?'dark':'light';
+  if(onlineStyle===which)return;
+  if(navigator.onLine===false){setOnline(false);return;}
+  var ml=window.__mlMap(map);
+  fetch(OFM[which]).then(function(r){if(!r.ok)throw new Error('style '+r.status);return r.json();}).then(function(st){
+    map._whenReady(function(){
+      removeOnlineBase();
+      Object.keys(st.sources||{}).forEach(function(k){var id='ofm-'+k;if(!ml.getSource(id)){ml.addSource(id,st.sources[k]);ofmSources.push(id);}});
+      if(st.glyphs&&ml.setGlyphs)ml.setGlyphs(st.glyphs);
+      if(st.sprite&&ml.setSprite)ml.setSprite(st.sprite);
+      var first=(ml.getStyle().layers||[])[0];var firstId=first?first.id:undefined;
+      (st.layers||[]).forEach(function(l){
+        var c=JSON.parse(JSON.stringify(l));c.id='ofm-'+l.id;if(c.source)c.source='ofm-'+c.source;c.metadata=Object.assign({},c.metadata||{},{ofm:true});
+        try{ml.addLayer(c,firstId);ofmLayers.push(c.id);}catch(e){}
+      });
+      if(ofmLayers.indexOf('ofm-building-3d')===-1&&ml.getSource('ofm-openmaptiles')){
+        var firstSym=ofmLayers.filter(function(id){var L2=ml.getLayer(id);return L2&&L2.type==='symbol';})[0];
+        try{ml.addLayer({id:'ofm-building-3d',type:'fill-extrusion',source:'ofm-openmaptiles','source-layer':'building',minzoom:14,metadata:{ofm:true},paint:{'fill-extrusion-base':['get','render_min_height'],'fill-extrusion-height':['get','render_height'],'fill-extrusion-color':'hsl(220,10%,28%)','fill-extrusion-opacity':0.85}},firstSym);ofmLayers.push('ofm-building-3d');}catch(e){}
+      }
+      if(ml.getLayer('ofm-building-3d')){ml.setPaintProperty('ofm-building-3d','fill-extrusion-color',which==='dark'?'hsl(220,10%,28%)':'hsl(35,10%,84%)');ml.setLayoutProperty('ofm-building-3d','visibility',threeD?'visible':'none');}
+      onlineStyle=which;setOnline(true);
+    });
+  }).catch(function(){setOnline(false);});
+}
+function removeOnlineBase(){var ml=window.__mlMap(map);ofmLayers.forEach(function(id){if(ml.getLayer(id))ml.removeLayer(id);});ofmSources.forEach(function(id){if(ml.getSource(id))ml.removeSource(id);});ofmLayers=[];ofmSources=[];onlineStyle='';}
+function setOnline(on){
+  onlineBase=on;
+  baseGroups.forEach(function(g){g.forceHide=on&&!g.keep&&!linesOn?true:(on&&!g.keep)?true:(!linesOn&&g.keep);});
+  syncBaseGroups();
+  map.getContainer().style.background=on?(wantDarkMap()?'#141821':'#E8ECE8'):(wantDarkMap()?'#18232E':'#C6DBE7');
+  $('#mapBtn').classList.add('avail');
+  coverageNote();
+  if(!on)$('#covNote').classList.remove('on');
+}
+function set3D(on){
+  threeD=on;var ml=window.__mlMap(map);
+  if(ml.getLayer('ofm-building-3d'))ml.setLayoutProperty('ofm-building-3d','visibility',on?'visible':'none');
+  ml.easeTo({pitch:on?55:0,bearing:on?ml.getBearing():0,duration:600});
+  syncMapMenu();
+}
+window.addEventListener('online',function(){loadOnlineBase();});
+window.addEventListener('offline',function(){setOnline(false);});
 var CLEAN_STYLE=[{featureType:'poi',stylers:[{visibility:'off'}]},{featureType:'transit.station',elementType:'labels.icon',stylers:[{visibility:'simplified'}]}];
 function getGoogleKey(){ if(GOOGLE_MAPS_KEY)return GOOGLE_MAPS_KEY; try{return window.localStorage.getItem(GKEY_STORE)||'';}catch(e){return '';} }
 function setGoogleKey(k){ try{ if(k)window.localStorage.setItem(GKEY_STORE,k); else window.localStorage.removeItem(GKEY_STORE); return true; }catch(e){ return false; } }
@@ -2457,6 +1930,7 @@ function loadGoogle(key,cb){
   document.head.appendChild(s);
 }
 function enableGoogle(){
+  gStatus('Google Maps is no longer used. The map now draws its own streets and 3D buildings online, from OpenStreetMap, without a key.');return;
   var key=getGoogleKey(); if(!key){ gStatus('No key saved. The built-in map is in use.'); return; }
   gStatus('Loading Google Maps');
   loadGoogle(key,function(ok,why){
@@ -2496,15 +1970,17 @@ function toggleOverlay(name){
   syncMapMenu();
 }
 function setOption(name){
+  if(name==='3d'){if(!onlineBase){toast('3D needs the online map. Offline you get the flat map.');return;}set3D(!threeD);$('#mapMenu').classList.remove('on');return;}
+  if(name==='north'){var ml=window.__mlMap(map);ml.easeTo({pitch:0,bearing:0,duration:500});threeD=false;if(ml.getLayer('ofm-building-3d'))ml.setLayoutProperty('ofm-building-3d','visibility','none');syncMapMenu();$('#mapMenu').classList.remove('on');return;}
   if(name==='visited'){hideVisited=!hideVisited;renderMarkers();}
   if(name==='hotel'){$('#mapMenu').classList.remove('on');$('#hotelBtn').click();return;}
   if(name==='clean'){gClean=!gClean;if(googleOn)setMapType(gType);}
-  if(name==='lines'){linesOn=!linesOn;baseGroups.forEach(function(g){if(g.keep)g.forceHide=!linesOn;});syncBaseGroups();}
+  if(name==='lines'){linesOn=!linesOn;setOnline(onlineBase);}
   syncMapMenu();
 }
 function syncMapMenu(){
   document.querySelectorAll('#mapMenu button').forEach(function(b){
-    var on=b.dataset.type?(b.dataset.type===gType):b.dataset.opt?(b.dataset.opt==='clean'?gClean:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false):!!gOverlays[b.dataset.overlay];
+    var on=b.dataset.opt==='3d'?threeD:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false;
     b.classList.toggle('on',on);
     b.querySelector('.tick').textContent=on?'✓':'';
   });
@@ -2528,7 +2004,7 @@ function probeTiles(){
   img.src='https://tile.openstreetmap.org/12/3638/1612.png';
 }
 function setTiles(on){
-  if(googleOn&&on)return;
+  return;
   tilesOn=!!on;
   var btn=$('#streetsBtn');btn.classList.toggle('on',tilesOn);btn.setAttribute('aria-pressed',tilesOn?'true':'false');
   btn.textContent=tilesOn?'Street detail on':'Street detail';
@@ -2547,10 +2023,13 @@ function setTiles(on){
    that would overlap a higher-priority label or a pin are hidden. Greedy, screen-space, cheap. */
 var LABELS=[];
 var LBL_PRIO={big:70,city:60,water:45,yam:50,hk:50,rw:50,st:40,plain:35};
+function lblGroupsVisible(){return !onlineBase;}
 function registerLabels(){
   LABELS=[];
   baseGroups.forEach(function(g){
-    g.layer.eachLayer(function(m){
+    if(!g.lbl)return;
+    g.lbl.forEach(function(e){
+      if(!e.m)return;var m=e.m;
       var ic=m.options&&m.options.icon;if(!ic||!ic.options||!/\blbl\b/.test(ic.options.className||''))return;
       var cls=ic.options.className,txt=String(ic.options.html||'').replace(/<[^>]+>/g,'');
       var kind=/\bbig\b/.test(cls)?'big':/\bcity\b/.test(cls)?'city':/\bwater\b/.test(cls)?'water':/\byam\b/.test(cls)?'yam':/\bhk\b/.test(cls)?'hk':/\brw\b/.test(cls)?'rw':/\bst\b/.test(cls)?'st':'plain';
@@ -2613,11 +2092,31 @@ function coverageNote(){
   var el=$('#covNote');if(!el)return;
   var c=map.getCenter(),z=map.getZoom(),inside=false;
   (BASE.bbox||[]).forEach(function(b){if(c.lat>=b[0]&&c.lng>=b[1]&&c.lat<=b[2]&&c.lng<=b[3])inside=true;});
-  el.classList.toggle('on',!inside&&z>=12&&!googleOn&&!tilesOn);
+  el.classList.toggle('on',!inside&&z>=12&&!onlineBase);
+}
+function lblAdd(g,ll,cls,html){
+  if(!g.lbl)g.lbl=[];
+  g.lbl.push({ll:ll,cls:cls,html:html,m:null});
+}
+var lblTimer=null;
+function syncLabelMarkers(){
+  if(!map)return;
+  var b=map.getBounds().pad(0.35),changed=false;
+  baseGroups.forEach(function(g){
+    if(!g.lbl)return;
+    var on=map.hasLayer(g.layer)&&(!onlineBase||g.keep);
+    g.lbl.forEach(function(e){
+      var want=on&&b.contains(e.ll);
+      if(want&&!e.m){e.m=L.marker(e.ll,{icon:L.divIcon({className:e.cls,html:e.html,iconSize:null}),interactive:false,pane:'base-labels',keyboard:false});g.layer.addLayer(e.m);changed=true;}
+      else if(!want&&e.m){g.layer.removeLayer(e.m);e.m=null;changed=true;}
+    });
+  });
+  if(changed)registerLabels();
 }
 function syncBaseGroups(){
   var z=map.getZoom();
   baseGroups.forEach(function(g){g.onMap=map.hasLayer(g.layer);});
+  clearTimeout(lblTimer);lblTimer=setTimeout(function(){syncLabelMarkers();resolveLabels();},0);
   baseGroups.forEach(function(g){
     var want=!g.hidden&&!g.forceHide&&z>=g.min&&(!g.max||z<=g.max);
     if(want&&!g.on){map.addLayer(g.layer);g.on=true;}
@@ -2670,9 +2169,10 @@ function buildBase(){
   window.__baseStyle={POLY:POLY,LINE:LINE,LAND:LAND,LAND_DARK:LAND_DARK,railDashLight:'#F7F5F0',railDashDark:'#2A2E38'};
   /* land: Natural Earth polygons plus solid rectangles where detailed data exists */
   var land=group(5);
-  (BASE.land||[]).forEach(function(enc){
-    var lp=L.polygon(decodeLine(enc),{renderer:R['base-land'],pane:'base-land',color:'#8FB2C8',weight:1,fillColor:LAND,fillOpacity:1,interactive:false});lp._kind='land';lp.addTo(land.layer);
-  });
+  (function(){
+    var rings=(BASE.land||[]).map(function(enc){return [decodeLine(enc)];});
+    if(rings.length){var lp=L.polygon(rings,{renderer:R['base-land'],pane:'base-land',color:'#8FB2C8',weight:1,fillColor:LAND,fillOpacity:1,interactive:false});lp._kind='land';lp.addTo(land.layer);}
+  })();
 
   (BASE.bbox||[]).forEach(function(b){
     var lr=L.rectangle([[b[0],b[1]],[b[2],b[3]]],{renderer:R['base-land'],pane:'base-land',stroke:false,fillColor:LAND,fillOpacity:1,interactive:false});lr._kind='land';lr.addTo(land.layer);
@@ -2680,32 +2180,40 @@ function buildBase(){
   var polyG={},lineG={},railDash=null;
   function pg(t){ if(!polyG[t]) polyG[t]=group(POLY[t].min); return polyG[t]; }
   function lg(t){ if(!lineG[t]) lineG[t]=group(LINE[t].min); return lineG[t]; }
+  var batchP={},batchL={};
   function addPoly(t,enc){
     var st=POLY[t]; if(!st) return;
-    var pl=L.polygon(decodeLine(enc),{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false});pl._kind='poly'+t;pl.addTo(pg(t).layer);
+    (batchP[t]=batchP[t]||[]).push(decodeLine(enc));
   }
   function addLine(t,enc){
-    var st=LINE[t]; if(!st) return; var pts=decodeLine(enc);
-    var pane=(t===0||t===1)?'base-rail':(t===7||t===8?'base-lines':'base-road');
-    var ln=L.polyline(pts,{renderer:R[pane],pane:pane,color:st.color,weight:st.weight,opacity:st.opacity||1,dashArray:st.dashArray||null,lineCap:'round',lineJoin:'round',interactive:false});ln._kind='line'+t;ln.addTo(lg(t).layer);
-    if(st.rail){
-      if(!railDash) railDash=group(11);
-      var rd=L.polyline(pts,{renderer:R[pane],pane:pane,color:'#F7F5F0',weight:1,dashArray:'6 6',opacity:1,interactive:false});rd._kind='raildash';rd.addTo(railDash.layer);
-    }
+    var st=LINE[t]; if(!st) return;
+    (batchL[t]=batchL[t]||[]).push(decodeLine(enc));
+  }
+  function flushBatches(){
+    Object.keys(batchP).forEach(function(t){
+      t=+t;var st=POLY[t],rings=batchP[t];if(!rings.length)return;
+      var pl=L.polygon(rings.map(function(r){return [r];}),{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false});pl._kind='poly'+t;pl.addTo(pg(t).layer);
+    });
+    Object.keys(batchL).forEach(function(t){
+      t=+t;var st=LINE[t],lines=batchL[t];if(!lines.length)return;
+      var pane=(t===0||t===1)?'base-rail':(t===7||t===8?'base-lines':'base-road');
+      var ln=L.polyline(lines,{renderer:R[pane],pane:pane,color:st.color,weight:st.weight,opacity:st.opacity||1,dashArray:st.dashArray||null,lineCap:'round',lineJoin:'round',interactive:false});ln._kind='line'+t;ln.addTo(lg(t).layer);
+      if(st.rail){
+        if(!railDash) railDash=group(11);
+        var rd=L.polyline(lines,{renderer:R[pane],pane:pane,color:'#F7F5F0',weight:1,dashArray:'6 6',opacity:1,interactive:false});rd._kind='raildash';rd.addTo(railDash.layer);
+      }
+    });
+    batchP={};batchL={};
   }
   var MAJOR={'Tokyo':1,'Kyoto':1,'Osaka':1,'Nara':1,'Hakone':1,'Yokohama':1,'Kobe':1};
   /* regional layer (drawn first so the detailed areas sit on top) */
   var regPoly=group(6),regLine=group(8),regCities=group(8);regPoly.max=10;
   if(BASE.regional){
-    (BASE.regional.polys||[]).forEach(function(p){
-      var st=POLY[p[0]]; if(!st) return;
-      L.polygon(decodeLine(p[1]),{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false}).addTo(regPoly.layer);
-    });
-    (BASE.regional.lines||[]).forEach(function(l){
-      var st=LINE[l[0]]; if(!st) return;
-      var pane=(l[0]===0)?'base-rail':(l[0]===7?'base-lines':'base-road');
-      L.polyline(decodeLine(l[1]),{renderer:R[pane],pane:pane,color:st.color,weight:Math.max(1,st.weight-0.4),opacity:1,lineCap:'round',lineJoin:'round',interactive:false}).addTo(regLine.layer);
-    });
+    var rp={},rl={};
+    (BASE.regional.polys||[]).forEach(function(p){ if(POLY[p[0]])(rp[p[0]]=rp[p[0]]||[]).push([decodeLine(p[1])]); });
+    Object.keys(rp).forEach(function(t){t=+t;var st=POLY[t];var pl=L.polygon(rp[t],{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false});pl._kind='poly'+t;pl.addTo(regPoly.layer);});
+    (BASE.regional.lines||[]).forEach(function(l){ if(LINE[l[0]])(rl[l[0]]=rl[l[0]]||[]).push(decodeLine(l[1])); });
+    Object.keys(rl).forEach(function(t){t=+t;var st=LINE[t];var pane=(t===0)?'base-rail':(t===7?'base-lines':'base-road');var ln=L.polyline(rl[t],{renderer:R[pane],pane:pane,color:st.color,weight:Math.max(1,st.weight-0.4),opacity:1,lineCap:'round',lineJoin:'round',interactive:false});ln._kind='line'+t;ln.addTo(regLine.layer);});
   }
   [3,2,0,1].forEach(function(t){pg(t);});
   var citiesMajor=group(5),citiesMinor=group(11),suburbs=group(12),stations=group(14),stationDots=group(13),waters=group(12);
@@ -2718,25 +2226,25 @@ function buildBase(){
       var ll=[lb[0],lb[1]],name=lb[2],kind=lb[3],rank=lb[4];
       if(kind==='t'){
         L.circleMarker(ll,{renderer:R['base-rail'],pane:'base-rail',radius:2.6,color:'#FFFFFF',weight:1.2,fillColor:'#66686E',fillOpacity:1,interactive:false}).addTo(stationDots.layer);
-        L.marker(ll,{icon:L.divIcon({className:'lbl st',html:esc(name),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(stations.layer);
+        lblAdd(stations,ll,'lbl st',esc(name));
       }else if(kind==='c'){
         var major=rank<=3||MAJOR[name]===1;
-        L.marker(ll,{icon:L.divIcon({className:'lbl city'+(major?' big':''),html:esc(name),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo((major?citiesMajor:citiesMinor).layer);
+        lblAdd(major?citiesMajor:citiesMinor,ll,'lbl city'+(major?' big':''),esc(name));
       }else if(kind==='w'){
-        L.marker(ll,{icon:L.divIcon({className:'lbl water',html:esc(name),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(waters.layer);
+        lblAdd(waters,ll,'lbl water',esc(name));
       }else{
-        L.marker(ll,{icon:L.divIcon({className:'lbl',html:esc(name),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(suburbs.layer);
+        lblAdd(suburbs,ll,'lbl',esc(name));
       }
     });
   }
   var areaKeys=Object.keys(BASE.areas||{});
   var firstArea=areaKeys.indexOf(activeArea)>-1?activeArea:areaKeys[0];
-  if(firstArea)buildArea(firstArea);
+  if(firstArea){buildArea(firstArea);flushBatches();}
   var restAreas=areaKeys.filter(function(a){return a!==firstArea;});
   function buildNext(){
     var a=restAreas.shift();
-    if(a){buildArea(a);syncBaseGroups();if(document.body.classList.contains('dark'))restyleBase(true);setTimeout(buildNext,0);return;}
-    (BASE.local||[]).forEach(function(l){addLine(l[0],l[1]);});
+    if(a){buildArea(a);flushBatches();syncBaseGroups();if(document.body.classList.contains('dark'))restyleBase(true);setTimeout(buildNext,0);return;}
+    (BASE.local||[]).forEach(function(l){addLine(l[0],l[1]);});flushBatches();
     syncBaseGroups();registerLabels();resolveLabels();if(document.body.classList.contains('dark'))restyleBase(true);
   }
   setTimeout(buildNext,80);
@@ -2744,7 +2252,7 @@ function buildBase(){
   if(BASE.regional){
     (BASE.regional.labels||[]).forEach(function(lb){
       var major=lb[4]<=3||MAJOR[lb[2]]===1;
-      L.marker([lb[0],lb[1]],{icon:L.divIcon({className:'lbl city'+(major?' big':''),html:esc(lb[2]),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo((major?citiesMajor:regCities).layer);
+      lblAdd(major?citiesMajor:regCities,[lb[0],lb[1]],'lbl city'+(major?' big':''),esc(lb[2]));
     });
   }
   regCities.isLabel=true;
@@ -2761,7 +2269,7 @@ function buildBase(){
       });
       (d.stations||[]).forEach(function(s){
         L.circleMarker([s[0],s[1]],{renderer:R['base-rail'],pane:'base-rail',radius:3.5,color:st.color,weight:2,fillColor:'#FFFFFF',fillOpacity:1,interactive:false}).addTo(hkSt.layer);
-        L.marker([s[0],s[1]],{icon:L.divIcon({className:'lbl '+st.lbl,html:esc(s[2]),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(hkLbl.layer);
+        lblAdd(hkLbl,[s[0],s[1]],'lbl '+st.lbl,esc(s[2]));
       });
     });
   }
@@ -2775,7 +2283,7 @@ function buildBase(){
     });
     (BASE.yamanote.stations||[]).forEach(function(s){
       L.circleMarker([s[0],s[1]],{renderer:R['base-rail'],pane:'base-rail',radius:4,color:'#2F6B1F',weight:2,fillColor:'#FFFFFF',fillOpacity:1,interactive:false}).addTo(yamSt.layer);
-      L.marker([s[0],s[1]],{icon:L.divIcon({className:'lbl yam',html:esc(s[2]),iconSize:null}),interactive:false,pane:'base-labels',keyboard:false}).addTo(yamLbl.layer);
+      lblAdd(yamLbl,[s[0],s[1]],'lbl yam',esc(s[2]));
     });
   }
   [citiesMajor,citiesMinor,suburbs,stations,waters].forEach(function(g){g.isLabel=true;});
@@ -2893,9 +2401,15 @@ function drawDayRoute(){
   if(el)el.textContent=list.length+' stops, '+(total<1000?Math.round(total)+' m':(total/1000).toFixed(1)+' km')+(routed===segs.length?' by road':(routed?', partly straight line':', straight line'));
   if(routed<segs.length){var dayAtRequest=activeDay;fetchRoutes(list,function(got){if(got&&activeDay===dayAtRequest){drawDayRoute();renderDays();}});}
 }
-function renderMarkers(){
+var renderSig='',renderBounds=null;
+function renderMarkers(force){
+  var z=map.getZoom(),b=map.getBounds();
+  var pad=z>=12?b.pad(0.6):null;
+  var sig=[z,activeDay,selectedId,hideVisited,state.hidden.join(','),state.rev||0,state.places.length,pad?[pad.getSouth().toFixed(3),pad.getWest().toFixed(3),pad.getNorth().toFixed(3),pad.getEast().toFixed(3)].join(','):'all'].join('|');
+  if(!force&&sig===renderSig&&renderBounds&&(!pad||renderBounds.contains(b)))return;
+  renderSig=sig;renderBounds=pad;
   layer.clearLayers();markers={};
-  var clustered=map.getZoom()<CLUSTER_BELOW;lastClustered=clustered;
+  var clustered=z<CLUSTER_BELOW;lastClustered=clustered;
   drawDayRoute();
   if(clustered){
     var groups={};
@@ -2918,7 +2432,7 @@ function renderMarkers(){
     });
     return;
   }
-  var shown=state.places.filter(function(p){return state.hidden.indexOf(p.cat)===-1&&typeof p.lat==='number'&&typeof p.lng==='number'&&!(hideVisited&&p.visited&&p.id!==selectedId);});
+  var shown=state.places.filter(function(p){return state.hidden.indexOf(p.cat)===-1&&typeof p.lat==='number'&&typeof p.lng==='number'&&!(hideVisited&&p.visited&&p.id!==selectedId)&&(!pad||p.id===selectedId||pad.contains([p.lat,p.lng]));});
   var z=map.getZoom(),bunches=[];
   if(z<16){
     /* group pins that would overlap on screen; the selected pin and the active day's pins stay single */
@@ -2956,7 +2470,7 @@ function renderMarkers(){
     layer.addLayer(m);
   });
 }
-function refreshMarker(id){var p=byId(id);if(p&&markers[id]){markers[id].setIcon(iconFor(p));markers[id].setZIndexOffset(id===selectedId?3000:0);}}
+function refreshMarker(id){var p=byId(id);if(p&&markers[id]){markers[id].setIcon(iconFor(p));markers[id].setZIndexOffset(id===selectedId?3000:0);}else if(p){renderMarkers(true);}}
 
 var pendingNote=null;
 function flushNote(){
@@ -3470,6 +2984,7 @@ function applyTheme(){
   var dark=t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.body.classList.toggle('dark',dark);
   restyleBase(dark);
+  if(typeof loadOnlineBase==='function'&&map)setTimeout(loadOnlineBase,0);
   document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.theme===t);});
   var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',dark?'#181B22':'#FFFFFF');
 }
@@ -3500,8 +3015,24 @@ function renderLastError(){
 }
 window.addEventListener('error',function(e){recordError(e.message+' @'+(e.lineno||'')+':'+(e.colno||''));});
 window.addEventListener('unhandledrejection',function(e){var r=e.reason;recordError('promise: '+(r&&r.message?r.message:String(r)));});
+function renderAbout(){
+  var el=$('#aboutNote');if(!el)return;
+  el.textContent='Version '+APP_VERSION+'. '+(navigator.serviceWorker&&navigator.serviceWorker.controller?'Installed for offline use.':'Not installed for offline use in this view.')+' Data lives on this phone'+(syncState.on?' and syncs.':'.');
+}
+function bindUpdates(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.addEventListener('message',function(e){
+    if(e.data&&e.data.type==='updated'){toastUndo('A new version is ready.',function(){location.reload();});var t=$('#toast');var b=t&&t.querySelector('button');if(b)b.textContent='Reload';}
+  });
+  $('#checkUpdate').addEventListener('click',function(){
+    navigator.serviceWorker.getRegistration().then(function(reg){
+      if(!reg){toast('Not installed as an app in this view.');return;}
+      toast('Checking');reg.update().then(function(){setTimeout(function(){if(reg.waiting){reg.waiting.postMessage({type:'skip'});}else toast('You have the latest version, '+APP_VERSION+'.');},1500);}).catch(function(){toast('Could not check now.');});
+    });
+  });
+}
 function bindTools(){
-  bindWho();bindBookings();bindExpenses();bindTripPanel();bindSync();
+  bindWho();bindBookings();bindExpenses();bindTripPanel();bindSync();bindUpdates();renderAbout();
   renderLastError();
   $('#errCopy').addEventListener('click',function(){copyText($('#errText').textContent+' | '+navigator.userAgent,function(ok){toast(ok?'Copied':'Could not copy');});});
   $('#errClear').addEventListener('click',function(){try{window.localStorage.removeItem('jm:lasterr');}catch(e){}renderLastError();});
@@ -3990,6 +3521,7 @@ function startFollow(){
     map.panTo(userPos,{animate:true,duration:.5});
   },function(){stopFollow();toast('Lost your position.');},{enableHighAccuracy:true,maximumAge:2000,timeout:15000});
   toast('Following you. Drag the map to stop.');
+  clearTimeout(followTimer);followTimer=setTimeout(function(){if(followWatch!==null){stopFollow();toast('Stopped following after 30 minutes to save battery. Tap the dot twice to follow again.');}},30*60*1000);
 }
 function stopFollow(){
   if(followWatch!==null){navigator.geolocation.clearWatch(followWatch);followWatch=null;}
@@ -4592,16 +4124,24 @@ function importExternal(text){
     else{var js=JSON.parse(t);if(js&&Array.isArray(js.places))items=js.places.map(function(p){return {name:p.name,notes:p.notes||'',lat:+p.lat,lng:+p.lng};});else items=parseGeoJson(js);}
   }catch(e){$('#kmlErr').textContent='Could not read that file. Export KML (not KMZ) from Google My Maps, or a GeoJSON file.';return;}
   if(!items||!items.length){$('#kmlErr').textContent='No point places found in that file.';return;}
-  var n=addPlaces(items);
-  $('#kmlErr').textContent='';
-  toast(n?'Added '+n+' places. Check their type and area with Edit.':'All '+items.length+' places were already in the list.');
-  if(n){closeDrawer();setArea('all');}
+  var dupes=[],fresh=[];
+  items.forEach(function(it){
+    var dup=state.places.some(function(p){return p.name.toLowerCase()===it.name.toLowerCase()&&distM([p.lat,p.lng],[it.lat,it.lng])<60;});
+    (dup?dupes:fresh).push(it);
+  });
+  var rows=fresh.slice(0,40).map(function(it){var c=guessCat(it.name);return '<div class="chk-row"><span>'+esc(CATS[c].icon)+'</span><label style="flex:1">'+esc(it.name)+'<br><small style="color:var(--muted)">'+esc(AREAS[guessArea(it.lat,it.lng)]?AREAS[guessArea(it.lat,it.lng)].label:'Other')+', '+esc(CATS[c].label)+'</small></label></div>';}).join('')+(fresh.length>40?'<p class="note">and '+(fresh.length-40)+' more</p>':'');
+  openPreview('Add these places?','Places are added to your list. Nothing is replaced or removed.',
+    [[fresh.length,'will be added'],[dupes.length,'already on the list'],[items.length,'in the file']],
+    rows+(dupes.length?'<p class="note">Skipped as duplicates: '+esc(dupes.slice(0,8).map(function(d){return d.name;}).join(', '))+(dupes.length>8?' and more':'')+'.</p>':''),
+    'Type and area are guessed from the name and position; check them with Edit afterwards.',
+    function(){var n=addPlaces(fresh);$('#kmlErr').textContent='';$('#previewModal').classList.remove('open');toast(n?'Added '+n+' places.':'Nothing to add.');if(n){closeDrawer();setArea('all');}});
 }
 function tripPageHtml(){
   var t=trip();
   function e(s){return esc(String(s||''));}
-  var css='body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px 18px;color:#1B1F2A;line-height:1.5}h1{font-size:30px;margin:0 0 4px}h2{font-size:20px;margin:28px 0 8px;border-bottom:2px solid #E04E2B;padding-bottom:4px}h3{font-size:15px;margin:16px 0 4px}.m{color:#6B7280;font-size:14px}.stop{padding:6px 0;border-bottom:1px solid #eee}.stop b{display:block}.stop small{color:#6B7280}p{margin:4px 0}.pl{margin:6px 0 12px}.pl small{color:#6B7280;display:block}';
+  var css='@media print{.noprint{display:none}h2{break-after:avoid}.stop,.pl{break-inside:avoid}body{padding:0}}body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px 18px;color:#1B1F2A;line-height:1.5}.noprint{margin:0 0 16px}.noprint button{padding:8px 14px;border:1px solid #ccc;border-radius:8px;background:#fff;font-size:14px}h1{font-size:30px;margin:0 0 4px}h2{font-size:20px;margin:28px 0 8px;border-bottom:2px solid #E04E2B;padding-bottom:4px}h3{font-size:15px;margin:16px 0 4px}.m{color:#6B7280;font-size:14px}.stop{padding:6px 0;border-bottom:1px solid #eee}.stop b{display:block}.stop small{color:#6B7280}p{margin:4px 0}.pl{margin:6px 0 12px}.pl small{color:#6B7280;display:block}';
   var out=['<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+e(t.name)+'</title><style>'+css+'</style></head><body>'];
+  out.push('<div class="noprint"><button onclick="window.print()">Print or save as PDF</button></div>');
   out.push('<h1>'+e(t.name)+'</h1><div class="m">'+e(t.travellers)+(t.travellers?', ':'')+e(dayLabel(TRIP_START,true))+' to '+e(dayLabel(TRIP_END,true))+'</div>');
   out.push('<h2>Day by day</h2>');
   tripDays().forEach(function(d){
@@ -4640,15 +4180,38 @@ function renderBackupNote(){
   el.textContent='Last backup '+(days===0?'today':days===1?'yesterday':days+' days ago')+(state.changedSince?', '+state.changedSince+' changes since.':'.');
 }
 function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',trip:trip(),gone:state.gone||{},routes:state.routes||{},photoSplit:1,closedSeeded:1,expMigrated:1,conanNoted:1,exported:new Date().toISOString()},null,2);}
+var pvAction=null;
+function openPreview(title,intro,stats,detail,safety,apply){
+  $('#pvTitle').textContent=title;$('#pvIntro').textContent=intro;
+  $('#pvStats').innerHTML=stats.map(function(s){return '<div><b>'+esc(String(s[0]))+'</b><small>'+esc(s[1])+'</small></div>';}).join('');
+  $('#pvDetail').innerHTML=detail;$('#pvSafety').textContent=safety;
+  pvAction=apply;$('#previewModal').classList.add('open');
+}
 function importJson(text){
   var js;
   try{js=JSON.parse(text);}catch(e){$('#importErr').textContent='That is not a valid export.';return;}
   if(!js||!Array.isArray(js.places)){$('#importErr').textContent='No places found in that text.';return;}
-  var ok=js.places.every(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
-  if(!ok){$('#importErr').textContent='Some places are missing a name or coordinates.';return;}
+  var bad=js.places.filter(function(p){return !(p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number');}).length;
+  var good=js.places.filter(function(p){return p&&typeof p.name==='string'&&typeof p.lat==='number'&&typeof p.lng==='number';});
+  var localIds={};state.places.forEach(function(p){localIds[p.id]=1;});
+  var newOnes=good.filter(function(p){return !p.id||!localIds[p.id];}).length,shared=good.length-newOnes;
+  var lost=state.places.filter(function(p){return !good.some(function(q){return q.id===p.id;});}).length;
+  var exported=js.exported?new Date(js.exported):null;
+  var detail='<p>Made '+(exported&&!isNaN(exported)?esc(fmtStamp(js.exported)):'on an unknown date')+'.</p>'
+    +'<p>'+shared+' places match ones you have and will be replaced by the backup\'s version. '+newOnes+' are new. '+lost+' of your current places are not in the backup and would be removed.</p>'
+    +(bad?'<p style="color:#8F2D1E">'+bad+' entries in the file are missing a name or coordinates and will be skipped.</p>':'')
+    +'<p>Bookings: '+((js.bookings||[]).length)+', expenses: '+((js.expenses||[]).length)+', guides: '+((js.guides||[]).length)+', saved images: '+((js.library||[]).length)+'.</p>';
+  openPreview('Replace with this backup?','A backup replaces everything on this phone with what the file contains.',
+    [[good.length,'places in the file'],[state.places.length,'places now'],[lost,'would be removed']],detail,
+    'Before applying, a copy of today\'s data is kept under Earlier versions, so you can go back.',
+    function(){applyBackup(Object.assign({},js,{places:good}));});
+}
+function applyBackup(js){
+  var keepKey='jm:snap:'+KEY+':'+todayIso()+'-pre-import';
+  idbSet(keepKey,JSON.stringify(state)).then(function(){return idbGet('jm:snaps:'+KEY).then(function(v){var list=v?JSON.parse(v):[];var d=todayIso()+'-pre-import';if(list.indexOf(d)===-1)list.push(d);return idbSet('jm:snaps:'+KEY,JSON.stringify(list.slice(-8)));});}).catch(function(){});
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
   state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();state.bookings=Array.isArray(js.bookings)?js.bookings:[];state.removedBookings=Array.isArray(js.removedBookings)?js.removedBookings:[];mergeBookings();state.expenses=Array.isArray(js.expenses)?js.expenses:[];state.budget=js.budget||'';state.customCats=Array.isArray(js.customCats)?js.customCats:[];installCustomCats();if(js.trip)state.trip=js.trip;state.gone=js.gone||{};applyTrip();buildTabs();
-  $('#importErr').textContent='';$('#importText').value='';
+  $('#importErr').textContent='';$('#importText').value='';$('#previewModal').classList.remove('open');
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
 
@@ -4775,6 +4338,8 @@ function bind(){
   $('#sgSearch').addEventListener('input',renderSigns);
   $('#sortArea').addEventListener('click',function(){sortNear=false;$('#sortArea').classList.add('on');$('#sortNear').classList.remove('on');renderList();});
   $('#sortNear').addEventListener('click',function(){if(!userPos){locate();}sortNear=true;$('#sortNear').classList.add('on');$('#sortArea').classList.remove('on');renderList();});
+  $('#pvCancel').addEventListener('click',function(){$('#previewModal').classList.remove('open');pvAction=null;});
+  $('#pvApply').addEventListener('click',function(){var a=pvAction;pvAction=null;if(a)a();});
   $('#kmlBtn').addEventListener('click',function(){
     var f=$('#kmlFile').files[0];
     if(!f){$('#kmlErr').textContent='Choose a file first.';return;}
@@ -4801,6 +4366,13 @@ function bind(){
   $('#mapSearch').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();runSearch(true);}});
   $('#searchGo').addEventListener('click',function(){runSearch(true);});
   $('#sharePage').addEventListener('click',shareTripPage);
+  $('#printPage').addEventListener('click',function(){
+    var html=tripPageHtml();
+    var w=window.open('','_blank');
+    if(!w){toast('Pop-ups are blocked; use Share a read-only trip page and open it from Files.');return;}
+    w.document.open();w.document.write(html);w.document.close();
+    setTimeout(function(){try{w.focus();w.print();}catch(e){}},600);
+  });
   $('#shareBackup').addEventListener('click',function(){
     var name='japan-2026-backup-'+todayIso()+'.json';
     try{
@@ -4842,6 +4414,7 @@ function bind(){
     if($('#tipsView').classList.contains('open')&&!$('#noteEditor').classList.contains('open'))$('#tipsView').classList.remove('open');
     else if($('#sgView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#sgView').classList.remove('open');
     else if($('#phView').classList.contains('open')&&!$('#bigJp').classList.contains('on'))$('#phView').classList.remove('open');
+    else if($('#previewModal').classList.contains('open')){$('#previewModal').classList.remove('open');pvAction=null;}
     else if($('#tripModal').classList.contains('open'))$('#tripModal').classList.remove('open');
     else if($('#bkModal').classList.contains('open')){$('#bkModal').classList.remove('open');editingBooking=null;}
     else if($('#bkView').classList.contains('open'))closeBooking();
