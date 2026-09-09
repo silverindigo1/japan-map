@@ -162,8 +162,13 @@ a.btn{color:inherit}
 .seg button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
 body.dark{--ink:#EDEDF0;--muted:#A0A5B2;--paper:#181B22;--washi:#222630;--line:#33384A;--indigo:#9FB4FF;--shu:#FF6A4D;--shu-soft:#3A2622}
 body.dark .lbl{text-shadow:0 0 3px #1E2230,0 0 3px #1E2230;color:#C9CDD6}
-body.dark .leaflet-base-land-pane,body.dark .leaflet-base-poly-pane,body.dark .leaflet-base-road-pane,body.dark .leaflet-base-rail-pane,body.dark .leaflet-tile-pane{filter:brightness(.62) saturate(.55) contrast(1.05)}
-body.dark #map{background:#141821}
+body.dark .leaflet-tile-pane{filter:brightness(.62) saturate(.55) contrast(1.05)}
+body.dark .lbl.city{color:#B9BFCC}
+body.dark .lbl.water{color:#7FA6C0}
+body.dark .lbl.st{color:#9AA0AC}
+body.dark .lbl.yam{color:#8CD17D;text-shadow:0 0 3px #141821,0 0 3px #141821}
+body.dark .lbl.hk{color:#E0A080;text-shadow:0 0 3px #141821,0 0 3px #141821}
+body.dark .lbl.rw{color:#7FB8D6;text-shadow:0 0 3px #141821,0 0 3px #141821}
 body.dark .pin{background:#2A2E3A}
 body.dark .bunch{background:#2A2E3A;color:#fff}
 body.dark .cluster span{text-shadow:none;color:#fff}
@@ -2565,6 +2570,12 @@ function resolveLabels(){
     function hit(r){for(var i=0;i<kept.length;i++){var k=kept[i];if(r.x<k.x+k.w&&r.x+r.w>k.x&&r.y<k.y+k.h&&r.y+r.h>k.y)return true;}return false;}
     var items=[];
     /* pins first: they are never hidden, labels avoid them */
+    var mapR=map.getContainer().getBoundingClientRect();
+    function rectOf(el){
+      var w=el._mw,h=el._mh;
+      if(!w){var r=el.getBoundingClientRect();w=el._mw=Math.max(1,r.width);h=el._mh=Math.max(1,r.height);}
+      return {w:w,h:h};
+    }
     if(layer)layer.eachLayer(function(m){
       if(!m._icon||!m.getLatLng)return;var cls=m._icon.className||'';
       if(!/pinwrap/.test(cls))return;var inner=m._icon.firstElementChild;if(!inner||!/bunch|cluster/.test(inner.className||''))return;
@@ -2577,15 +2588,18 @@ function resolveLabels(){
       if(pt.x<-40||pt.y<-40||pt.x>size.x+40||pt.y>size.y+40)return;
       kept.push({x:pt.x-17,y:pt.y-17,w:34,h:34});
       var nm=m._icon.querySelector('.nm');
-      if(nm){var txt=nm.textContent||'',w=Math.min(150,Math.max(20,txt.length*11*0.58)),h=15;
+      if(nm){var d=rectOf(nm);
         var prio=p.id===selectedId?100:(activeDay&&p.day===activeDay)?80:30;
-        items.push({el:nm,prio:prio,r:{x:pt.x-w/2,y:pt.y+36,w:w,h:h}});}
+        items.push({el:nm,prio:prio,r:{x:pt.x-d.w/2,y:pt.y+36,w:d.w,h:d.h}});}
     });
     LABELS.forEach(function(L2){
       if(!L2.g.onMap||!L2.m._icon)return;
       var pt=map.latLngToContainerPoint(L2.m.getLatLng());
       if(pt.x<-80||pt.y<-40||pt.x>size.x+80||pt.y>size.y+40)return;
-      items.push({el:L2.m._icon,prio:L2.prio,r:{x:pt.x-L2.w/2,y:pt.y-L2.h/2+L2.dy,w:L2.w,h:L2.h}});
+      /* measured once per element; the transform in CSS already places it, so read its real box */
+      var el=L2.m._icon,r=el._rect;
+      if(!r){var b=el.getBoundingClientRect();r=el._rect={dx:b.left-mapR.left-pt.x,dy:b.top-mapR.top-pt.y,w:Math.max(1,b.width),h:Math.max(1,b.height)};}
+      items.push({el:el,prio:L2.prio,r:{x:pt.x+r.dx,y:pt.y+r.dy,w:r.w,h:r.h}});
     });
     items.sort(function(a,b){return b.prio-a.prio;});
     items.forEach(function(it){
@@ -2635,46 +2649,48 @@ function buildBase(){
   var R={};
   ['base-land','base-poly','base-lines','base-road','base-rail'].forEach(function(n){R[n]=L.canvas({pane:n,padding:0.4});});
   var POLY=[
-    {fill:'#C6DBE7',min:5},   /* water */
-    {fill:'#C6DBE7',min:5},   /* ocean */
-    {fill:'#D3E2C5',min:10},  /* park */
-    {fill:'#DCE6D0',min:11}   /* wood */
+    {fill:'#C6DBE7',dark:'#1C2A38',min:5},   /* water */
+    {fill:'#C6DBE7',dark:'#18232E',min:5},   /* ocean */
+    {fill:'#D3E2C5',dark:'#22302A',min:10},  /* park */
+    {fill:'#DCE6D0',dark:'#1F2A25',min:11}   /* wood */
   ];
   var LINE=[
-    {color:'#66686E',weight:1.7,min:9,rail:true},                  /* rail */
-    {color:'#B7A3DA',weight:1.5,dashArray:'5 4',opacity:.9,min:13}, /* subway */
-    {color:'#E6B36B',weight:2.4,min:9},                             /* motorway */
-    {color:'#EEC98F',weight:2,min:10},                              /* trunk */
-    {color:'#F1DDB4',weight:1.6,min:12},                            /* primary */
-    {color:'#E2DDD3',weight:1.2,min:13},                            /* secondary */
+    {color:'#66686E',dark:'#7C808C',weight:1.7,min:9,rail:true},                  /* rail */
+    {color:'#B7A3DA',dark:'#8E7FC2',weight:1.5,dashArray:'5 4',opacity:.9,min:13}, /* subway */
+    {color:'#E6B36B',dark:'#8A6A3A',weight:2.4,min:9},                             /* motorway */
+    {color:'#EEC98F',dark:'#7A6444',weight:2,min:10},                              /* trunk */
+    {color:'#F1DDB4',dark:'#5E574C',weight:1.6,min:12},                            /* primary */
+    {color:'#E2DDD3',dark:'#494B54',weight:1.2,min:13},                            /* secondary */
     null,
-    {color:'#A6C3D7',weight:1.6,min:10},                            /* river */
-    {color:'#B3CCDC',weight:1.1,min:12},                            /* canal */
-    {color:'#E4DFD5',weight:1.2,min:15}                             /* local streets near pins */
+    {color:'#A6C3D7',dark:'#2F4A60',weight:1.6,min:10},                            /* river */
+    {color:'#B3CCDC',dark:'#2B4256',weight:1.1,min:12},                            /* canal */
+    {color:'#E4DFD5',dark:'#3E4048',weight:1.2,min:15}                             /* local streets near pins */
   ];
+  var LAND_DARK='#22262F';
+  window.__baseStyle={POLY:POLY,LINE:LINE,LAND:LAND,LAND_DARK:LAND_DARK,railDashLight:'#F7F5F0',railDashDark:'#2A2E38'};
   /* land: Natural Earth polygons plus solid rectangles where detailed data exists */
   var land=group(5);
   (BASE.land||[]).forEach(function(enc){
-    L.polygon(decodeLine(enc),{renderer:R['base-land'],pane:'base-land',color:'#8FB2C8',weight:1,fillColor:LAND,fillOpacity:1,interactive:false}).addTo(land.layer);
+    var lp=L.polygon(decodeLine(enc),{renderer:R['base-land'],pane:'base-land',color:'#8FB2C8',weight:1,fillColor:LAND,fillOpacity:1,interactive:false});lp._kind='land';lp.addTo(land.layer);
   });
 
   (BASE.bbox||[]).forEach(function(b){
-    L.rectangle([[b[0],b[1]],[b[2],b[3]]],{renderer:R['base-land'],pane:'base-land',stroke:false,fillColor:LAND,fillOpacity:1,interactive:false}).addTo(land.layer);
+    var lr=L.rectangle([[b[0],b[1]],[b[2],b[3]]],{renderer:R['base-land'],pane:'base-land',stroke:false,fillColor:LAND,fillOpacity:1,interactive:false});lr._kind='land';lr.addTo(land.layer);
   });
   var polyG={},lineG={},railDash=null;
   function pg(t){ if(!polyG[t]) polyG[t]=group(POLY[t].min); return polyG[t]; }
   function lg(t){ if(!lineG[t]) lineG[t]=group(LINE[t].min); return lineG[t]; }
   function addPoly(t,enc){
     var st=POLY[t]; if(!st) return;
-    L.polygon(decodeLine(enc),{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false}).addTo(pg(t).layer);
+    var pl=L.polygon(decodeLine(enc),{renderer:R['base-poly'],pane:'base-poly',stroke:false,fillColor:st.fill,fillOpacity:1,interactive:false});pl._kind='poly'+t;pl.addTo(pg(t).layer);
   }
   function addLine(t,enc){
     var st=LINE[t]; if(!st) return; var pts=decodeLine(enc);
     var pane=(t===0||t===1)?'base-rail':(t===7||t===8?'base-lines':'base-road');
-    L.polyline(pts,{renderer:R[pane],pane:pane,color:st.color,weight:st.weight,opacity:st.opacity||1,dashArray:st.dashArray||null,lineCap:'round',lineJoin:'round',interactive:false}).addTo(lg(t).layer);
+    var ln=L.polyline(pts,{renderer:R[pane],pane:pane,color:st.color,weight:st.weight,opacity:st.opacity||1,dashArray:st.dashArray||null,lineCap:'round',lineJoin:'round',interactive:false});ln._kind='line'+t;ln.addTo(lg(t).layer);
     if(st.rail){
       if(!railDash) railDash=group(11);
-      L.polyline(pts,{renderer:R[pane],pane:pane,color:'#F7F5F0',weight:1,dashArray:'6 6',opacity:1,interactive:false}).addTo(railDash.layer);
+      var rd=L.polyline(pts,{renderer:R[pane],pane:pane,color:'#F7F5F0',weight:1,dashArray:'6 6',opacity:1,interactive:false});rd._kind='raildash';rd.addTo(railDash.layer);
     }
   }
   var MAJOR={'Tokyo':1,'Kyoto':1,'Osaka':1,'Nara':1,'Hakone':1,'Yokohama':1,'Kobe':1};
@@ -2719,9 +2735,9 @@ function buildBase(){
   var restAreas=areaKeys.filter(function(a){return a!==firstArea;});
   function buildNext(){
     var a=restAreas.shift();
-    if(a){buildArea(a);syncBaseGroups();setTimeout(buildNext,0);return;}
+    if(a){buildArea(a);syncBaseGroups();if(document.body.classList.contains('dark'))restyleBase(true);setTimeout(buildNext,0);return;}
     (BASE.local||[]).forEach(function(l){addLine(l[0],l[1]);});
-    syncBaseGroups();registerLabels();resolveLabels();
+    syncBaseGroups();registerLabels();resolveLabels();if(document.body.classList.contains('dark'))restyleBase(true);
   }
   setTimeout(buildNext,80);
   registerLabels();
@@ -2980,15 +2996,20 @@ function openSheet(id){
   $('#dirLink').href='https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'&travelmode=transit';
   var d=$('#deleteBtn');d.textContent='Delete';pendingDelete=null;
   $('#sheet').classList.add('open');
-  requestAnimationFrame(function(){
-    var sh=$('#sheet').getBoundingClientRect(),mapR=map.getContainer().getBoundingClientRect();
+  var sheetEl=$('#sheet'),done=false,openedId=id;
+  function afterOpen(){
+    if(done||selectedId!==openedId)return;done=true;
+    var sh=sheetEl.getBoundingClientRect(),mapR=map.getContainer().getBoundingClientRect();
     var topR=document.querySelector('.top'),topH=topR?topR.getBoundingClientRect().bottom-mapR.top:120;
     var visibleTop=Math.max(0,topH),visibleBottom=Math.min(mapR.height,sh.top-mapR.top);
     var pt=map.latLngToContainerPoint([p.lat,p.lng]);
     if(pt.y>visibleTop+40&&pt.y<visibleBottom-40&&pt.x>30&&pt.x<mapR.width-30)return;
     var target=L.point(mapR.width/2,visibleTop+(visibleBottom-visibleTop)*0.45);
     map.panBy(pt.subtract(target),{animate:true});
-  });
+  }
+  var onEnd=function(e){if(e.target===sheetEl&&e.propertyName==='transform'){sheetEl.removeEventListener('transitionend',onEnd);afterOpen();}};
+  sheetEl.addEventListener('transitionend',onEnd);
+  setTimeout(function(){sheetEl.removeEventListener('transitionend',onEnd);afterOpen();},380);
 }
 function closeSheet(){
   if(pendingNote)flushNote();
@@ -3431,10 +3452,24 @@ function renderChecks(){
   var h=$('#panel-tools .tool:nth-child(2) h3');if(h)h.textContent='Checklist, '+done+' of '+all.length+' done';
   renderExpenses();
 }
+function restyleBase(dark){
+  var S=window.__baseStyle;if(!S||!baseGroups)return;
+  baseGroups.forEach(function(g){
+    g.layer.eachLayer(function(l){
+      var k=l._kind;if(!k||!l.setStyle)return;
+      if(k==='land'){l.setStyle({fillColor:dark?S.LAND_DARK:S.LAND,color:dark?'#3C4A5A':'#8FB2C8'});return;}
+      if(k==='raildash'){l.setStyle({color:dark?S.railDashDark:S.railDashLight});return;}
+      var m=/^poly(\d)$/.exec(k);if(m){var st=S.POLY[+m[1]];if(st)l.setStyle({fillColor:dark?st.dark:st.fill});return;}
+      m=/^line(\d)$/.exec(k);if(m){var ls=S.LINE[+m[1]];if(ls)l.setStyle({color:dark?ls.dark:ls.color});return;}
+    });
+  });
+  if(map)map.getContainer().style.background=dark?'#18232E':(googleOn?'#E5E3DF':'#C6DBE7');
+}
 function applyTheme(){
   var t=state.theme||'auto';
   var dark=t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.body.classList.toggle('dark',dark);
+  restyleBase(dark);
   document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.theme===t);});
   var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',dark?'#181B22':'#FFFFFF');
 }
@@ -4680,6 +4715,7 @@ function bind(){
   });
   $('#addBtn').addEventListener('click',function(){openForm(null);});
   $('#locBtn').addEventListener('click',locate);
+  window.addEventListener('scroll',function(){if(window.scrollX||window.scrollY)window.scrollTo(0,0);},{passive:true});
   $('#hotelBtn').addEventListener('click',function(){
     var t=todayIso();
     var stay=bookings().filter(function(b){return b.type==='hotel'&&b.date&&b.end&&t>=b.date&&t<b.end;})[0]
