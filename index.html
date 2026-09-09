@@ -167,7 +167,10 @@ a.btn{color:inherit}
 .seg button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
 body.dark{--ink:#EDEDF0;--muted:#A0A5B2;--paper:#181B22;--washi:#222630;--line:#33384A;--indigo:#9FB4FF;--shu:#FF6A4D;--shu-soft:#3A2622}
 body.dark .lbl{text-shadow:0 0 3px #1E2230,0 0 3px #1E2230;color:#C9CDD6}
-body.dark .leaflet-tile-pane{filter:brightness(.62) saturate(.55) contrast(1.05)}
+body.dark .maplibregl-canvas{filter:brightness(.58) saturate(.7) contrast(1.06)}
+body.dark .leaflet-control-attribution{background:rgba(24,27,34,.55);color:#9AA0AC}
+body.dark .leaflet-control-attribution a{color:#B9C4D6}
+body.dark .maplibregl-ctrl-scale{background:rgba(24,27,34,.5);color:#C9CDD6;border-color:#888}
 body.dark .lbl.city{color:#B9BFCC}
 body.dark .lbl.water{color:#7FA6C0}
 body.dark .lbl.st{color:#9AA0AC}
@@ -563,6 +566,7 @@ body.picking .top,body.picking .fab{display:none}
   <button class="streets-btn" id="streetsBtn" type="button" aria-pressed="false" style="display:none">Street detail</button>
   <button class="map-btn" id="mapBtn" type="button" aria-haspopup="true">Map style</button>
   <div class="map-menu" id="mapMenu" role="menu">
+    <button type="button" data-opt="sat"><span class="tick"></span>Satellite</button>
     <button type="button" data-opt="3d"><span class="tick"></span>3D buildings and tilt</button>
     <button type="button" data-opt="north"><span class="tick"></span>Face north, flat</button>
     <hr>
@@ -1159,7 +1163,7 @@ window.__mlMap=function(m){return m&&m._ml;};
 (function(){
 'use strict';
 
-var APP_VERSION='41';
+var APP_VERSION='43';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -1864,12 +1868,28 @@ function buildMap(){
 var tilesOn=false,tileLayer=null,tilesAvailable=false;
 var followWatch=null,walkRing=null,followTimer=null;
 var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={},gClean=false,linesOn=true;
-var onlineBase=false,onlineStyle='',threeD=false,ofmLayers=[],ofmSources=[];
-var OFM={light:'https://tiles.openfreemap.org/styles/liberty',dark:'https://tiles.openfreemap.org/styles/dark'};
+var onlineBase=false,onlineStyle='',threeD=false,ofmLayers=[],ofmSources=[],satOn=false;
+var SAT_URL='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+function setSatellite(on){
+  var ml=window.__mlMap(map);satOn=on;
+  if(!ml.getSource('sat')){ml.addSource('sat',{type:'raster',tiles:[SAT_URL],tileSize:256,maxzoom:19,attribution:'Imagery: Esri, Maxar, Earthstar Geographics'});}
+  var first=(ml.getStyle().layers||[])[0];
+  if(!ml.getLayer('sat'))ml.addLayer({id:'sat',type:'raster',source:'sat',metadata:{ofm:true,sat:true},paint:{'raster-opacity':1}},first?first.id:undefined);
+  ml.setLayoutProperty('sat','visibility',on?'visible':'none');
+  /* on satellite keep the labels and the 3D buildings from the vector map, hide its ground */
+  ofmLayers.forEach(function(id){var l=ml.getLayer(id);if(!l)return;
+    if(l.type==='symbol'||id==='ofm-building-3d')return;
+    ml.setLayoutProperty(id,'visibility',on?'none':'visible');});
+  if(ml.getLayer('ofm-building-3d'))ml.setPaintProperty('ofm-building-3d','fill-extrusion-opacity',on?0.55:0.9);
+  var canvas=document.querySelector('.maplibregl-canvas');if(canvas)canvas.style.filter=(!on&&document.body.classList.contains('dark'))?'brightness(.58) saturate(.7) contrast(1.06)':'';
+  if(attribution&&attribution.addAttribution)attribution.addAttribution('<span class="attrib">© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · OpenFreeMap'+(on?' · Imagery Esri, Maxar, Earthstar Geographics':'')+'</span>');
+  syncMapMenu();
+}
+var OFM={light:'https://tiles.openfreemap.org/styles/liberty',dark:'https://tiles.openfreemap.org/styles/liberty'};
 function wantDarkMap(){return document.body.classList.contains('dark');}
 /* Fetch the OpenFreeMap style and add its sources and layers under our own layers. Failure means offline: the embedded map stays. */
 function loadOnlineBase(){
-  var which=wantDarkMap()?'dark':'light';
+  var which='light';
   if(onlineStyle===which)return;
   if(navigator.onLine===false){setOnline(false);return;}
   var ml=window.__mlMap(map);
@@ -1888,17 +1908,19 @@ function loadOnlineBase(){
         var firstSym=ofmLayers.filter(function(id){var L2=ml.getLayer(id);return L2&&L2.type==='symbol';})[0];
         try{ml.addLayer({id:'ofm-building-3d',type:'fill-extrusion',source:'ofm-openmaptiles','source-layer':'building',minzoom:14,metadata:{ofm:true},paint:{'fill-extrusion-base':['get','render_min_height'],'fill-extrusion-height':['get','render_height'],'fill-extrusion-color':'hsl(220,10%,28%)','fill-extrusion-opacity':0.85}},firstSym);ofmLayers.push('ofm-building-3d');}catch(e){}
       }
-      if(ml.getLayer('ofm-building-3d')){ml.setPaintProperty('ofm-building-3d','fill-extrusion-color',which==='dark'?'hsl(220,10%,28%)':'hsl(35,10%,84%)');ml.setLayoutProperty('ofm-building-3d','visibility',threeD?'visible':'none');}
+      if(ml.getLayer('ofm-building-3d')){ml.setPaintProperty('ofm-building-3d','fill-extrusion-color','hsl(35,10%,84%)');ml.setPaintProperty('ofm-building-3d','fill-extrusion-opacity',0.9);ml.setLayoutProperty('ofm-building-3d','visibility',threeD?'visible':'none');}
       onlineStyle=which;setOnline(true);
+      if(satOn)setSatellite(true);
     });
   }).catch(function(){setOnline(false);});
 }
 function removeOnlineBase(){var ml=window.__mlMap(map);ofmLayers.forEach(function(id){if(ml.getLayer(id))ml.removeLayer(id);});ofmSources.forEach(function(id){if(ml.getSource(id))ml.removeSource(id);});ofmLayers=[];ofmSources=[];onlineStyle='';}
 function setOnline(on){
   onlineBase=on;
+  restyleBase(document.body.classList.contains('dark'));
   baseGroups.forEach(function(g){g.forceHide=on&&!g.keep&&!linesOn?true:(on&&!g.keep)?true:(!linesOn&&g.keep);});
   syncBaseGroups();
-  map.getContainer().style.background=on?(wantDarkMap()?'#141821':'#E8ECE8'):(wantDarkMap()?'#18232E':'#C6DBE7');
+  map.getContainer().style.background=on?(wantDarkMap()?'#2A2E36':'#E8ECE8'):(wantDarkMap()?'#18232E':'#C6DBE7');
   $('#mapBtn').classList.add('avail');
   coverageNote();
   if(!on)$('#covNote').classList.remove('on');
@@ -1970,6 +1992,7 @@ function toggleOverlay(name){
   syncMapMenu();
 }
 function setOption(name){
+  if(name==='sat'){if(!onlineBase){toast('Satellite needs a connection.');return;}setSatellite(!satOn);$('#mapMenu').classList.remove('on');return;}
   if(name==='3d'){if(!onlineBase){toast('3D needs the online map. Offline you get the flat map.');return;}set3D(!threeD);$('#mapMenu').classList.remove('on');return;}
   if(name==='north'){var ml=window.__mlMap(map);ml.easeTo({pitch:0,bearing:0,duration:500});threeD=false;if(ml.getLayer('ofm-building-3d'))ml.setLayoutProperty('ofm-building-3d','visibility','none');syncMapMenu();$('#mapMenu').classList.remove('on');return;}
   if(name==='visited'){hideVisited=!hideVisited;renderMarkers();}
@@ -1980,7 +2003,7 @@ function setOption(name){
 }
 function syncMapMenu(){
   document.querySelectorAll('#mapMenu button').forEach(function(b){
-    var on=b.dataset.opt==='3d'?threeD:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false;
+    var on=b.dataset.opt==='3d'?threeD:b.dataset.opt==='sat'?satOn:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false;
     b.classList.toggle('on',on);
     b.querySelector('.tick').textContent=on?'✓':'';
   });
@@ -2968,6 +2991,9 @@ function renderChecks(){
 }
 function restyleBase(dark){
   var S=window.__baseStyle;if(!S||!baseGroups)return;
+  var canvas=document.querySelector('.maplibregl-canvas');
+  if(canvas)canvas.style.filter=(dark&&!satOn)?'brightness(.58) saturate(.7) contrast(1.06)':'';
+  dark=dark&&!onlineBase;
   baseGroups.forEach(function(g){
     g.layer.eachLayer(function(l){
       var k=l._kind;if(!k||!l.setStyle)return;

@@ -1,5 +1,5 @@
 /* Caches the app shell so the app opens without a connection. Live services are never cached. Map tiles are kept as a small fallback cache. */
-var VERSION='v41';
+var VERSION='v43';
 var SHELL_CACHE='japan-map-shell-'+VERSION;
 var TILE_CACHE='japan-map-tiles-v1';
 var SHELL=[
@@ -13,7 +13,7 @@ var SHELL=[
   'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.7.1/maplibre-gl.js'
 ];
 var TILE_LIMIT=600;
-var LIVE=['tiles.openfreemap.org','nominatim.openstreetmap.org','open-meteo.com','frankfurter','wikipedia.org','wikidata.org','supabase.co','project-osrm.org','google.com','googleapis.com','gstatic.com','ggpht.com'];
+var LIVE=['arcgisonline.com','tiles.openfreemap.org','nominatim.openstreetmap.org','open-meteo.com','frankfurter','wikipedia.org','wikidata.org','supabase.co','project-osrm.org','google.com','googleapis.com','gstatic.com','ggpht.com'];
 
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(SHELL_CACHE).then(function(c){
