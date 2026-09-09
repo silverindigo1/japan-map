@@ -1,5 +1,5 @@
 /* Caches the app shell so the app opens without a connection. Live services are never cached. Map tiles are kept as a small fallback cache. */
-var VERSION='v43';
+var VERSION='v44';
 var SHELL_CACHE='japan-map-shell-'+VERSION;
 var TILE_CACHE='japan-map-tiles-v1';
 var SHELL=[

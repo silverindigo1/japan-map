@@ -567,6 +567,7 @@ body.picking .top,body.picking .fab{display:none}
   <button class="map-btn" id="mapBtn" type="button" aria-haspopup="true">Map style</button>
   <div class="map-menu" id="mapMenu" role="menu">
     <button type="button" data-opt="sat"><span class="tick"></span>Satellite</button>
+    <button type="button" data-opt="p3d"><span class="tick"></span>Photorealistic 3D</button>
     <button type="button" data-opt="3d"><span class="tick"></span>3D buildings and tilt</button>
     <button type="button" data-opt="north"><span class="tick"></span>Face north, flat</button>
     <hr>
@@ -744,6 +745,13 @@ body.picking .top,body.picking .fab{display:none}
         <h3>Japanese voice</h3>
         <div class="inline-btns"><select id="voiceSel" style="flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:14px"></select><button class="btn" id="voiceTest" type="button">Test</button></div>
         <p class="note" id="voiceHint"></p>
+      </div>
+      <div class="data-block">
+        <h3>Photorealistic 3D</h3>
+        <p class="note">Optional. Real textured 3D of the cities, the kind Apple Maps shows. Needs a Google Cloud key with the Map Tiles API enabled and billing on. Google gives 1,000 tileset requests a month free, then 6 USD per 1,000; one app open with this layer on is about one request. Nothing is requested until you paste a key and switch the layer on in Map style. It needs a good connection and uses more battery, and it does not work offline.</p>
+        <input id="p3dKey" placeholder="Paste Map Tiles API key" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:14px;margin-bottom:6px">
+        <div class="inline-btns"><button class="btn primary" id="p3dSave" type="button">Save key</button><button class="btn" id="p3dRemove" type="button">Remove key</button></div>
+        <p class="note" id="p3dStatus"></p>
       </div>
       <div class="data-block" style="display:none">
         <h3>Google Maps</h3>
@@ -1163,7 +1171,7 @@ window.__mlMap=function(m){return m&&m._ml;};
 (function(){
 'use strict';
 
-var APP_VERSION='43';
+var APP_VERSION='44';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -1870,6 +1878,61 @@ var followWatch=null,walkRing=null,followTimer=null;
 var googleLayer=null,googleOn=false,googleLoading=false,gType='roadmap',gOverlays={},gClean=false,linesOn=true;
 var onlineBase=false,onlineStyle='',threeD=false,ofmLayers=[],ofmSources=[],satOn=false;
 var SAT_URL='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var P3D_STORE='japan-map:p3dkey',p3dOn=false,p3dLayer=null,p3dLoading=false,deckOverlay=null;
+function p3dKey(){try{return window.localStorage.getItem(P3D_STORE)||'';}catch(e){return '';}}
+function p3dStatus(m){var el=$('#p3dStatus');if(el)el.textContent=m;}
+function loadScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('load failed'));};document.head.appendChild(s);});}
+function setPhoto3D(on){
+  var key=p3dKey();
+  if(on&&!key){toast('Add a Map Tiles API key first: More, Backup, Photorealistic 3D.');return;}
+  if(on&&!onlineBase){toast('Photorealistic 3D needs a connection.');return;}
+  if(!on){
+    p3dOn=false;
+    if(deckOverlay){try{deckOverlay.setProps({layers:[]});}catch(e){}}
+    ofmLayers.forEach(function(id){var l=window.__mlMap(map).getLayer(id);if(l&&!satOn)window.__mlMap(map).setLayoutProperty(id,'visibility','visible');});
+    if(satOn)setSatellite(true);
+    syncMapMenu();return;
+  }
+  if(p3dLoading)return;
+  p3dLoading=true;toast('Loading photorealistic 3D');
+  var chain=window.deck?Promise.resolve():loadScript('https://unpkg.com/deck.gl@9.1.14/dist.min.js').then(function(){return loadScript('https://unpkg.com/@loaders.gl/3d-tiles@4.3.3/dist/dist.min.js');});
+  chain.then(function(){
+    var ml=window.__mlMap(map);
+    var Tile3D=(window.deck&&window.deck.Tile3DLayer);
+    var Tiles3DLoader=(window.loaders&&(window.loaders.Tiles3DLoader||window.loaders.Tile3DLoader))||(window.deck&&window.deck.Tiles3DLoader);
+    if(!Tile3D||!Tiles3DLoader)throw new Error('3D engine did not load');
+    if(!deckOverlay){deckOverlay=new window.deck.MapboxOverlay({interleaved:true,layers:[]});ml.addControl(deckOverlay);}
+    var layer=new Tile3D({
+      id:'google-3d',
+      data:'https://tile.googleapis.com/v1/3dtiles/root.json?key='+encodeURIComponent(key),
+      loadOptions:{'3d-tiles':{loadGLTF:true},tileset:{queryParams:{key:key}},fetch:{mode:'cors'}},
+      operation:'terrain+draw',
+      onTilesetError:function(err){p3dStatus('Google refused the request'+(err&&err.message?': '+String(err.message).slice(0,90):'')+'. Check that the Map Tiles API is enabled and that the key allows this site.');toast('Photorealistic 3D could not start. See More, Backup for the reason.');setPhoto3D(false);}
+    });
+    deckOverlay.setProps({layers:[layer]});
+    /* the drawn ground would poke through the mesh, so hide it while this layer is on */
+    ofmLayers.forEach(function(id){var l=ml.getLayer(id);if(!l)return;if(l.type==='symbol')return;ml.setLayoutProperty(id,'visibility','none');});
+    if(ml.getLayer('sat'))ml.setLayoutProperty('sat','visibility','none');
+    if(ml.getLayer('ofm-building-3d'))ml.setLayoutProperty('ofm-building-3d','visibility','none');
+    if(ml.getPitch()<45)ml.easeTo({pitch:60,duration:700});
+    p3dOn=true;p3dLoading=false;p3dStatus('Photorealistic 3D is on.');syncMapMenu();
+  }).catch(function(e){p3dLoading=false;p3dStatus('Could not load the 3D engine: '+e.message);toast('Photorealistic 3D could not load.');});
+}
+function bindPhoto3D(){
+  var f=$('#p3dKey');if(!f)return;
+  f.value=p3dKey();
+  p3dStatus(p3dKey()?'Key saved. Turn it on under Map style.':'No key. The layer stays off and nothing is requested from Google.');
+  $('#p3dSave').addEventListener('click',function(){
+    var v=f.value.trim();
+    if(!v){p3dStatus('Paste the key first.');return;}
+    try{window.localStorage.setItem(P3D_STORE,v);}catch(e){}
+    p3dStatus('Key saved. Turn it on under Map style.');toast('Key saved');
+  });
+  $('#p3dRemove').addEventListener('click',function(){
+    try{window.localStorage.removeItem(P3D_STORE);}catch(e){}
+    f.value='';if(p3dOn)setPhoto3D(false);p3dStatus('Key removed. Nothing is requested from Google.');toast('Key removed');
+  });
+}
 function setSatellite(on){
   var ml=window.__mlMap(map);satOn=on;
   if(!ml.getSource('sat')){ml.addSource('sat',{type:'raster',tiles:[SAT_URL],tileSize:256,maxzoom:19,attribution:'Imagery: Esri, Maxar, Earthstar Geographics'});}
@@ -1992,8 +2055,10 @@ function toggleOverlay(name){
   syncMapMenu();
 }
 function setOption(name){
-  if(name==='sat'){if(!onlineBase){toast('Satellite needs a connection.');return;}setSatellite(!satOn);$('#mapMenu').classList.remove('on');return;}
+  if(name==='p3d'){setPhoto3D(!p3dOn);$('#mapMenu').classList.remove('on');return;}
+  if(name==='sat'){if(p3dOn)setPhoto3D(false);if(!onlineBase){toast('Satellite needs a connection.');return;}setSatellite(!satOn);$('#mapMenu').classList.remove('on');return;}
   if(name==='3d'){if(!onlineBase){toast('3D needs the online map. Offline you get the flat map.');return;}set3D(!threeD);$('#mapMenu').classList.remove('on');return;}
+  if(name==='north'&&p3dOn){setPhoto3D(false);}
   if(name==='north'){var ml=window.__mlMap(map);ml.easeTo({pitch:0,bearing:0,duration:500});threeD=false;if(ml.getLayer('ofm-building-3d'))ml.setLayoutProperty('ofm-building-3d','visibility','none');syncMapMenu();$('#mapMenu').classList.remove('on');return;}
   if(name==='visited'){hideVisited=!hideVisited;renderMarkers();}
   if(name==='hotel'){$('#mapMenu').classList.remove('on');$('#hotelBtn').click();return;}
@@ -2003,7 +2068,7 @@ function setOption(name){
 }
 function syncMapMenu(){
   document.querySelectorAll('#mapMenu button').forEach(function(b){
-    var on=b.dataset.opt==='3d'?threeD:b.dataset.opt==='sat'?satOn:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false;
+    var on=b.dataset.opt==='3d'?threeD:b.dataset.opt==='sat'?satOn:b.dataset.opt==='p3d'?p3dOn:b.dataset.opt==='visited'?hideVisited:b.dataset.opt==='lines'?linesOn:false;
     b.classList.toggle('on',on);
     b.querySelector('.tick').textContent=on?'✓':'';
   });
@@ -3058,7 +3123,7 @@ function bindUpdates(){
   });
 }
 function bindTools(){
-  bindWho();bindBookings();bindExpenses();bindTripPanel();bindSync();bindUpdates();renderAbout();
+  bindWho();bindBookings();bindExpenses();bindTripPanel();bindSync();bindUpdates();renderAbout();bindPhoto3D();
   renderLastError();
   $('#errCopy').addEventListener('click',function(){copyText($('#errText').textContent+' | '+navigator.userAgent,function(ok){toast(ok?'Copied':'Could not copy');});});
   $('#errClear').addEventListener('click',function(){try{window.localStorage.removeItem('jm:lasterr');}catch(e){}renderLastError();});
