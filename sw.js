@@ -1,5 +1,5 @@
 /* Caches the app shell so the app opens without a connection. Live services are never cached. Map tiles are kept as a small fallback cache. */
-var VERSION='v59';
+var VERSION='v60';
 var SHELL_CACHE='japan-map-shell-'+VERSION;
 var TILE_CACHE='japan-map-tiles-v1';
 var IMG_CACHE='japan-map-photos-v1';
@@ -61,7 +61,7 @@ function trimImages(){
 self.addEventListener('fetch',function(e){
   var url=e.request.url;
   if(e.request.method!=='GET')return;
-  if(url.indexOf('upload.wikimedia.org')>-1){
+  if(url.indexOf('upload.wikimedia.org')>-1||url.indexOf('thumb.wikimedia.org')>-1){
     /* place photos: cache once seen, so a page opened before stays illustrated offline */
     e.respondWith(
       caches.match(e.request).then(function(hit){
