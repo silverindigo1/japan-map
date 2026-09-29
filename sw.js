@@ -1,7 +1,9 @@
 /* Caches the app shell so the app opens without a connection. Live services are never cached. Map tiles are kept as a small fallback cache. */
-var VERSION='v57';
+var VERSION='v59';
 var SHELL_CACHE='japan-map-shell-'+VERSION;
 var TILE_CACHE='japan-map-tiles-v1';
+var IMG_CACHE='japan-map-photos-v1';
+var IMG_LIMIT=400;
 var SHELL=[
   './',
   './index.html',
@@ -32,7 +34,7 @@ self.addEventListener('message',function(e){
 
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(keys){
-    return Promise.all(keys.filter(function(k){return k!==SHELL_CACHE&&k!==TILE_CACHE;}).map(function(k){return caches.delete(k);}));
+    return Promise.all(keys.filter(function(k){return k!==SHELL_CACHE&&k!==TILE_CACHE&&k!==IMG_CACHE;}).map(function(k){return caches.delete(k);}));
   }).then(function(){return self.clients.claim();}).then(function(){
     return self.clients.matchAll({type:'window'}).then(function(cs){cs.forEach(function(c){c.postMessage({type:'updated',version:VERSION});});});
   }));
@@ -47,9 +49,31 @@ function trimTiles(){
   });
 }
 
+function trimImages(){
+  return caches.open(IMG_CACHE).then(function(c){
+    return c.keys().then(function(keys){
+      if(keys.length<=IMG_LIMIT)return;
+      return Promise.all(keys.slice(0,keys.length-IMG_LIMIT).map(function(k){return c.delete(k);}));
+    });
+  });
+}
+
 self.addEventListener('fetch',function(e){
   var url=e.request.url;
   if(e.request.method!=='GET')return;
+  if(url.indexOf('upload.wikimedia.org')>-1){
+    /* place photos: cache once seen, so a page opened before stays illustrated offline */
+    e.respondWith(
+      caches.match(e.request).then(function(hit){
+        if(hit)return hit;
+        return fetch(e.request).then(function(res){
+          if(res&&(res.ok||res.type==='opaque')){var copy=res.clone();caches.open(IMG_CACHE).then(function(c){c.put(e.request,copy);}).then(trimImages);}
+          return res;
+        });
+      })
+    );
+    return;
+  }
   for(var i=0;i<LIVE.length;i++){if(url.indexOf(LIVE[i])>-1)return;}
   if(url.indexOf('tile.openstreetmap.org')>-1){
     e.respondWith(
