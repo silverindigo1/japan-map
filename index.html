@@ -85,6 +85,11 @@ a.btn{color:inherit}
 .stop-row{display:flex;align-items:center;gap:8px;padding:6px 0}
 .stop-row .n{width:22px;height:22px;border-radius:50%;background:var(--indigo);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
 .stop-row .name{flex:1;min-width:0;font-size:14px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stop-row .tag.sugg{background:#EEF0FF;color:#3B4AA6;border:1px solid #C9CFF5}
+.stop-row .hint{display:block;font-size:11.5px;color:#9A5A1E;margin-top:2px;white-space:normal}
+.stop-row .keep{height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-size:12px;font-weight:700;color:var(--indigo)}
+.daycard .dc-r .warn{color:#9A2F2F;font-weight:600}
+body.dark .stop-row .tag.sugg{background:#2b3160;color:#c9cff5;border-color:#3b4aa6}
 .stop-row .mv{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-size:14px;color:var(--muted)}
 .stop-row .mv:disabled{opacity:.3}
 .day-actions{display:flex;gap:8px;padding:6px 0 4px}
@@ -240,6 +245,13 @@ body.dark .who-seg button.on,body.dark .bar i{color:#0F1220}
 .ph-row .go{color:var(--muted);font-size:18px}
 .spk{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper);font-size:18px;display:flex;align-items:center;justify-content:center;flex:none}
 .spk:active{background:var(--washi)}
+.bigjp .x2{margin-top:16px;max-width:520px;width:100%}
+.bigjp .x2 .ad{font-size:clamp(18px,5.4vw,28px);font-weight:700;color:#111;line-height:1.4}
+.bigjp .x2 .tel{font-size:16px;color:var(--muted);margin-top:6px}
+.bigjp .x2 .ph{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.bigjp .x2 .ph button{border:1px solid var(--line);background:var(--washi);border-radius:12px;padding:8px 12px;text-align:center;color:var(--ink)}
+.bigjp .x2 .ph b{display:block;font-size:15px}.bigjp .x2 .ph small{display:block;font-size:11px;color:var(--muted)}
+body.dark .bigjp .x2 .ad{color:var(--ink)}
 .bigjp .spk{width:64px;height:64px;font-size:28px;margin-top:22px;border-color:var(--shu)}
 .sg-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 0;border-bottom:1px solid var(--line)}
 .sg-row .jp{font-size:22px;font-weight:600;min-width:0;flex:1}
@@ -821,6 +833,55 @@ body.dark{--primary:#9FB4FF;--primary-ink:#0F1220;--danger:#FF8A75;--ok:#A9E0C0;
 .btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
 .btn.accent{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
 .btn.danger{color:var(--danger);border-color:var(--line)}
+.tool.emg .ins{margin:10px 0}.tool.emg .ins label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.tool.emg .ins input{flex:1;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:15px;margin-top:6px}
+.taxi-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin:6px 0;text-align:left;color:var(--ink)}
+.taxi-row b{display:block;font-size:14px}.taxi-row small{display:block;font-size:13px;color:var(--muted)}
+#nextUp{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:6px 12px 0;padding:8px 10px;box-shadow:0 4px 14px rgba(0,0,0,.08);pointer-events:auto}
+#nextUp .tc-h{display:flex;align-items:baseline;gap:8px}
+#nextUp .tc-h b{font-size:13px}
+#nextUp .tc-h span{font-size:12px;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nextUp .tc-x{border:none;background:none;font-size:18px;color:var(--muted);padding:0 2px;line-height:1}
+#nextUp .tc-n{display:flex;align-items:baseline;gap:8px;margin-top:4px;flex-wrap:wrap}
+#nextUp .tc-n .t{font-weight:800;color:var(--shu);font-size:14px}
+#nextUp .tc-n b{font-size:15px}
+#nextUp .tc-n small{font-size:12px;color:var(--muted)}
+#nextUp .tc-m{font-size:12px;color:var(--muted);margin-top:2px}
+#nextUp .tc-b{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+body.dark #nextUp{background:#2A2E3A}
+.rain-box{display:none}.rain-box.open{display:block}
+.pp-rate{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.pp-rate .k{font-size:13px;color:var(--muted)}
+.pp-rate .stars button{border:none;background:none;font-size:24px;color:#E0A100;padding:0 1px;line-height:1}
+.pp-rate .again{border:1px solid var(--line);background:var(--washi);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--ink)}
+.pp-rate .again.on{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok)}
+.buy-form{display:none;border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px;background:var(--paper)}
+.buy-form.open{display:block}
+.buy-form select,.buy-form input{width:100%}
+.buy-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.buy-row input[type=checkbox]{width:22px;height:22px;margin-top:2px;flex:none;accent-color:var(--ok)}
+.buy-row .bt{flex:1;min-width:0;border:none;background:none;text-align:left;padding:0;color:var(--ink)}
+.buy-row .bt b{display:block;font-size:14px}
+.buy-row .bt small{display:block;font-size:12px;color:var(--muted)}
+.buy-row .bt small.nt{font-style:italic}
+.buy-row .pr{text-align:right;white-space:nowrap}
+.buy-row .pr b{display:block;font-size:13px}.buy-row .pr small{display:block;font-size:11px;color:var(--muted)}.buy-row .pr i{font-size:12px;color:var(--muted)}
+.buy-row.done .bt b{text-decoration:line-through;color:var(--muted)}
+body.dark .buy-form{background:#2A2E3A}
+.by-pair{display:flex;align-items:center;gap:8px}
+.by-pair>div{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--washi);padding:0 10px}
+.by-pair>div input{flex:1;min-width:0;border:none!important;background:transparent!important;padding:9px 0!important;font-size:16px}
+.by-pair>div span{font-size:12px;color:var(--muted);font-weight:700}
+.by-pair b{color:var(--muted)}
+.by-pair input:disabled{opacity:.4}
+.by-rate{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+.by-rate .lnk{border:none;background:none;color:var(--indigo);font-weight:700;padding:0;font-size:12px}
+.by-sel .chip-sel{display:inline-flex;align-items:center;gap:6px;background:var(--washi);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 12px;font-size:14px;font-weight:600}
+.by-sel .chip-sel small{font-weight:500;color:var(--muted);font-size:11px}
+.by-sel .chip-sel button{border:none;background:var(--line);border-radius:50%;width:22px;height:22px;line-height:20px;font-size:14px;color:var(--ink)}
+.by-res button{display:block;width:100%;text-align:left;border:none;border-bottom:1px solid var(--line);background:transparent;padding:8px 4px;color:var(--ink)}
+.by-res button b{display:block;font-size:14px}.by-res button small{display:block;font-size:12px;color:var(--muted)}
+.by-res button.free b{color:var(--indigo)}
+.buy-form textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);font-size:15px;font-family:inherit;resize:vertical}
 .todo-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
 .todo{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;background:var(--paper)}
 .todo.soon{border-color:var(--pend-line);background:var(--pend-bg)}
@@ -844,6 +905,12 @@ body.dark .pp-season{background:#3a2e22;border-color:#7a5a3a}
 .stn-ic svg{width:20px;height:20px;fill:currentColor}
 .stn-t{flex:1;min-width:0}.stn-t b{display:block;font-size:16px}.stn-t small{display:block;font-size:12px;color:var(--muted);line-height:1.3}
 .stn-head .close{width:34px;height:34px;border-radius:50%;border:none;background:var(--washi);font-size:20px;color:var(--ink)}
+.chain-row{display:flex;align-items:center;gap:10px;width:100%;padding:9px 0;border:none;border-top:1px solid var(--line);background:transparent;text-align:left;color:var(--ink)}
+.chain-row .pin-mini{width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none;overflow:hidden}
+.chain-row .pin-mini img{width:30px;height:30px;object-fit:cover}
+.chain-row .nm{flex:1;min-width:0}.chain-row .nm b{display:block;font-size:14px}.chain-row .nm small{display:block;font-size:12px;color:var(--muted)}
+.chain-row .d{color:var(--muted);font-size:18px}
+.chain-list{padding-left:14px;border-left:2px solid var(--line);margin-left:14px}
 .stn-row{display:flex;align-items:center;gap:10px;width:100%;padding:8px 16px;border:none;border-top:1px solid var(--line);background:transparent;text-align:left;color:var(--ink)}
 .stn-row .pin-mini{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none;overflow:hidden}
 .stn-row .pin-mini img{width:28px;height:28px;object-fit:cover}
@@ -1059,6 +1126,8 @@ body.dark .ar-card{background:#2A2E3A}
       <button class="on" data-panel="places" role="tab">Places</button>
       <button data-panel="days" role="tab">Days</button>
       <button data-panel="bookings" role="tab">Bookings</button>
+      <button data-panel="prep" role="tab">Essentials</button>
+      <button data-panel="buy" role="tab">To buy</button>
       <button data-panel="guides" role="tab">Guides</button>
       <button data-panel="journal" role="tab">Journal</button>
       <button data-panel="tools" role="tab">Spending</button>
@@ -1099,6 +1168,19 @@ body.dark .ar-card{background:#2A2E3A}
     </div>
     <div class="panel" id="panel-trip">
       <div class="tool">
+        <h3>What is new</h3>
+        <p class="note" style="margin:4px 0"><b>Version 70.</b> Adding to the To buy list: search a saved place or type any shop, enter the price in yen or kroner and the other fills itself, longer notes.</p>
+        <p class="note" style="margin:4px 0"><b>Version 69.</b> A To buy list: what, where, the price in yen and kroner, ticked off as you buy, with the amount going into Spending.</p>
+        <p class="note" style="margin:4px 0"><b>Version 68.</b> Today card on the map during the trip, a rain plan per day, a backup restaurant on every food page, Japanese address and phrases to show staff and taxi drivers, ratings after a visit, an Essentials tab with what to book, the checklist and taxi addresses, photos found from the phone, field by field sync.</p>
+        <p class="note" style="margin:4px 0"><b>Version 67.</b> Hayakawa Hamonoten knife shop in Kyoto.</p>
+        <p class="note" style="margin:4px 0"><b>Version 66.</b> Grutto Pass, with free-entry places marked.</p>
+        <p class="note" style="margin:4px 0"><b>Version 65.</b> Suggested itinerary for the whole trip, day load, arrive-by hints, calendar export, chains as one row.</p>
+        <p class="note" style="margin:4px 0"><b>Version 64.</b> Still to book list, train legs, luggage forwarding, closed days, autumn colour and night lights, station sheets, area pages, new icon.</p>
+        <p class="note" style="margin:4px 0"><b>Version 63.</b> Coloured areas and the main stations by name.</p>
+        <p class="note" style="margin:4px 0"><b>Version 62.</b> Nintendo Museum and both teamLab tickets booked.</p>
+        <p class="note" style="margin:4px 0"><b>Version 61.</b> Four tabs, back button, preview sheet, planner rebuilt, safe migration with a backup.</p>
+      </div>
+      <div class="tool">
         <h3>This trip</h3>
         <div class="field"><label for="tName">Name</label><input id="tName"></div>
         <div class="field"><label for="tWho">Travellers</label><input id="tWho" placeholder="Florian & Lendita"></div>
@@ -1124,11 +1206,51 @@ body.dark .ar-card{background:#2A2E3A}
       <div class="tool" id="backupDue" style="display:none"><b style="font-size:14px">Back up soon</b><p class="note" style="margin:4px 0 8px" id="backupDueText"></p><button class="btn small" type="button" id="backupDueGo">Open Backup</button></div>
       <p class="note">Flights, hotels, trains, tickets and tables, each marked confirmed or pending. Each one also shows on its day in Plan.</p>
       <div class="inline-btns" style="margin-bottom:6px"><button class="btn primary" id="bkNew" type="button">Add a booking</button></div>
+      <p class="note" style="margin-top:4px">What still needs booking is under Essentials.</p>
+      <div class="todo-head" style="margin-top:18px"><h3>Bookings</h3><button class="btn small" id="icsBtn" type="button">Export to calendar</button></div>
+      <p class="note">An .ics file with every dated booking and every timed stop, Japan time, with an alert an hour before. Open it on the phone and add it to a calendar of its own.</p>
+      <div id="bkList"></div>
+    </div>
+    <div class="panel" id="panel-prep">
       <div class="todo-head"><h3>Still to book</h3><span id="todoCount" class="note" style="margin:0"></span></div>
       <p class="note">Dates are the day the sale opens or the last sensible day to act. Tap Done when it is handled.</p>
       <div id="todoList"></div>
-      <h3 style="margin-top:18px">Bookings</h3>
-      <div id="bkList"></div>
+      <h3 style="margin-top:18px">Addresses to show a taxi driver</h3>
+      <p class="note">Tap a hotel and the address fills the screen in Japanese.</p>
+      <div id="taxiList"></div>
+      <div class="tool" style="margin-top:18px">
+        <h3>Checklist</h3>
+        <div class="who-seg" id="whoSeg"><button type="button" data-who="all" class="on">All</button><button type="button" data-who="both">Shared</button><button type="button" data-who="florian">Florian</button><button type="button" data-who="lendita">Lendita</button></div>
+        <div class="chk-add"><input id="chkNew" placeholder="Add an item"><select id="chkWho"><option value="both">Shared</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select><button class="btn small" id="chkAdd" type="button">Add</button></div>
+        <div id="chkList"></div>
+      </div>
+    </div>
+    <div class="panel" id="panel-buy">
+      <p class="note" id="buySum"></p>
+      <div class="inline-btns" style="justify-content:space-between;margin:4px 0 8px"><div class="seg" id="buySeg"><button type="button" data-f="open">To buy</button><button type="button" data-f="bought">Bought</button><button type="button" data-f="all">All</button></div><button class="btn small primary" id="buyAdd" type="button">Add</button></div>
+      <div class="buy-form" id="buyForm">
+        <h3 id="byTitle" style="margin:0 0 8px">Add something to buy</h3>
+        <div class="field"><label for="byItem">What</label><input id="byItem" placeholder="Matcha whisk, sneakers, Pokemon cards" autocomplete="off"></div>
+        <div class="field"><label for="byWhereQ">Where</label>
+          <input type="hidden" id="byWhere">
+          <div class="by-sel" id="byWhereSel"></div>
+          <input id="byWhereQ" placeholder="Search our saved places, or type a shop name" autocomplete="off" autocapitalize="off">
+          <div class="by-res" id="byWhereRes"></div>
+        </div>
+        <div class="field"><label>Price</label>
+          <div class="by-pair"><div><input id="byPrice" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPriceDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
+          <small class="by-rate" id="byRate"></small>
+        </div>
+        <div class="field" id="byPaidWrap"><label>Paid</label>
+          <div class="by-pair"><div><input id="byPaid" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPaidDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
+        </div>
+        <div class="field"><label for="byWho">For</label><select id="byWho"><option value="both">Both</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select></div>
+        <div class="field"><label for="byNote">Note</label><textarea id="byNote" rows="2" placeholder="Size, colour, model, who it is for, a link"></textarea></div>
+        <p class="note" id="byInfo" style="margin:0 0 8px"></p>
+        <div class="inline-btns"><button class="btn primary" id="bySave" type="button">Save</button><button class="btn" id="byCancel" type="button">Cancel</button><button class="btn" id="byDel" type="button">Remove</button></div>
+      </div>
+      <div id="buyList"></div>
+      <p class="note" style="margin-top:14px">Tax-free from November 2026: pay the full price with your passport shown, keep the goods unopened, and the tax is refunded after the customs check at the airport. Ticking an item as bought adds what you paid to Spending.</p>
     </div>
     <div class="panel" id="panel-journal">
       <p class="note">Everything you mark as visited lands here with the time, your notes, photo and what you spent. Your honeymoon, written by itself.</p>
@@ -1142,12 +1264,6 @@ body.dark .ar-card{background:#2A2E3A}
         <div class="conv"><input id="cvYen" inputmode="decimal" placeholder="JPY"><span class="eq">=</span><input id="cvDkk" inputmode="decimal" placeholder="DKK"></div>
         <div class="rate">Rate, DKK per 100 JPY: <input id="cvRate" inputmode="decimal" placeholder="e.g. 4.2"><button class="btn small" id="rateFetch" type="button">Update</button></div>
         <p class="note" id="cvNote" style="margin:6px 0 0"></p>
-      </div>
-      <div class="tool" style="display:none">
-        <h3>Checklist</h3>
-        <div class="who-seg" id="whoSeg"><button type="button" data-who="all" class="on">All</button><button type="button" data-who="both">Shared</button><button type="button" data-who="florian">Florian</button><button type="button" data-who="lendita">Lendita</button></div>
-        <div class="chk-add"><input id="chkNew" placeholder="Add an item"><select id="chkWho"><option value="both">Shared</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select><button class="btn small" id="chkAdd" type="button">Add</button></div>
-        <div id="chkList"></div>
       </div>
       <div class="tool">
         <h3 id="expHead">Spending</h3>
@@ -1163,15 +1279,6 @@ body.dark .ar-card{background:#2A2E3A}
         </div>
         <div class="exp-list" id="expList"></div>
       </div>
-      <div class="tool emg" style="display:none">
-        <h3>If something goes wrong</h3>
-        <div class="inline-btns" style="margin-bottom:8px"><button class="btn primary small" id="shareLoc" type="button">Share my location</button></div>
-        <a href="tel:110"><b>110</b><small>Police</small></a>
-        <a href="tel:119"><b>119</b><small>Ambulance and fire</small></a>
-        <a href="tel:+81334963001"><b>+81 3 3496 3001</b><small>Royal Danish Embassy, Tokyo. Emergencies. Phone hours weekdays 10 to 12 and 13 to 15; outside those hours the call is forwarded to the Foreign Ministry watch centre in Copenhagen</small></a>
-        <a href="tel:+4533921112"><b>+45 33 92 11 12</b><small>Udenrigsministeriets Globale Vagtcentral, Copenhagen, 24 hours</small></a>
-        <div class="addr">Royal Danish Embassy<br>29-6 Sarugaku-cho, Shibuya-ku, Tokyo 150-0033<br>デンマーク大使館 東京都渋谷区猿楽町29-6</div>
-      </div>
     </div>
 
     <div class="panel" id="panel-data">
@@ -1179,8 +1286,14 @@ body.dark .ar-card{background:#2A2E3A}
       <p class="note">Use this page to move the list to another phone or to keep a copy.</p>
       <p class="note" id="dataSize"></p>
       <div class="data-block">
+        <h3>Photos</h3>
+        <p class="note">Pages without a picture can look one up on Wikipedia. Run this once on wifi; the photos are then kept for offline use. One lookup every second or so, it can be stopped any time.</p>
+        <p class="note" id="phStat"></p>
+        <div class="inline-btns"><button class="btn" id="phRun" type="button">Find photos for the rest</button></div>
+      </div>
+      <div class="data-block">
         <h3>Sync between phones</h3>
-        <p class="note">Both phones enter the same project address, key and trip code. Changes merge within a minute, item by item, newest wins. Anyone with the code can read and change the trip, so treat it like a password. Needs a free Supabase project, see SYNC-SETUP.md in the download.</p>
+        <p class="note">Both phones enter the same project address, key and trip code. Changes merge within a minute. When both phones change the same place, each field keeps the latest edit, so a note from one phone and a new day from the other both survive. Anyone with the code can read and change the trip, so treat it like a password. Needs a free Supabase project, see SYNC-SETUP.md in the download.</p>
         <input id="syUrl" placeholder="https://xxxx.supabase.co" autocomplete="off" autocapitalize="off" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);margin-bottom:6px">
         <input id="syKey" placeholder="anon public key" autocomplete="off" autocapitalize="off" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi);margin-bottom:6px">
         <div class="inline-btns" style="margin-bottom:6px"><input id="syCode" placeholder="trip code" autocomplete="off" autocapitalize="off" style="flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--washi)"><button class="btn small" id="syGen" type="button">New code</button></div>
@@ -1636,7 +1749,7 @@ window.__mlMap=function(m){return m&&m._ml;};
 (function(){
 'use strict';
 
-var APP_VERSION='64';
+var APP_VERSION='70';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -1679,14 +1792,14 @@ var SEED_PLACES=[
   {id:'kappabashi',name:'Kappabashi Dougu Street',jp:'合羽橋道具街',area:'tokyo',cat:'shopping',icon:'🔪',lat:35.7134,lng:139.7897,when:'',notes:'Knife street. Compare two or three shops before buying. See Nice to know > Shopping. On your Tokyo list.',page:{style:'Kitchenware and knife street',orderLabel:'Don\'t miss',order:'A proper Japanese kitchen knife from one of the specialist shops, and the plastic food sample shops',desc:'About 800 metres of wholesale kitchen suppliers between Ueno and Asakusa, where Tokyo\'s restaurants buy their pots, lacquer trays, noren curtains and signs. For visitors the draw is knives: specialist shops such as Kama-asa and Kamata stock hundreds of blades, from everyday santoku to single-bevel sashimi knives, and staff will explain steels and handles and often engrave your name on the blade. The plastic food sample shops are worth a look even if you buy nothing. Look for the giant chef\'s head on top of the Niimi building at the south end. Senso-ji is a ten-minute walk east, so the two fit into one morning.',queueLabel:'Good to know',queue:'Many shops close on Sundays and some on holidays, so aim for a weekday or Saturday. Tax-free buying needs your passport. Knives must go in checked luggage, not hand luggage, on the flight home.',best:'A weekday morning, before walking on to Asakusa',dur:'1 to 2 hours'},mylist:1},
   {id:'sensoji',name:'Senso-ji',jp:'浅草寺',area:'tokyo',cat:'shrine',icon:'⛩️',lat:35.7148,lng:139.7967,when:'',notes:'Ten minutes on foot from Kappabashi. Nakamise street in front for snacks.',page:{style:'Buddhist temple',orderLabel:'Don\'t miss',order:'The Kaminarimon gate with its giant red lantern, and drawing an omikuji fortune at the main hall',desc:'Tokyo\'s oldest temple, founded according to tradition in 628 after two fishermen pulled a small statue of Kannon from the Sumida River. You enter under the Kaminarimon, the Thunder Gate, then walk the 250 metres of Nakamise, a lane of stalls selling ningyo-yaki cakes, rice crackers, fans and souvenirs. Beyond the Hozomon gate stand the main hall and a five-storey pagoda, both rebuilt after the war. People waft smoke from the big incense burner over themselves for good health. Asakusa Shrine sits just to the right of the main hall, and Skytree is a twenty-minute walk across the river.',queueLabel:'Good to know',queue:'The temple grounds can be visited at any time, but the Nakamise stalls close in the early evening. If your omikuji fortune is bad, tie it to the rack provided and leave it behind. Eating while walking is discouraged on Nakamise, so finish snacks by the stall.',best:'Early morning for quiet, or after dark when the buildings are lit',dur:'1 to 1.5 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Sensoji_2023.jpg/960px-Sensoji_2023.jpg'},
   {id:'tsurugi',name:'Tsurugi Samurai Tokyo',jp:'剣 サムライ東京',area:'tokyo',cat:'experience',icon:'🗡️',lat:35.6838,lng:139.7385,when:'Private lesson for two requested, 11, 13 or 26 Nov',notes:'Kojimachi dojo. Confirm the slot in the email thread.',page:{style:'Samurai sword lesson',orderLabel:'Don\'t miss',order:'The cutting and defensive forms with the wooden sword, and the matcha break halfway through',desc:'A small dojo in Kojimachi, an area that was once part of the Edo Castle grounds, running lessons of about two hours in classical Japanese swordsmanship for visitors. You change into samurai-style training clothes, learn dojo etiquette, breathing and posture, watch the instructor demonstrate, then practise cuts and defensive forms with a wooden training sword. There is a pause for matcha and a Japanese sweet, then supervised practice with the instructor, and you leave with a personalised scroll and photos. A private lesson means the instructor\'s attention is on the two of you the whole time. The moat of the Imperial Palace is a few minutes\' walk east.',queueLabel:'Good to know',queue:'The dojo is about a minute from Exit 4 of Kojimachi Station on the Tokyo Metro Yurakucho line. Training clothes are provided, so wear something easy to change out of. Confirm the booked date and time by email before the day.',best:'A morning slot, while you are fresh',dur:'2 hours'}},
-  {id:'tokyu-stay',name:'Tokyu Stay Shibuya Shin Minami Guchi',jp:'東急ステイ渋谷新南口',area:'tokyo',cat:'hotel',icon:'🏨',lat:35.6558,lng:139.7018,when:'Booked, 10 to 15 Nov',notes:'',day:'2026-11-10',page:{style:'Apartment-style hotel',orderLabel:'Don\'t miss',order:'The washer-dryer in the room before you move on, and the quieter walk along the Shibuya River',desc:'The Tokyo base: a Tokyu Stay a couple of minutes from the New South exit of Shibuya station, on the calmer south side away from the crossing crowds. Tokyu Stay rooms are compact but built for longer stays, with a washer-dryer in every room and, in most rooms, a small kitchen corner with a fridge and basic cookware, which makes it easy to wash clothes before Hakone and Kyoto. Shibuya Stream and the redeveloped Shibuya River walkway are close by, and Daikanyama and Nakameguro are a pleasant walk south. The scramble crossing and Shibuya Sky are about ten minutes away on foot.',queueLabel:'Good to know',queue:'Ask at the front desk for detergent if there is none in the room. The front desk can normally hold luggage before check-in and after check-out.',best:'Home base, 10 to 15 November',dur:'Five nights'},logo:'tokyu-stay'},
+  {id:'tokyu-stay',addr:"東京都渋谷区渋谷3丁目26-21",name:'Tokyu Stay Shibuya Shin Minami Guchi',jp:'東急ステイ渋谷新南口',area:'tokyo',cat:'hotel',icon:'🏨',lat:35.6558,lng:139.7018,when:'Booked, 10 to 15 Nov',notes:'',day:'2026-11-10',page:{tel:'03-5466-0109',style:'Apartment-style hotel',orderLabel:'Don\'t miss',order:'The washer-dryer in the room before you move on, and the quieter walk along the Shibuya River',desc:'The Tokyo base: a Tokyu Stay a couple of minutes from the New South exit of Shibuya station, on the calmer south side away from the crossing crowds. Tokyu Stay rooms are compact but built for longer stays, with a washer-dryer in every room and, in most rooms, a small kitchen corner with a fridge and basic cookware, which makes it easy to wash clothes before Hakone and Kyoto. Shibuya Stream and the redeveloped Shibuya River walkway are close by, and Daikanyama and Nakameguro are a pleasant walk south. The scramble crossing and Shibuya Sky are about ten minutes away on foot.',queueLabel:'Good to know',queue:'Ask at the front desk for detergent if there is none in the room. The front desk can normally hold luggage before check-in and after check-out.',best:'Home base, 10 to 15 November',dur:'Five nights'},logo:'tokyu-stay'},
   {id:'shibuya',name:'Shibuya Crossing',jp:'渋谷スクランブル交差点',area:'tokyo',cat:'landmark',icon:'🚶',lat:35.6595,lng:139.7005,when:'',notes:'Near the hotel. Best after dark.',page:{style:'Pedestrian scramble crossing',orderLabel:'Don\'t miss',order:'Crossing it yourself on a green light, then watching it from above',desc:'The big scramble crossing outside the Hachiko exit of Shibuya station, where every traffic light turns red at once and up to around 3,000 people cross in all directions, diagonals included. Crossing takes under a minute and is oddly fun; watching it from above is the other half. The free option is the glass-walled passage between the JR station and Shibuya Mark City, which looks straight down on it, and Shibuya Sky gives the full aerial view. The bronze statue of Hachiko, the dog who waited here every day for his dead owner, stands by the exit and is the usual meeting point.',queueLabel:'Good to know',queue:'Agree a meeting point beforehand on busy nights, as it is easy to lose each other in the crowd. Cross only on the green light and do not stop in the road for photos.',best:'After dark, when the screens are lit',dur:'30 minutes'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Shibuya_Crossing%2C_Aerial.jpg/960px-Shibuya_Crossing%2C_Aerial.jpg'},
   {id:'meiji',name:'Meiji Jingu',jp:'明治神宮',area:'tokyo',cat:'shrine',icon:'⛩️',lat:35.6764,lng:139.6993,when:'',notes:'Forest walk in the middle of the city. Go early.',page:{style:'Shinto shrine in a forest',orderLabel:'Don\'t miss',order:'The gravel walk under the trees to the main courtyard, and the wall of sake barrels on the way',desc:'A Shinto shrine completed in 1920 to honour Emperor Meiji and Empress Shoken, set in a man-made forest of around 100,000 trees donated from across Japan and planted by volunteers. From the Harajuku entrance you pass under tall wooden torii and walk about ten minutes along a wide gravel path, past a display of sake barrels and French wine casks given as offerings, to the main courtyard. November is Shichi-go-san season, when families bring children aged three, five and seven in kimono to be blessed, and on weekends you often see a wedding procession cross the courtyard. Yoyogi Park is next door and Takeshita Street is across the road.',queueLabel:'Good to know',queue:'Bow once before passing under each torii and walk at the sides of the path, as the centre is for the deity. At the purification basin, rinse the left hand, then the right, then the mouth from your cupped left palm. Photograph ceremonies only from a respectful distance.',best:'Early morning, and November weekends for Shichi-go-san',dur:'1 hour'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Meiji_Jingu_2023-3.jpg/960px-Meiji_Jingu_2023-3.jpg'},
   {id:'tsukiji',name:'Tsukiji Outer Market',jp:'築地場外市場',area:'tokyo',cat:'food',icon:'🍣',lat:35.6654,lng:139.7707,when:'',notes:'Breakfast sushi and tamagoyaki. Most stalls close early afternoon. On your Tokyo list.',page:{style:'Market',orderLabel:'Best time',order:'9:00 to 14:00, after the trade rush. Saturday is the safe day',desc:'The outer market that stayed when the wholesale market moved to Toyosu: about 400 shops of fish, knives, tea, tamagoyaki and dried goods, plus sushi and seafood-bowl counters. Until 9:00 it is priority time for professional buyers; normal shopping runs 9:00 to 14:00, and after that each shop decides for itself.',queueLabel:'Good to know',queue:'Sundays, public holidays and some Wednesdays are market holidays, when many shops close. Check the market calendar for your date. Eat inside or in front of the shop, not while walking; do not touch the food; ask before taking photos; no bargaining; leave suitcases in a locker.',payLabel:'Paying',pay:'Mostly cash at the small stalls'},mylist:1,ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/2018_Tsukiji_fish_market.jpg/960px-2018_Tsukiji_fish_market.jpg'},
   {id:'gyoen',name:'Shinjuku Gyoen',jp:'新宿御苑',area:'tokyo',cat:'nature',icon:'🍁',lat:35.6852,lng:139.7100,when:'',notes:'Autumn colour in November. Small entry fee.',page:{style:'Former imperial garden',orderLabel:'Don\'t miss',order:'The Japanese garden around the ponds, and the chrysanthemum exhibition in the first half of November',desc:'A large garden in the middle of Shinjuku that belonged to the imperial family until it opened to the public in 1949. It mixes three styles: a Japanese landscape garden with ponds, bridges and tea houses, a formal French garden with avenues of plane trees, and an English lawn big enough to lose the city around it. In the first half of November it holds the annual chrysanthemum exhibition, a tradition inherited from the imperial court, with flowers trained in classical styles and displayed under wooden shelters in the Japanese garden. The maples usually colour from mid to late November, and a large glass greenhouse makes a warm break. It is a short walk from Shinjuku station.',queueLabel:'Good to know',queue:'Bags are checked at the gates and alcohol is not allowed. The garden is normally closed on Mondays, with exceptions in peak seasons, so check before going. Of the three gates, Shinjuku Gate is closest to the station.',best:'A weekday morning; the chrysanthemums usually run 1 to 15 November',dur:'1.5 to 2 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG/960px-Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG'},
   {id:'skytree',name:'Tokyo Skytree',jp:'東京スカイツリー',area:'tokyo',cat:'landmark',icon:'🗼',lat:35.7101,lng:139.8107,when:'',notes:'',page:{style:'Broadcast tower and observation decks',orderLabel:'Don\'t miss',order:'The glass floor panels on the Tembo Deck, and the sloping glass walkway of the Tembo Galleria higher up',desc:'At 634 metres the tallest structure in Japan, opened in 2012 as the broadcast tower for the Tokyo region. Fast lifts take you to the Tembo Deck at 350 metres, with glass floor panels, a cafe and a 360 degree view; a further ticket takes you on to the Tembo Galleria at 450 metres, a glass tube that spirals up around the tower. On a clear day Mount Fuji shows to the south-west. At the base, the Tokyo Solamachi mall has hundreds of shops and restaurants, including a Pokemon Center and the Sumida Aquarium. Senso-ji is a twenty-minute walk across the Sumida River, so the two pair well.',queueLabel:'Good to know',queue:'Tickets for a fixed date and time can be bought online, which saves the ticket queue on busy days. Visibility changes quickly, so check the sky before going up; Fuji is clearest on cold, dry mornings.',best:'Around sunset, to see the city by day and then lit up',dur:'1.5 to 2 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Tokyo_Skytree_2014_%E2%85%A2.jpg/960px-Tokyo_Skytree_2014_%E2%85%A2.jpg'},
-  {id:'setsugetsuka',name:'Setsugetsuka',jp:'雪月花',area:'hakone',cat:'hotel',icon:'♨️',lat:35.2504,lng:139.0429,when:'15 to 16 Nov, Gora',notes:'Kaiseki dinner, private open-air bath on the terrace.',day:'2026-11-15',page:{style:'Onsen ryokan by Gora Station',orderLabel:'Don\'t miss',order:'The open-air tub on your own terrace after dark, and the free bowl of ramen served late in the evening',desc:'Toki no Yu Setsugetsuka is a large modern ryokan a minute\'s walk from Gora Station, where the Hakone Tozan railway ends and the cable car begins. Rooms combine Western beds with a tatami area, and each has its own open-air tub on the terrace; the terrace tubs use heated water, while the big shared indoor and outdoor baths are fed by Gora hot spring. Dinner is a seasonal kaiseki course, with a choice of menus such as one built around wagyu shabu-shabu and sushi. Small touches set it apart: ice lollies in the afternoon, ramen late at night, a lactic drink in the morning. Gora Park and the Hakone Museum of Art are a few minutes uphill, so it is an easy base for the first Hakone evening.',queueLabel:'Good to know',queue:'Send big bags ahead from Hakone-Yumoto rather than carrying them up the switchback train. Yukata are fine around the building and in the baths. Ask the hotel about its tattoo rules for the shared baths if that matters.',best:'Arrive mid-afternoon to bathe before dinner',dur:'Overnight'},logo:'setsugetsuka'},
-  {id:'tsukinoizumi',name:'Gora Tsukinoizumi',jp:'強羅 月の泉',area:'hakone',cat:'hotel',icon:'♨️',lat:35.2492,lng:139.0388,when:'16 to 17 Nov, Gora',notes:'Japanese room with private open-air bath, dinner and breakfast. Arrive around 16:00 by cable car.',day:'2026-11-16',page:{style:'Nine-room ryokan in Naka-Gora',orderLabel:'Don\'t miss',order:'Your room\'s own open-air hot spring bath, and the creative kaiseki dinner served in a private dining room',desc:'A small ryokan with only nine rooms, on the hillside above Gora a few minutes\' walk from Naka-Gora station on the Hakone Tozan cable car. Every room has its own open-air bath fed by Gora hot spring, so all the soaking happens in private rather than in shared baths. Dinner is a creative kaiseki meal and breakfast is also served privately, which suits a couple. The inn also offers massage and head spa treatments. After the larger Setsugetsuka the night before, this is the quieter and more intimate second night, and Gora Park and the Hakone Museum of Art are a short walk down the slope.',queueLabel:'Good to know',queue:'Take the cable car from Gora and get off at Naka-Gora, not at the top or bottom of the line. Dinner and breakfast run in fixed time slots, so pick yours at check-in.',best:'Check in around 16:00 to use the bath before and after dinner',dur:'Overnight'}},
+  {id:'setsugetsuka',addr:"神奈川県足柄下郡箱根町強羅1300-34",name:'Setsugetsuka',jp:'雪月花',area:'hakone',cat:'hotel',icon:'♨️',lat:35.2504,lng:139.0429,when:'15 to 16 Nov, Gora',notes:'Kaiseki dinner, private open-air bath on the terrace.',day:'2026-11-15',page:{tel:'0460-86-1222',style:'Onsen ryokan by Gora Station',orderLabel:'Don\'t miss',order:'The open-air tub on your own terrace after dark, and the free bowl of ramen served late in the evening',desc:'Toki no Yu Setsugetsuka is a large modern ryokan a minute\'s walk from Gora Station, where the Hakone Tozan railway ends and the cable car begins. Rooms combine Western beds with a tatami area, and each has its own open-air tub on the terrace; the terrace tubs use heated water, while the big shared indoor and outdoor baths are fed by Gora hot spring. Dinner is a seasonal kaiseki course, with a choice of menus such as one built around wagyu shabu-shabu and sushi. Small touches set it apart: ice lollies in the afternoon, ramen late at night, a lactic drink in the morning. Gora Park and the Hakone Museum of Art are a few minutes uphill, so it is an easy base for the first Hakone evening.',queueLabel:'Good to know',queue:'Send big bags ahead from Hakone-Yumoto rather than carrying them up the switchback train. Yukata are fine around the building and in the baths. Ask the hotel about its tattoo rules for the shared baths if that matters.',best:'Arrive mid-afternoon to bathe before dinner',dur:'Overnight'},logo:'setsugetsuka'},
+  {id:'tsukinoizumi',addr:"〒250-0408 神奈川県足柄下郡箱根町強羅1300-173",name:'Gora Tsukinoizumi',jp:'強羅 月の泉',area:'hakone',cat:'hotel',icon:'♨️',lat:35.2492,lng:139.0388,when:'16 to 17 Nov, Gora',notes:'Japanese room with private open-air bath, dinner and breakfast. Arrive around 16:00 by cable car.',day:'2026-11-16',page:{tel:'0460-82-8801',style:'Nine-room ryokan in Naka-Gora',orderLabel:'Don\'t miss',order:'Your room\'s own open-air hot spring bath, and the creative kaiseki dinner served in a private dining room',desc:'A small ryokan with only nine rooms, on the hillside above Gora a few minutes\' walk from Naka-Gora station on the Hakone Tozan cable car. Every room has its own open-air bath fed by Gora hot spring, so all the soaking happens in private rather than in shared baths. Dinner is a creative kaiseki meal and breakfast is also served privately, which suits a couple. The inn also offers massage and head spa treatments. After the larger Setsugetsuka the night before, this is the quieter and more intimate second night, and Gora Park and the Hakone Museum of Art are a short walk down the slope.',queueLabel:'Good to know',queue:'Take the cable car from Gora and get off at Naka-Gora, not at the top or bottom of the line. Dinner and breakfast run in fixed time slots, so pick yours at check-in.',best:'Check in around 16:00 to use the bath before and after dinner',dur:'Overnight'}},
   {id:'openair',name:'Hakone Open-Air Museum',jp:'彫刻の森美術館',area:'hakone',cat:'art',icon:'🎨',lat:35.2440,lng:139.0509,when:'',notes:'Two to three hours, mostly outdoors. Dress warm.',page:{style:'Outdoor sculpture museum',orderLabel:'Don\'t miss',order:'The Picasso Pavilion, and the stained-glass Symphonic Sculpture tower you can climb inside',desc:'Japan\'s first open-air art museum, opened in 1969 on a hillside in Ninotaira, with sculptures set across lawns against a backdrop of mountains. There are works by Henry Moore, Rodin and many Japanese sculptors, and a two-floor pavilion of paintings, ceramics and sculpture by Picasso. The Symphonic Sculpture is a tall tower lined with stained glass, with a spiral staircase up to a lookout over the park. Most of the visit is outdoors on paths and slopes, so it works best in dry weather, and there is a hot spring foot bath in the grounds that is welcome in November. It is next to Chokoku-no-Mori station, one stop below Gora on the Tozan railway.',queueLabel:'Good to know',queue:'Most of the site is outdoors with slopes and steps, so wear warm layers and good shoes. Bring a small towel for the foot bath.',best:'A dry, clear day, late morning when the sun is on the lawns',dur:'2 to 3 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Hakone5.jpg/960px-Hakone5.jpg',logo:'hakone-open'},
   {id:'owakudani',name:'Owakudani',jp:'大涌谷',area:'hakone',cat:'nature',icon:'🌋',lat:35.2437,lng:139.0197,when:'',notes:'Black eggs. Check ropeway status, it closes on gas alerts.',page:{style:'Volcanic crater valley',orderLabel:'Don\'t miss',order:'A black egg boiled in the hot spring, and the view of Fuji from the ropeway on a clear day',desc:'Owakudani is the steaming crater area left by an eruption of Mount Hakone about 3,000 years ago. Sulphur vents hiss on bare yellow slopes and the air smells strongly of eggs. The famous snack is kuro-tamago: eggs boiled in the hot spring pools until iron and sulphur turn the shells black, and eating one is said to add seven years to your life. Most people arrive on the Hakone Ropeway from Sounzan, which swings right over the valley, and on a clear day Fuji rises behind it. From here the ropeway continues down to Togendai for the Lake Ashi boat, which makes it the middle stop of the classic Hakone loop.',queueLabel:'Good to know',queue:'The ropeway and the viewing area close at short notice when volcanic gas levels rise, so check the ropeway status that morning. People with asthma or heart conditions are advised to keep the visit short.',best:'Morning, when Fuji is more often clear',dur:'45 minutes to 1 hour'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Owakudani_-_Hakone_%2827369344357%29.jpg/960px-Owakudani_-_Hakone_%2827369344357%29.jpg'},
   {id:'ashi',name:'Hakone Shrine and Lake Ashi',jp:'箱根神社',area:'hakone',cat:'shrine',icon:'⛩️',lat:35.2046,lng:139.0253,when:'',notes:'Torii in the water. Mt Fuji view from the lake on clear days.',page:{style:'Lakeside Shinto shrine',orderLabel:'Don\'t miss',order:'The red Heiwa no Torii standing in the lake, and the cedar-lined stone steps up to the main hall',desc:'Hakone Shrine has stood on the shore of Lake Ashi for more than 1,200 years and was patronised by samurai, among them Minamoto no Yoritomo, the first Kamakura shogun. The main hall sits at the top of a flight of stone steps among tall old cedars, which feels far older and quieter than the souvenir stalls below. The best-known sight is the Heiwa no Torii, the Peace Gate, standing in the water at the foot of the shrine, where people queue to be photographed underneath it. Lake Ashi fills an old volcanic caldera, and on clear days Fuji appears across the water. It is about a ten minute walk along the shore from the Moto-Hakone boat pier.',queueLabel:'Good to know',queue:'The queue for the photo under the lakeside torii can be long at midday. The steps up to the main hall are steep.',best:'Early morning before the boats arrive, or late afternoon',dur:'45 minutes to 1 hour'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Hakonejinja_-01.jpg/960px-Hakonejinja_-01.jpg'},
@@ -1706,11 +1819,11 @@ var SEED_PLACES=[
   {id:'goldengai',name:'Golden Gai',jp:'新宿ゴールデン街',area:'tokyo',cat:'hood',icon:'🏮',lat:35.69399,lng:139.7047,when:'',notes:'Two hundred doll-house bars. Many charge a small cover, some are locals only, look for English signs.',page:{style:'Alley of tiny bars',orderLabel:'Don\'t miss',order:'One drink each in two different bars, choosing places with English signs or open doors',desc:'Six narrow lanes on the edge of Kabukicho holding around two hundred bars, most with room for six to ten people, some up a steep staircase to a single upstairs room. The lanes took their present form around the late 1950s and have long been a haunt of writers, film people and musicians. Every bar has its own owner and personality, from punk and horror film themes to quiet whisky counters, and the fun is in moving on after a drink or two. Hanazono Shrine sits right beside the lanes, and Omoide Yokocho, on the other side of the station, is the natural place for dinner first.',queueLabel:'Good to know',queue:'Most bars charge a seat or cover charge, often posted on the door; English signs usually mean visitors are welcome, and some bars are for regulars only. Photography in the lanes is discouraged and many owners do not want pictures inside.',best:'Late evening, early in the week',dur:'1 to 2 hours'}},
   {id:'yanaka',name:'Yanaka Ginza',jp:'谷中銀座',area:'tokyo',cat:'food',icon:'🍡',lat:35.72767,lng:139.76532,when:'',notes:'Old Tokyo shopping lane, cats, croquettes. Sunset from the stairs at the east end.',page:{style:'Old Tokyo shopping lane',orderLabel:'Order',order:'A menchi katsu or croquette fried to order at a butcher\'s counter, eaten on the spot, and a cat-themed sweet',desc:'A short shopping street of around sixty small family shops in Yanaka, one of the few parts of central Tokyo that largely escaped both the 1923 earthquake fires and the wartime bombing. It runs from the Yuyake Dandan steps near Nippori station towards Sendagi, with butchers frying croquettes and minced-meat cutlets, rice cracker bakers, tea sellers and cat-themed trinkets, since the area has long been known for its street cats. Around it, Yanaka\'s lanes hold small temples, old wooden houses and the tree-lined Yanaka Cemetery. It is a gentle walk from Ueno Park and pairs well with it for a slow afternoon.',queueLabel:'Good to know',queue:'Many shops close early in the evening and some take a day off midweek, so go in the afternoon. Eat your croquette beside the shop that sold it rather than walking with it. Cash is handy at the smaller stalls.',best:'Late afternoon, ending on the Yuyake Dandan steps at sunset',dur:'1 hour'}},
   {id:'uenopark',name:'Ueno Park',jp:'上野公園',area:'tokyo',cat:'nature',icon:'🍁',lat:35.71529,lng:139.77383,when:'',notes:'Museum park with ginkgo colour in November. Good pairing with Ameyoko and Yanaka.',page:{style:'Museum park',orderLabel:'Don\'t miss',order:'The ginkgo trees along the main avenue, and Kiyomizu Kannon-do with its looped moon pine',desc:'One of Japan\'s first public parks, opened in 1873 on the grounds of a former temple complex, and home to the country\'s densest cluster of museums: the Tokyo National Museum, the National Museum of Western Art in a Le Corbusier building, the National Museum of Nature and Science, and Ueno Zoo. Between them stand temples and shrines older than the park, including the gold-leafed Ueno Toshogu and Kiyomizu Kannon-do, a small copy of Kyoto\'s Kiyomizu-dera, whose pine is trained into a circle. At the south end, Shinobazu Pond is covered in lotus leaves, browning by November. The ginkgos turn gold in late November. Ameyoko starts by the park\'s south entrance.',queueLabel:'Good to know',queue:'The park itself is free; the museums and zoo each charge separately and many close on Mondays. The main paths are wide and flat, and crowds build around the museums on weekends.',best:'A weekday in late November for the ginkgos',dur:'1 to 2 hours, more with a museum'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Ueno_park.jpg/960px-Ueno_park.jpg'},
-  {id:'tnm',hours:"Closed Mondays as a rule (the next day when Monday is a holiday). Check the museum site for the day.",closed:[1],name:'Tokyo National Museum',jp:'東京国立博物館',area:'tokyo',cat:'art',icon:'🏛️',lat:35.71904,lng:139.77597,when:'',notes:'Swords, armour, ceramics. The Honkan building alone takes two hours.',page:{style:'National art and history museum',orderLabel:'Don\'t miss',order:'The sword and armour rooms in the Honkan, and the Gallery of Horyuji Treasures',desc:'The oldest museum in Japan, founded in 1872, holding the largest collection of Japanese art. The Honkan, the main building from 1938, takes you through Japanese art in order: Buddhist sculpture, lacquer, ceramics, ink painting, kimono, and rooms of samurai swords and armour that justify the visit on their own. Displays rotate, so the national treasures on show change every few weeks. In a separate modern building by Yoshio Taniguchi, the Gallery of Horyuji Treasures sets rows of small seventh-century gilt bronze Buddhas in dimmed light. In autumn the garden behind the Honkan, with its pond, maples and tea houses, is usually opened to visitors. It sits at the top of Ueno Park.',queueLabel:'Good to know',queue:'The regular ticket covers the permanent galleries; special exhibitions in the Heiseikan are ticketed separately. Photography is allowed in most permanent galleries, with signs where it is not. The museum is usually closed on Mondays.',best:'A weekday morning, before the school groups',dur:'2 to 3 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Tokyo_National_Museum%2C_Honkan_2010.jpg/960px-Tokyo_National_Museum%2C_Honkan_2010.jpg'},
+  {id:'tnm',pass:{"name":"Grutto Pass","kind":"discount"},hours:"Closed Mondays as a rule (the next day when Monday is a holiday). Check the museum site for the day.",closed:[1],name:'Tokyo National Museum',jp:'東京国立博物館',area:'tokyo',cat:'art',icon:'🏛️',lat:35.71904,lng:139.77597,when:'',notes:'Swords, armour, ceramics. The Honkan building alone takes two hours.',page:{style:'National art and history museum',orderLabel:'Don\'t miss',order:'The sword and armour rooms in the Honkan, and the Gallery of Horyuji Treasures',desc:'The oldest museum in Japan, founded in 1872, holding the largest collection of Japanese art. The Honkan, the main building from 1938, takes you through Japanese art in order: Buddhist sculpture, lacquer, ceramics, ink painting, kimono, and rooms of samurai swords and armour that justify the visit on their own. Displays rotate, so the national treasures on show change every few weeks. In a separate modern building by Yoshio Taniguchi, the Gallery of Horyuji Treasures sets rows of small seventh-century gilt bronze Buddhas in dimmed light. In autumn the garden behind the Honkan, with its pond, maples and tea houses, is usually opened to visitors. It sits at the top of Ueno Park.',queueLabel:'Good to know',queue:'The regular ticket covers the permanent galleries; special exhibitions in the Heiseikan are ticketed separately. Photography is allowed in most permanent galleries, with signs where it is not. The museum is usually closed on Mondays.',best:'A weekday morning, before the school groups',dur:'2 to 3 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Tokyo_National_Museum%2C_Honkan_2010.jpg/960px-Tokyo_National_Museum%2C_Honkan_2010.jpg'},
   {id:'akiba',name:'Akihabara',jp:'秋葉原',area:'tokyo',cat:'shopping',icon:'🎮',lat:35.69716,lng:139.77516,when:'',notes:'Electronics, arcades, second-hand cameras. Yodobashi Akiba for anything technical.',page:{style:'Electronics and anime district',orderLabel:'Don\'t miss',order:'Yodobashi Akiba for anything technical, and the retro game floors of Super Potato',desc:'Tokyo\'s old electronics district, which has grown into the city\'s centre for anime, manga, games and collectables. Yodobashi Akiba, a huge store by the station, has whole floors of cameras, lenses, audio and kitchen gadgets. Along Chuo-dori are multi-storey arcades with claw machines and rhythm games, anime and manga shops such as Animate and Mandarake for figures and second-hand manga, and Radio Kaikan, a tower of small shops selling model kits, figures and trading cards. Super Potato, up a narrow staircase, sells retro consoles and cartridges and has a small arcade of old machines. The side streets under the tracks still hold the tiny parts stalls the area started with.',queueLabel:'Good to know',queue:'Tax-free shopping in the big stores needs your passport. Check that electronics suit European voltage and plugs before buying, as Japan uses 100 V and two-pin plugs. Some shops do not allow photos inside.',best:'A weekday afternoon into the evening',dur:'2 to 3 hours'}},
   {id:'toyosu',name:'Toyosu Market',jp:'豊洲市場',area:'tokyo',cat:'food',icon:'🐟',lat:35.64495,lng:139.78469,when:'',notes:'The wholesale market that replaced Tsukiji. Tuna auction viewing deck from 05:30, sushi upstairs. Closed most Wednesdays and Sundays.',page:{style:'Wholesale fish market',orderLabel:'Order',order:'A sushi or kaisendon breakfast at one of the market restaurants, after watching the tuna auction',desc:'Tokyo\'s central wholesale market, which moved here from Tsukiji in 2018. It is a set of large, clean modern buildings rather than a street market: visitors walk raised corridors and look down through windows on the early morning tuna auction, where rows of tuna are inspected with torches and sold in quick rounds of bidding. Many of the restaurants from Tsukiji\'s inner market reopened here, spread over the three buildings, with the largest cluster in the intermediate wholesale building, which also has a rooftop garden over the bay. Next door, Toyosu Senkyaku Banrai adds a food hall in an Edo-style streetscape. teamLab Planets is one stop away on the Yurikamome line.',queueLabel:'Good to know',queue:'The auction takes place very early, so come at dawn and watch from the upper viewing windows; the lower observation deck needs a lottery booking made the month before. The market is closed on Sundays, national holidays and some Wednesdays, so check the market calendar. The best-known sushi counters can queue for an hour or more.',best:'Early morning on a market day',dur:'2 to 3 hours'}},
   {id:'borderless',name:'teamLab Borderless',jp:'チームラボボーダレス',area:'tokyo',cat:'art',icon:'🎨',lat:35.662,lng:139.74342,when:'',notes:'The other teamLab, at Azabudai Hills. Different from Planets: no water, rooms flow into each other. Timed tickets.',page:{style:'Digital art museum',orderLabel:'Don\'t miss',order:'The Bubble Universe room, and a bowl of tea at the EN Tea House, where flowers bloom in the cup',desc:'The second teamLab museum in Tokyo, reopened in 2024 in the basement of Azabudai Hills after moving from Odaiba. Unlike Planets there is no water and no set route: dark corridors lead into rooms where projected waterfalls, flowers and birds move across walls and floors and drift into the next space, so a room looks different each time you pass through. Highlights include Bubble Universe, a mirrored room of glowing spheres, and a drawing room where your coloured sketch of a sea creature is scanned and set swimming across the wall. The tea house is paid separately. Tokyo Tower is about a ten-minute walk away and Roppongi Hills is close by.',queueLabel:'Good to know',queue:'Entry is by timed ticket booked online. Some rooms, such as Infinite Crystal World, use a free numbered ticket issued in the teamLab app, so download it before you go. Mirrored floors make trousers a better choice than skirts.',best:'The first slot on a weekday',dur:'2 to 3 hours'}},
-  {id:'mori',hours:"Closed Tuesdays as a rule. Check the museum site for the day.",closed:[2],name:'Mori Art Museum and Tokyo City View',jp:'森美術館',area:'tokyo',cat:'art',icon:'🏙️',lat:35.66043,lng:139.72926,when:'',notes:'53rd floor of Roppongi Hills. Exhibition plus the best indoor city view, open late.',page:{style:'Contemporary art museum and observatory',orderLabel:'Don\'t miss',order:'Whatever exhibition is on, then the indoor deck at dusk looking towards Tokyo Tower',desc:'A contemporary art museum at the top of the Mori Tower in Roppongi Hills, with the Tokyo City View observation deck one floor below it. The museum has no permanent display and runs large themed or solo shows of Asian and international artists, each lasting a few months. The deck is a glass-walled gallery around the 52nd floor with a 360 degree view: Tokyo Tower stands close in the foreground, and Fuji appears on clear days. The open-air rooftop Sky Deck has been closed since 2024. At the foot of the tower stands Maman, Louise Bourgeois\'s giant bronze spider. teamLab Borderless and Tokyo Tower are both within walking distance.',queueLabel:'Good to know',queue:'One ticket usually covers both the museum and the observation deck. Check what is on before going, as the museum closes between exhibitions. Tickets and lifts are reached through the glass Museum Cone at the base of the tower.',best:'Late afternoon into dark',dur:'2 hours'},logo:'mori-art'},
+  {id:'mori',pass:{"name":"Grutto Pass","kind":"discount"},hours:"Closed Tuesdays as a rule. Check the museum site for the day.",closed:[2],name:'Mori Art Museum and Tokyo City View',jp:'森美術館',area:'tokyo',cat:'art',icon:'🏙️',lat:35.66043,lng:139.72926,when:'',notes:'53rd floor of Roppongi Hills. Exhibition plus the best indoor city view, open late.',page:{style:'Contemporary art museum and observatory',orderLabel:'Don\'t miss',order:'Whatever exhibition is on, then the indoor deck at dusk looking towards Tokyo Tower',desc:'A contemporary art museum at the top of the Mori Tower in Roppongi Hills, with the Tokyo City View observation deck one floor below it. The museum has no permanent display and runs large themed or solo shows of Asian and international artists, each lasting a few months. The deck is a glass-walled gallery around the 52nd floor with a 360 degree view: Tokyo Tower stands close in the foreground, and Fuji appears on clear days. The open-air rooftop Sky Deck has been closed since 2024. At the foot of the tower stands Maman, Louise Bourgeois\'s giant bronze spider. teamLab Borderless and Tokyo Tower are both within walking distance.',queueLabel:'Good to know',queue:'One ticket usually covers both the museum and the observation deck. Check what is on before going, as the museum closes between exhibitions. Tickets and lifts are reached through the glass Museum Cone at the base of the tower.',best:'Late afternoon into dark',dur:'2 hours'},logo:'mori-art'},
   {id:'shimokita',name:'Shimokitazawa',jp:'下北沢',area:'tokyo',cat:'shopping',icon:'🎧',lat:35.66157,lng:139.66706,when:'',notes:'Vintage shops, coffee, small theatres. Slow afternoon, no big sights.',page:{style:'Vintage and cafe neighbourhood',orderLabel:'Don\'t miss',order:'The second-hand clothes shops around the station, and the Reload and Bonus Track complexes along the old rail line',desc:'A low-rise neighbourhood a few minutes from Shibuya on the Keio Inokashira line, known for second-hand clothing, record shops, small live music venues and theatres. There are dozens of vintage stores, from sorted American workwear and band T-shirts to piled-up bargain racks. When the Odakyu line was moved underground, the strip of land above it became a walkway of new low buildings: Reload and Bonus Track hold coffee roasters, bookshops and small restaurants. The Honda Theatre and its smaller stages make it Tokyo\'s small-theatre district. It is a place to wander without a list, with coffee stops and a curry lunch, a dish the area is known for.',queueLabel:'Good to know',queue:'Many shops are small and up a flight of stairs, so look up at the signs. Weekends are crowded and weekdays much calmer.',best:'A slow weekday afternoon',dur:'2 to 3 hours'},ph:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Shimokitazawa_Street_2015.jpg/960px-Shimokitazawa_Street_2015.jpg'},
   {id:'nakameguro',name:'Nakameguro',jp:'中目黒',area:'tokyo',cat:'hood',icon:'🌸',lat:35.64414,lng:139.69883,when:'',notes:'Canal-side boutiques and coffee. Quiet in November, pretty in the evening light.',page:{style:'Canal-side neighbourhood',orderLabel:'Don\'t miss',order:'A walk along the Meguro River, and a coffee at the Starbucks Reserve Roastery',desc:'A neighbourhood along the Meguro River, a narrow stream in a concrete channel lined with cherry trees and with small boutiques, cafes and bars on both banks. It is packed in cherry blossom season; in November it is quieter and easier to enjoy, with the leaves turning and a calm canal walk in the evening. The four-storey Starbucks Reserve Roastery by Kengo Kuma, with a tall copper cask running up through the building, is about a ten-minute walk upstream from the station. Traveler\'s Factory, the shop behind the Traveler\'s Notebook, is tucked into a side street. It links on foot with Daikanyama T-Site, and is one stop from Shibuya on the Tokyu Toyoko line.',queueLabel:'Good to know',queue:'The Roastery can have a queue at weekends; weekday mornings are easier. Most boutiques are small, and quiet browsing is the norm.',best:'Late afternoon into early evening',dur:'2 hours'}},
   {id:'imperial',name:'Imperial Palace East Gardens',jp:'皇居東御苑',area:'tokyo',cat:'nature',icon:'🏯',lat:35.6867,lng:139.7574,when:'',notes:'Free castle grounds and stone ramparts. Closed Mondays and Fridays.',page:{style:'Castle grounds and gardens',orderLabel:'Don\'t miss',order:'The stone base of the old castle keep, and the Ninomaru garden with its pond',desc:'The public part of the Imperial Palace grounds, laid over the inner circles of Edo Castle, seat of the Tokugawa shoguns for more than 250 years. Few buildings survive, but the scale is still there in the massive stone walls, moats and gates such as the Otemon, and in a few old guardhouses. On the upper level, the Honmaru, a wide lawn leads to the Tenshudai, the stone platform where the keep stood until it burned in 1657; you can climb it for a view. Below, the Ninomaru garden has a pond, a small waterfall and maples that colour in late November. It is a ten-minute walk from the Marunouchi side of Tokyo Station.',queueLabel:'Good to know',queue:'Entry is free, with a bag check at the gate. The gardens are usually closed on Mondays and Fridays, apart from special openings. Otemon is the closest gate to Tokyo Station.',best:'A weekday morning, with maples in late November',dur:'1 to 1.5 hours'}},
@@ -2147,8 +2260,11 @@ var SEED_PLACES=[
   {id:'tk-shibuya-loft',name:'Shibuya LOFT',jp:'渋谷ロフト',area:'tokyo',cat:'shopping',icon:'🛍️',lat:35.66032,lng:139.70061,hours:'Daily 11:00-21:00',addr:'東京都渋谷区宇田川町21-1',notes:'From a TikTok you saved: the Thermos pocket eco bag. Tax-free counter until 20:30.',mylist:1,page:{style:'Lifestyle and stationery store',orderLabel:'Don\'t miss',order:'The Thermos pocket eco bag, plus stationery, beauty and travel gadgets',desc:'LOFT is a Japanese lifestyle store chain selling stationery, cosmetics, kitchen and travel goods, gadgets and gifts, and Shibuya LOFT is its big store in Udagawacho, a few minutes from Shibuya Crossing. It is the place for clever small things: pens and notebooks, skincare, travel gear and folding shopping bags such as the Thermos one from your TikTok. Mega Don Quijote and Center-gai are a short walk away, so it slots easily into an evening in central Shibuya.',queueLabel:'Good to know',queue:'Tax-free service runs 11:00 to 20:30, half an hour before closing. Some departments may keep different hours.',best:'Weekday afternoon or early evening',dur:'45 minutes to 1 hour',payLabel:'Paying',pay:'Transit IC cards, iD, QUICPay, PayPay and other code payments, Alipay+, WeChat Pay, UnionPay',tel:'03-3462-3807'},logo:'loft'},
   {id:'tk-iori-grand-front-osaka',name:'IORI Imabari Towel, Grand Front Osaka',jp:'伊織 グランフロント大阪店',area:'osaka',cat:'shopping',icon:'🧺',lat:34.70583,lng:135.49434,hours:'Daily 11:00-21:00',addr:'大阪府大阪市北区大深町3-1 グランフロント大阪 北館 2F',notes:'From a TikTok you saved: Imabari towels, the IORINO range. North Building, 2F, about five minutes\' walk from Osaka Station.',mylist:1,page:{style:'Imabari towel specialist',orderLabel:'Don\'t miss',order:'The IORINO towels (ながもち, やわらか, すぐさら), plus baby items and scarves',desc:'IORI (伊織) is a specialist shop for Imabari towels, made in Imabari in Ehime, Japan\'s largest towel-producing area, known for high absorbency and safe materials. Its own IORINO range comes in versions built for long life, lasting softness or quick drying. Beyond towels it sells baby goods, scarves, bedding and accessories, which makes it a good gift stop. The branch is on the second floor of the North Building of Grand Front Osaka in Umeda, next to Osaka Station.',queueLabel:'Good to know',queue:'Towels are light but bulky, so leave suitcase space. Grand Front Osaka has its own North and South Buildings; this shop is in the North one.',best:'Any afternoon while in Umeda',dur:'30 minutes',tel:'06-6136-5851'},logo:'iori-imabari'},
   {id:'tk-kaldi-sakura-stage',name:'KALDI Coffee Farm Shibuya Sakura Stage',jp:'カルディコーヒーファーム 渋谷サクラステージ店',area:'tokyo',cat:'food',icon:'☕',lat:35.65707,lng:139.70201,hours:'Daily 10:00-21:00',addr:'東京都渋谷区桜丘町1-4 渋谷サクラステージ SHIBUYAサイド 2F',notes:'From a TikTok you saved: KALDI\'s green garlic chilli oil. This is the KALDI nearest your hotel, on 2F of Sakura Stage beside Tokyu Store.',mylist:1,page:{style:'Imported food and coffee shop',orderLabel:'Don\'t miss',order:'The green garlic chilli oil (青いにんにく辣油), coffee beans and Japanese snacks to take home',desc:'KALDI Coffee Farm is a Japanese chain of coffee and imported food shops, packed with sauces, snacks, sweets, coffee beans and its own-brand condiments. Its green garlic chilli oil, made with green chillies, garlic and sesame, is a KALDI staple that goes on tofu, hot pot, pasta or bread. This branch is on the second floor of the SHIBUYA side of Shibuya Sakura Stage, a couple of minutes from your hotel and on the same floor as Tokyu Store, so you can do both in one short trip.',queueLabel:'Good to know',queue:'Popular items can sell out, so if you see the chilli oil, buy it then. Hours can change at short notice.',best:'Any evening near the hotel',dur:'20 minutes',tel:'03-6455-0270'},logo:'kaldi-coffee'},
-  {id:'rikugien',name:'Rikugien',jp:'六義園',area:'tokyo',cat:'nature',icon:'🍁',lat:35.7326,lng:139.7466,when:'',hours:'9:00-17:00, last entry 16:30',addr:'東京都文京区本駒込6-16-3',notes:'Edo-period stroll garden near Komagome station, the classic Tokyo maple garden. The 2026 night illumination runs 25 November to 6 December, after your Tokyo days, so this is a daytime visit or a skip.',page:{style:'Edo-period stroll garden',orderLabel:'Don\'t miss',order:'The view from the Fujishiro-toge hill and the maples around the pond',desc:'A landscape garden laid out around 1700 for a shogun\'s adviser, with a central pond, tea houses and small hills that stand in for scenes from classical poetry. In late autumn the maples along the water go red and the garden is lit in the evenings for a couple of weeks, though in 2026 that starts on 25 November, after you have left Tokyo. By day it is quiet, 10 minutes on foot from Komagome station on the Yamanote line, and pairs with Yanaka.',queueLabel:'Good to know',queue:'Entry is 300 yen; the night viewing is a separate ticket. Closed over New Year only.',best:'A weekday afternoon in mid November for the first colour',dur:'1 hour'},season:{"label":"Autumn illumination","from":"2026-11-25","to":"2026-12-06","note":"Night viewing of the lit maples, 25 November to 6 December 2026, which is after your Tokyo days. Daytime entry 300 yen.","src":"https://www.tokyo-park.or.jp/park/rikugien/","ok":1}},
-  {id:'gaien-ginkgo',name:'Meiji Jingu Gaien ginkgo avenue',jp:'明治神宮外苑いちょう並木',area:'tokyo',cat:'nature',icon:'🍂',lat:35.6745,lng:139.7183,when:'',hours:'Always open',addr:'東京都港区北青山2丁目',notes:'The 300 m avenue of ginkgo trees between Aoyama-dori and the Gaien picture gallery, yellow in the second half of November. Five minutes from Gaienmae station, ten from Omotesando.',page:{style:'Avenue of ginkgo trees',orderLabel:'Don\'t miss',order:'The view down the avenue from the Aoyama-dori end towards the gallery dome',desc:'Four rows of ginkgo trees, planted in the 1920s, line the approach from Aoyama-dori to the Meiji Memorial Picture Gallery. For two or three weeks in late November and early December the whole avenue turns yellow and the leaves cover the pavement; it is the most photographed autumn spot in central Tokyo and busy on weekends. There is a small festival with food stalls along the avenue in most years. It is ten minutes on foot from Omotesando, so it fits into a Harajuku and Omotesando day.',queueLabel:'Good to know',queue:'Free, always open. Weekday mornings are calm; on weekends the avenue is shoulder to shoulder. The 2026 festival dates were not published on the Gaien site when this was written.',best:'A weekday morning in the second half of November',dur:'30 minutes'},season:{"label":"Ginkgo avenue","from":"2026-11-15","to":"2026-12-05","note":"The avenue usually turns yellow in the second half of November. 2026 festival dates were not on the Gaien site when this was written.","src":"https://www.meijijingugaien.jp/","ok":0}}
+  {id:'rikugien',pass:{"name":"Grutto Pass","kind":"free"},name:'Rikugien',jp:'六義園',area:'tokyo',cat:'nature',icon:'🍁',lat:35.7326,lng:139.7466,when:'',hours:'9:00-17:00, last entry 16:30',addr:'東京都文京区本駒込6-16-3',notes:'Edo-period stroll garden near Komagome station, the classic Tokyo maple garden. The 2026 night illumination runs 25 November to 6 December, after your Tokyo days, so this is a daytime visit or a skip.',page:{style:'Edo-period stroll garden',orderLabel:'Don\'t miss',order:'The view from the Fujishiro-toge hill and the maples around the pond',desc:'A landscape garden laid out around 1700 for a shogun\'s adviser, with a central pond, tea houses and small hills that stand in for scenes from classical poetry. In late autumn the maples along the water go red and the garden is lit in the evenings for a couple of weeks, though in 2026 that starts on 25 November, after you have left Tokyo. By day it is quiet, 10 minutes on foot from Komagome station on the Yamanote line, and pairs with Yanaka.',queueLabel:'Good to know',queue:'Entry is 300 yen; the night viewing is a separate ticket. Closed over New Year only.',best:'A weekday afternoon in mid November for the first colour',dur:'1 hour'},season:{"label":"Autumn illumination","from":"2026-11-25","to":"2026-12-06","note":"Night viewing of the lit maples, 25 November to 6 December 2026, which is after your Tokyo days. Daytime entry 300 yen.","src":"https://www.tokyo-park.or.jp/park/rikugien/","ok":1}},
+  {id:'gaien-ginkgo',name:'Meiji Jingu Gaien ginkgo avenue',jp:'明治神宮外苑いちょう並木',area:'tokyo',cat:'nature',icon:'🍂',lat:35.6745,lng:139.7183,when:'',hours:'Always open',addr:'東京都港区北青山2丁目',notes:'The 300 m avenue of ginkgo trees between Aoyama-dori and the Gaien picture gallery, yellow in the second half of November. Five minutes from Gaienmae station, ten from Omotesando.',page:{style:'Avenue of ginkgo trees',orderLabel:'Don\'t miss',order:'The view down the avenue from the Aoyama-dori end towards the gallery dome',desc:'Four rows of ginkgo trees, planted in the 1920s, line the approach from Aoyama-dori to the Meiji Memorial Picture Gallery. For two or three weeks in late November and early December the whole avenue turns yellow and the leaves cover the pavement; it is the most photographed autumn spot in central Tokyo and busy on weekends. There is a small festival with food stalls along the avenue in most years. It is ten minutes on foot from Omotesando, so it fits into a Harajuku and Omotesando day.',queueLabel:'Good to know',queue:'Free, always open. Weekday mornings are calm; on weekends the avenue is shoulder to shoulder. The 2026 festival dates were not published on the Gaien site when this was written.',best:'A weekday morning in the second half of November',dur:'30 minutes'},season:{"label":"Ginkgo avenue","from":"2026-11-15","to":"2026-12-05","note":"The avenue usually turns yellow in the second half of November. 2026 festival dates were not on the Gaien site when this was written.","src":"https://www.meijijingugaien.jp/","ok":0}},
+  {id:'hamarikyu',name:'Hama-rikyu Gardens',jp:'浜離宮恩賜庭園',area:'tokyo',cat:'nature',icon:'🌳',lat:35.6597,lng:139.7634,when:'',hours:'9:00-17:00, last entry 16:30',addr:'東京都中央区浜離宮庭園1-1',notes:'Edo-period garden on the bay between Tsukiji and Shiodome, with a tidal pond, a tea house on the water and the towers behind. Free with the Grutto Pass. Ten minutes on foot from the Tsukiji outer market.',pass:{name:'Grutto Pass',kind:'free'},page:{style:'Daimyo garden by the bay',orderLabel:'Don\'t miss',order:'Matcha and a sweet at the Nakajima tea house on the pond',desc:'The former duck-hunting grounds and villa garden of the shoguns, now a landscape garden whose pond fills from Tokyo Bay with the tide. The Nakajima tea house sits in the middle of the pond and serves matcha; the 300 year old pine near the entrance and the peony garden are the other set pieces. It is the natural pause between the Tsukiji outer market and Ginza, and the Sumida river water bus leaves from a pier inside the garden if you want to reach Asakusa by boat.',queueLabel:'Good to know',queue:'Entry is 300 yen, or free by showing the Grutto Pass QR at the gate. Closed over New Year only.',best:'Late morning after Tsukiji, an hour before Ginza',dur:'1 hour'}},
+  {id:'hokusai-museum',name:'Sumida Hokusai Museum',jp:'すみだ北斎美術館',area:'tokyo',cat:'art',icon:'🌊',lat:35.6955,lng:139.7994,when:'',hours:'9:30-17:30, last entry 17:00. Closed Mondays as a rule, check the museum site for the day.',closed:[1],addr:'東京都墨田区亀沢2-7-2',notes:'Small, sharp museum on the artist of the Great Wave, in the district where he lived. The permanent collection is free with the Grutto Pass; special exhibitions are discounted. Five minutes from Ryogoku station.',pass:{name:'Grutto Pass',kind:'free'},page:{style:'Museum of Hokusai',orderLabel:'Don\'t miss',order:'The reconstructed studio with Hokusai and his daughter at work, and the touch screens of the Hokusai Manga',desc:'A mirrored aluminium box by Kazuyo Sejima holding the Sumida ward collection of Hokusai, who was born and worked in this part of Edo. The permanent floor walks through his life by period, with the Thirty-six Views of Mount Fuji and a life-size tableau of the old artist drawing in his cluttered room. It is compact, an hour at most, and sits between Ryogoku station and the Kokugikan, so it pairs with the sumo hall and a chanko lunch, or with Asakusa across the river.',queueLabel:'Good to know',queue:'Permanent collection free with the Grutto Pass, special exhibitions at a discount. Closed Mondays as a rule.',best:'A weekday morning on the Asakusa or Ryogoku day',dur:'1 hour'}},
+  {id:'hayakawa-hamonoten',name:'Hayakawa Hamonoten',jp:'早川刃物店',area:'kyoto',cat:'shopping',icon:'🔪',lat:35.0013,lng:135.7628,when:'',hours:'9:00-17:00, closed Saturdays, Sundays and holidays',closed:[0,6],addr:'京都市下京区堺町通仏光寺上る東前町399-1 (pin placed on the block, about 50 m accuracy)',notes:'Small third-generation knife shop between Karasuma and Kawaramachi, seen on TikTok. Weekdays only, so in Kyoto that means Tuesday 17 to Friday 20 November. Knives go in the checked suitcase.',mylist:1,page:{style:'Old knife and scissor shop',orderLabel:'Don\'t miss',order:'Ask for a knife to be engraved; reviewers say it is done free with a purchase',desc:'A family knife and scissor shop on Sakaimachi-dori, a few minutes south of Nishiki Market, run for three generations and about 90 years. The shop is tiny, eight people fill it, and the owner and a younger assistant speak little English but manage. Reviewers on Tripadvisor found the range smaller than the tourist knife shops but with the same makers, noticeably cheaper, and with free engraving. The shop also sharpens knives and scissors, and takes vintage riveted scissors apart to hone each blade. A Kyoto city guide reported in 2024 that the owner, then 86, planned to close by 2028, so this is not a shop to save for a later trip.',queueLabel:'Good to know',queue:'Open weekdays 9:00 to 17:00 only, closed Saturdays, Sundays and holidays. Cash is safest. Knives must travel in checked luggage, never in a day bag on the Shinkansen or the plane cabin.',payLabel:'Paying',pay:'Assume cash; the shop is old fashioned.',best:'A weekday afternoon after Nishiki Market, before 16:30',dur:'30 minutes',tel:'075-351-6731'}}
 ];
 
 var SEED_GUIDES=[
@@ -2184,7 +2300,7 @@ var SIGNS=[
 var SEED_FIX62={"nintendo-museum": {"notes": ["In Uji, 5 minutes from the east exit of Kintetsu Ogura station. Advance ticket only: the November lottery is over, so watch the ticketing site for first-come tickets from cancellations. Closed Tuesdays.", "In Uji, 5 minutes from the east exit of Kintetsu Ogura station. Booked: Thursday 19 November, entry 14:00 to 14:30, two adults. Bring passports and the ticket in the Nintendo account. Closed Tuesdays."]}};
 var SEED_FIX61={"shibuya": {"cat": ["other", "landmark"]}, "skytree": {"cat": ["other", "landmark"]}, "gion": {"cat": ["other", "hood"]}, "osakacastle": {"cat": ["other", "shrine"]}, "goldengai": {"cat": ["other", "hood"]}, "nakameguro": {"cat": ["other", "hood"]}, "sekisho": {"cat": ["other", "landmark"]}, "odawara": {"cat": ["other", "shrine"]}, "nijo": {"cat": ["other", "shrine"]}, "umeda": {"cat": ["other", "landmark"]}, "tsutenkaku": {"cat": ["other", "landmark"]}, "kaiyukan": {"cat": ["other", "experience"]}, "naramachi": {"cat": ["other", "hood"]}, "shibuyasky": {"cat": ["other", "landmark"]}, "tocho": {"cat": ["other", "landmark"]}, "tokyotower": {"cat": ["other", "landmark"]}, "marunouchi": {"cat": ["other", "landmark"]}, "sumidaaq": {"cat": ["other", "experience"]}, "kyototower": {"cat": ["other", "landmark"]}, "tempozan": {"cat": ["other", "landmark"]}, "sanjo-ohashi": {"cat": ["other", "landmark"]}, "kyoto-aquarium": {"cat": ["other", "experience"]}, "harukas": {"cat": ["other", "landmark"]}, "yk-minatomirai": {"cat": ["other", "hood"]}, "kb-harborland": {"cat": ["other", "hood"]}, "kb-kitano": {"cat": ["other", "hood"]}, "ng-castle": {"cat": ["other", "shrine"]}, "hr-peace": {"cat": ["other", "art"]}, "kz-higashi": {"cat": ["other", "hood"]}, "photo-tt-7eleven": {"name": ["Tokyo Tower photo spot: the 7-Eleven", "7-Eleven photo spot"]}, "photo-tt-caledo": {"name": ["Tokyo Tower photo spot: Caledo Tower street", "Caledo Tower street"]}, "photo-tt-akabanebashi": {"name": ["Tokyo Tower photo spot: Akabanebashi crossing", "Akabanebashi crossing"]}, "photo-tt-shibapark": {"name": ["Tokyo Tower photo spot: inside Shiba Park", "Shiba Park view"]}, "photo-tt-tofuya": {"name": ["Tokyo Tower photo spot: the stairs near Tofuya Ukai", "Tofuya Ukai stairs"]}};
 var SEED_FIX55={"pc-kyoto": {"lat": [35.00288, 35.00351], "lng": [135.76801, 135.75873], "name": ["Pokemon Center Kyoto", "Pokemon Center Kyoto"], "notes": ["Kyoto Takashimaya, 5th floor, at Shijo Kawaramachi. Kyoto exclusives with kimono Pikachu.", "On the 2nd floor of SUINA Muromachi (Kyoto Economic Center) on Shijo-dori, by Shijo and Karasuma stations; it moved here from Takashimaya in March 2019. Daily 10:00-20:00."]}, "op-shibuya": {"lat": [35.66091, 35.65977], "lng": [139.70102, 139.70077], "name": ["One Piece Mugiwara Store Shibuya", "One Piece Mugiwara Store Shibuya"], "notes": ["The main One Piece shop, near Shibuya Parco. Figures, exclusive merchandise, a wall of wanted posters.", "The main One Piece shop, on the 6th floor of MAGNET by SHIBUYA109 at Shibuya Crossing. Figures, exclusive merchandise, a wall of wanted posters. 10:00-21:00."]}, "narita-t2": {"lat": [35.77304, 35.7628], "lng": [140.38762, 140.3876], "name": ["Narita Airport, Terminal 2 (Pokemon Store)", "Narita Airport, Terminal 1 South Wing (Pokemon Store)"], "jp": ["成田空港 第2ターミナル", "成田空港 第1ターミナル 南ウイング"], "notes": ["Pokemon Store Narita is in the Terminal 2 main building, before security. Narita is an hour from Tokyo, Haneda is 20 minutes.", "Pokemon Store Narita moved in January 2025 to Terminal 1, South Wing, 4th floor, before security; about 5 minutes on foot from Narita Airport Station. Daily 09:00-20:00. Narita is an hour from Tokyo, Haneda is 20 minutes."]}, "gundam-odaiba": {"name": ["Unicorn Gundam, Odaiba", "Gundam Base Tokyo, DiverCity"], "notes": ["Twenty metre Gundam outside DiverCity, transforms with lights several times a day. The Mugiwara Store is inside the mall behind it.", "The life-size Unicorn Gundam statue outside DiverCity ended at the end of August 2026. The Gundam Base shop inside DiverCity is the reason to come now. The Mugiwara Store is in the same mall."], "icon": ["🤖", "🤖"]}, "haneda-t2": {"name": ["Haneda Airport, Terminal 2 (Pokemon Store)", "Haneda Airport, Terminal 2 (Pokemon vending)"], "notes": ["Pokemon Store Haneda is inside Terminal 2 on the departures floor, near gate area entrance. Last chance for a plush before the flight.", "Haneda has no Pokemon Store. Terminal 2 has Pokemon vending machines before security, so buy plush in the city. Haneda is 20 minutes from central Tokyo."]}, "nin-kyoto": {"notes": ["Kyoto Takashimaya, in the company town where Nintendo started as a card maker in 1889.", "Kyoto Takashimaya S.C. T8 building, 7th floor, in the city where Nintendo started as a card maker in 1889."]}, "kyototower": {"notes": ["Opposite the station. There is a public bath in the basement.", "Opposite the station. Observation deck for the view over Kyoto; the old basement bath has closed."]}, "uniqlo-tokyo": {"notes": ["Twelve floors in Marronnier Gate Ginza, the global flagship with the full range and Japan only lines. Tax free counter on site.", "UNIQLO TOKYO in Marronnier Gate Ginza 2, four floors with the full range and Japan only lines. The twelve-floor UNIQLO Ginza is a few minutes away on Chuo-dori."]}, "kyoto-manga": {"notes": ["Old school building with 300,000 manga volumes on open shelves, read on the lawn. Closed Wednesdays.", "Old school building with about 300,000 manga in the collection, some 50,000 on open shelves, read on the lawn. Closed Wednesdays."]}};
-var SEED_CLOSED={'tl-solakzade':[3],'tl-musubi':[3],'tl-cheese-stand':[1],'tl-rakuutei':[1],'tl-himawari-sushi-shintoshin':[2],'tl-aoyama-sushi-umi':[3],'tl-sobakiri-miyota-aoyama':[0],'tl-onigiri-yadoroku':[0],'tl-clandestino-nakameguro':[2],'tl-ahiru-store':[0, 3],'tl-path-tomigaya':[1],'tl-premier-mai':[3],'tl-takenoshita-soba':[1],'tl-pain-maison-ginza':[2],'tl-ginza-maru':[0],'tl-udonya-shinbori':[0, 1],'tl-menya-nukaji':[0],'tl-horaiya-ueno':[3],'tl-tonkatsu-nanaido':[0, 6],'nintendo-museum':[2],'lp-lambert-shinjuku':[1, 4],'lp-takizme-tea':[1, 2, 3, 4, 5],'lp-coffee-county-tokyo':[1],'lp-nadoya-no-katte':[1, 2, 3, 4],'lp-dekasan-osaka':[1],'ram-afrobeats':[1],'ram-breakbeats':[0,1,2,3],'iyoshi-asakusa-rokku':[2],'iyoshi-asakusa-kannon':[1],'iyoshi-nakano':[2,3],'kyu-asakura':[1],'kyoto-manga':[3],ghibli:[2],tnm:[1],nezumuseum:[1],imperial:[1,5],isuien:[2],mori:[],toyosu:[0,3],'tnm':[1],'nezumuseum':[1],'mori':[2],'ghibli':[2],'kyoto-manga':[3],'osaka-housing':[2],'nara-museum':[1],'yk-cupnoodle':[2],'ng-toyota':[1],'kz-21st':[1],'kokugikan':[0,6]};
+var SEED_CLOSED={'tl-solakzade':[3],'tl-musubi':[3],'tl-cheese-stand':[1],'tl-rakuutei':[1],'tl-himawari-sushi-shintoshin':[2],'tl-aoyama-sushi-umi':[3],'tl-sobakiri-miyota-aoyama':[0],'tl-onigiri-yadoroku':[0],'tl-clandestino-nakameguro':[2],'tl-ahiru-store':[0, 3],'tl-path-tomigaya':[1],'tl-premier-mai':[3],'tl-takenoshita-soba':[1],'tl-pain-maison-ginza':[2],'tl-ginza-maru':[0],'tl-udonya-shinbori':[0, 1],'tl-menya-nukaji':[0],'tl-horaiya-ueno':[3],'tl-tonkatsu-nanaido':[0, 6],'nintendo-museum':[2],'lp-lambert-shinjuku':[1, 4],'lp-takizme-tea':[1, 2, 3, 4, 5],'lp-coffee-county-tokyo':[1],'lp-nadoya-no-katte':[1, 2, 3, 4],'lp-dekasan-osaka':[1],'ram-afrobeats':[1],'ram-breakbeats':[0,1,2,3],'iyoshi-asakusa-rokku':[2],'iyoshi-asakusa-kannon':[1],'iyoshi-nakano':[2,3],'kyu-asakura':[1],'kyoto-manga':[3],ghibli:[2],tnm:[1],nezumuseum:[1],imperial:[1,5],isuien:[2],mori:[],toyosu:[0,3],'tnm':[1],'nezumuseum':[1],'mori':[2],'ghibli':[2],'kyoto-manga':[3],'osaka-housing':[2],'nara-museum':[1],'yk-cupnoodle':[2],'ng-toyota':[1],'kz-21st':[1],'kokugikan':[0,6],'hokusai-museum':[1],'hayakawa-hamonoten':[0,6]};
 var SEED_TIPS={
   anime:'Pokemon Centers: Mega Tokyo in Ikebukuro is the biggest; Shibuya Parco floor 6 has Pokemon Center, Nintendo Tokyo and the Jump Shop together. Pokemon Cafe needs an online reservation released a month ahead. Poke Lids are painted manholes; six sit near Machida station in western Tokyo, four in Higashi-Osaka on the Nara line. The Conan cafe is a seasonal pop-up, check before going.',
   general:'Cash still matters at small shops, shrines and some ramen counters. Keep coins and small notes.\nSuica or PASMO in Apple Wallet covers trains, buses, konbini and vending machines. Top up in the Wallet app.\nTax free shopping needs the passport at the till. Check the current minimum spend before relying on it.\nBins are rare. Carry a small bag for wrappers.\nLuggage forwarding (takkyubin) hotel to hotel is worth it for Tokyo to Kyoto. Ask at reception the day before and keep a small bag for Hakone.',
@@ -2268,11 +2384,13 @@ function dayHint(iso){
   return '';
 }
 function todayIso(){
+  if(window.__jmToday)return window.__jmToday;
   var tz=state.trip&&state.trip.tz;
   if(tz&&window.Intl){try{var parts=new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());if(/^\d{4}-\d{2}-\d{2}$/.test(parts))return parts;}catch(e){}}
   return isoLocal(new Date());
 }
 function nowHMTz(){
+  if(window.__jmNow)return window.__jmNow;
   var tz=state.trip&&state.trip.tz;
   if(tz&&window.Intl){try{return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()).replace('24:','00:');}catch(e){}}
   var d=new Date();return pad2(d.getHours())+':'+pad2(d.getMinutes());
@@ -2343,7 +2461,7 @@ var store={
 };
 function nowHM(){var d=new Date();return pad2(d.getHours())+':'+pad2(d.getMinutes());}
 var syncState={on:false,url:'',key:'',code:'',busy:false,last:0,pushTimer:null,pulling:false};
-var SYNC_COLLECTIONS=['places','bookings','expenses','checks','guides','library','customCats'];
+var SYNC_COLLECTIONS=['places','bookings','expenses','checks','guides','library','customCats','buys'];
 var lastSnap={};
 function stampChanges(){
   /* give every changed entity a timestamp and remember deletions, so two phones can merge */
@@ -2352,9 +2470,12 @@ function stampChanges(){
     var arr=state[c]||[];var seen={};
     arr.forEach(function(e){
       if(!e||!e.id)return;seen[e.id]=1;
-      var body=JSON.stringify(e,function(k,v){return k==='_u'?undefined:v;});
+      var body=JSON.stringify(e,function(k,v){return (k==='_u'||k==='_f')?undefined:v;});
       var key=c+':'+e.id;
-      if(lastSnap[key]!==body){e._u=now;lastSnap[key]=body;}
+      if(lastSnap[key]!==body){
+        if(lastSnap[key]){try{var old=JSON.parse(lastSnap[key]);var ks={};Object.keys(old).concat(Object.keys(e)).forEach(function(k){if(k!=='_u'&&k!=='_f')ks[k]=1;});Object.keys(ks).forEach(function(k){if(JSON.stringify(old[k])!==JSON.stringify(e[k])){e._f=e._f||{};e._f[k]=now;}});}catch(x){}}
+        e._u=now;lastSnap[key]=body;
+      }
     });
     Object.keys(lastSnap).forEach(function(k){
       if(k.indexOf(c+':')===0&&!seen[k.slice(c.length+1)]){state.gone=state.gone||{};state.gone[k.slice(c.length+1)]=now;delete lastSnap[k];}
@@ -2365,7 +2486,7 @@ function stampChanges(){
 }
 function stampEdited(){
   var now=Date.now();
-  var seeds={places:SEED_PLACES,guides:SEED_GUIDES,checks:SEED_CHECKS.map(function(c){return {id:c[0],text:c[1],done:false,who:c[2]||'both'};}),bookings:SEED_BOOKINGS};
+  var seeds={places:SEED_PLACES,guides:SEED_GUIDES,checks:SEED_CHECKS.map(function(c){return {id:c[0],text:c[1],done:false,who:c[2]||'both'};}),bookings:SEED_BOOKINGS,buys:SEED_BUYS};
   SYNC_COLLECTIONS.forEach(function(c){
     (state[c]||[]).forEach(function(e){
       if(!e||!e.id||e._u)return;
@@ -2377,12 +2498,12 @@ function stampEdited(){
     });
   });
 }
-function snapshotNow(){lastSnap={};lastSnap['meta']=(state.budget||'')+'|'+(state.rate||'');SYNC_COLLECTIONS.forEach(function(c){(state[c]||[]).forEach(function(e){if(e&&e.id)lastSnap[c+':'+e.id]=JSON.stringify(e,function(k,v){return k==='_u'?undefined:v;});});});lastSnap['tips']=JSON.stringify(state.tips);}
+function snapshotNow(){lastSnap={};lastSnap['meta']=(state.budget||'')+'|'+(state.rate||'');SYNC_COLLECTIONS.forEach(function(c){(state[c]||[]).forEach(function(e){if(e&&e.id)lastSnap[c+':'+e.id]=JSON.stringify(e,function(k,v){return (k==='_u'||k==='_f')?undefined:v;});});});lastSnap['tips']=JSON.stringify(state.tips);}
 function syncPayload(){
   var out={};SYNC_COLLECTIONS.forEach(function(c){out[c]=state[c]||[];});
   out.tips=state.tips;out.tipsU=state.tipsU||0;out.trip=trip();out.gone=state.gone||{};
-  out.removedSeeds=removedSeeds();out.removedGuides=removedGuides();out.removedChecks=removedChecks();out.removedBookings=removedBookings();
-  out.budget=state.budget||'';out.rate=state.rate||'';out.metaU=state.metaU||0;
+  out.removedSeeds=removedSeeds();out.removedGuides=removedGuides();out.removedChecks=removedChecks();out.removedBuys=removedBuys();out.removedBookings=removedBookings();
+  out.budget=state.budget||'';out.rate=state.rate||'';out.metaU=state.metaU||0;out.todos=state.todos||{};
   return out;
 }
 function mergeRemote(rem){
@@ -2394,6 +2515,14 @@ function mergeRemote(rem){
     remote.forEach(function(e){
       if(!e||!e.id)return;var l=byId[e.id];
       if(!l){ if(!(gone[e.id]&&gone[e.id]>(e._u||0))){byId[e.id]=e;changed=true;} }
+      else if(l._f&&e._f&&(e._u||0)!==(l._u||0)){
+        /* both phones changed this record: keep each field from the phone that changed it last */
+        var nw=(e._u||0)>(l._u||0)?e:l,od=nw===e?l:e,m=JSON.parse(JSON.stringify(nw)),fn=nw._f||{},fo=od._f||{};
+        m._f=Object.assign({},fn);
+        Object.keys(fo).forEach(function(k){if((fo[k]||0)>(fn[k]||0)){if(od[k]===undefined)delete m[k];else m[k]=JSON.parse(JSON.stringify(od[k]));m._f[k]=fo[k];}});
+        m._u=Math.max(e._u||0,l._u||0);
+        if(JSON.stringify(m)!==JSON.stringify(l)){byId[e.id]=m;changed=true;}
+      }
       else if((e._u||0)>(l._u||0)||(l._u===undefined&&e._u!==undefined)){byId[e.id]=e;changed=true;}
     });
     var merged=Object.keys(byId).map(function(k){return byId[k];}).filter(function(e){return !(gone[e.id]&&gone[e.id]>(e._u||0));});
@@ -2403,8 +2532,9 @@ function mergeRemote(rem){
   });
   if((rem.tipsU||0)>(state.tipsU||0)&&rem.tips){state.tips=Object.assign({},SEED_TIPS,rem.tips);state.tipsU=rem.tipsU;changed=true;}
   if(rem.trip&&(rem.trip._u||0)>(trip()._u||0)){state.trip=rem.trip;applyTrip();buildTabs();changed=true;}
-  ['removedSeeds','removedGuides','removedChecks','removedBookings'].forEach(function(k){var a=state[k]||[];(rem[k]||[]).forEach(function(id){if(a.indexOf(id)===-1){a.push(id);changed=true;}});state[k]=a;});
+  ['removedSeeds','removedGuides','removedChecks','removedBookings','removedBuys'].forEach(function(k){var a=state[k]||[];(rem[k]||[]).forEach(function(id){if(a.indexOf(id)===-1){a.push(id);changed=true;}});state[k]=a;});
   if((rem.metaU||0)>(state.metaU||0)){if(rem.budget!==state.budget){state.budget=rem.budget;changed=true;}if(rem.rate!==state.rate){state.rate=rem.rate;changed=true;}state.metaU=rem.metaU;}
+  if(rem.todos){var lt=state.todos=state.todos||{};Object.keys(rem.todos).forEach(function(k){var r=rem.todos[k],l=lt[k];if(!l||(r.u||0)>(l.u||0)){if(JSON.stringify(l)!==JSON.stringify(r)){lt[k]=r;changed=true;}}});}
   state.gone=gone;
   return changed;
 }
@@ -2617,7 +2747,7 @@ function init(){
       var savedSchema=saved.schema||0;
       if(savedSchema<SCHEMA){snapshotBefore('before-v'+SCHEMA,JSON.stringify(saved));}
       state.places=saved.places;
-      ['photoSplit','closedSeeded','expMigrated','conanNoted','caledoFixed','friendNoted','fix55','fix61','fix62','bk62','fix64','schema','rev'].forEach(function(f){if(saved[f]!==undefined)state[f]=saved[f];});
+      ['photoSplit','closedSeeded','expMigrated','conanNoted','caledoFixed','friendNoted','fix55','fix61','fix62','bk62','fix64','fix66','schema','rev'].forEach(function(f){if(saved[f]!==undefined)state[f]=saved[f];});
       state.routes=saved.routes&&typeof saved.routes==='object'?saved.routes:{};
       state.tips=Object.assign({},SEED_TIPS,saved.tips||{});
       state.hidden=(Array.isArray(saved.hidden)?saved.hidden:[]).filter(function(k){return typeof k==='string';});
@@ -2628,7 +2758,7 @@ function init(){
         (state.library||[]).forEach(function(it){ it.photo=''; });
         state.photoSplit=1;
       }
-      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';state.lastBackup=saved.lastBackup||'';state.changedSince=saved.changedSince||0;state.trip=saved.trip||null;state.gone=saved.gone||{};
+      state.checks=Array.isArray(saved.checks)?saved.checks:[];state.removedChecks=Array.isArray(saved.removedChecks)?saved.removedChecks:[];state.rate=saved.rate||'';state.theme=saved.theme||'auto';state.weather=saved.weather||{};mergeChecks();state.buys=Array.isArray(saved.buys)?saved.buys:[];state.removedBuys=Array.isArray(saved.removedBuys)?saved.removedBuys:[];mergeBuys();state.customCats=Array.isArray(saved.customCats)?saved.customCats:[];installCustomCats();state.voiceName=saved.voiceName||'';state.lastBackup=saved.lastBackup||'';state.changedSince=saved.changedSince||0;state.trip=saved.trip||null;state.gone=saved.gone||{};
       state.bookings=Array.isArray(saved.bookings)?saved.bookings:[];state.todos=saved.todos&&typeof saved.todos==='object'?saved.todos:{};state.removedBookings=Array.isArray(saved.removedBookings)?saved.removedBookings:[];state.expenses=Array.isArray(saved.expenses)?saved.expenses:[];state.budget=saved.budget||'';mergeBookings();
       if(!state.expMigrated){state.places.forEach(function(p){if(p.spent)syncPlaceExpense(p);});state.expMigrated=1;}
       state.guides=Array.isArray(saved.guides)?saved.guides:[];
@@ -2662,7 +2792,8 @@ function init(){
       })();
       if(!state.fix61){state.places.forEach(function(p){var fx=SEED_FIX61[p.id];if(!fx)return;Object.keys(fx).forEach(function(k){if((p[k]||'')===fx[k][0])p[k]=fx[k][1];});});state.fix61=1;}
       if(!state.fix62){state.places.forEach(function(p){var fx=SEED_FIX62[p.id];if(!fx)return;Object.keys(fx).forEach(function(k){if((p[k]||'')===fx[k][0])p[k]=fx[k][1];});});state.fix62=1;}
-      if(!state.fix64){var sp64={};SEED_PLACES.forEach(function(x){sp64[x.id]=x;});state.places.forEach(function(p){var sd=sp64[p.id];if(!sd)return;if(SEED_CLOSED[p.id]&&!(p.closed&&p.closed.length))p.closed=SEED_CLOSED[p.id].slice();if(sd.hours&&!p.hours)p.hours=sd.hours;if(sd.season)p.season=sd.season;else if(p.season&&!sd.season)delete p.season;});checks().forEach(function(c){if(c.id==='c-shink'&&c.text==='Shinkansen seats reserved, Tokyo to Kyoto')c.text='Shinkansen seats reserved, Odawara to Kyoto, 17 Nov';});state.fix64=1;}
+      if(!state.fix64){var sp64={};SEED_PLACES.forEach(function(x){sp64[x.id]=x;});state.places.forEach(function(p){var sd=sp64[p.id];if(!sd)return;if(SEED_CLOSED[p.id]&&!(p.closed&&p.closed.length))p.closed=SEED_CLOSED[p.id].slice();if(sd.hours&&!p.hours)p.hours=sd.hours;if(sd.season)p.season=sd.season;else if(p.season&&!sd.season)delete p.season;if(sd.pass)p.pass=sd.pass;});checks().forEach(function(c){if(c.id==='c-shink'&&c.text==='Shinkansen seats reserved, Tokyo to Kyoto')c.text='Shinkansen seats reserved, Odawara to Kyoto, 17 Nov';});state.fix64=1;}
+      if(!state.fix66){var sp66={};SEED_PLACES.forEach(function(x){sp66[x.id]=x;});state.places.forEach(function(p){var sd=sp66[p.id];if(sd&&sd.pass)p.pass=sd.pass;});state.fix66=1;}
       if(!state.bk62){var sb={};SEED_BOOKINGS.forEach(function(x){sb[x.id]=x;});bookings().forEach(function(b){var sd=sb[b.id];if(!sd||(b.id!=='bk-planets'&&b.id!=='bk-bio'))return;if(!b.date&&!b.ref&&!b.img){['title','date','time','ref','notes','status'].forEach(function(k){b[k]=sd[k];});}});state.bk62=1;}
       if(!state.fix55){state.places.forEach(function(p){var fx=SEED_FIX55[p.id];if(!fx)return;Object.keys(fx).forEach(function(k){var o=fx[k][0],n=fx[k][1];if(k==='lat'||k==='lng'){if(Math.abs((p[k]||0)-o)<1e-6)p[k]=n;}else if((p[k]||'')===o)p[k]=n;});});state.fix55=1;}
       if(!state.caledoFixed){var ap=state.places.filter(function(p){return p.id==='addr-higashiazabu-1-3-6';})[0];if(ap&&ap.name==='Higashi-Azabu 1-3-6'&&!(ap.links&&ap.links.length)&&!ap.day){state.places=state.places.filter(function(p){return p!==ap;});}state.caledoFixed=1;}
@@ -2675,7 +2806,7 @@ function init(){
     }else{
       state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
       state.tips=Object.assign({},SEED_TIPS);
-      state.guides=[];mergeGuides();state.checks=[];mergeChecks();state.bookings=[];mergeBookings();state.expenses=[];
+      state.guides=[];mergeGuides();state.checks=[];mergeChecks();state.buys=[];mergeBuys();state.bookings=[];mergeBookings();state.expenses=[];
       state.places.forEach(function(p){if(SEED_CLOSED[p.id])p.closed=SEED_CLOSED[p.id].slice();});state.closedSeeded=1;
       freshInstall=true;
       migrateBookings();state.schema=SCHEMA;
@@ -2706,7 +2837,7 @@ function buildMap(){
   L.control.scale({position:'bottomleft',imperial:false}).addTo(map);
   buildBase();
   loadOnlineBase();
-  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();},online:function(){return onlineBase;},ramen:function(i){openRamenPage(i);},hoodOf:function(p){return hoodOf(p);},zones:function(){return ZONES;},area:function(i){openAreaPage(i);},station:function(n){var st=STATIONS.filter(function(x){return x[0]===n;})[0];if(st)openStationSheet(st);},todos:function(){return SEED_TODO;},stations:function(){return STATIONS;},zoneOf:function(p){return zoneOf(p);},status:function(p){return placeStatus(p);},dayLabel:function(a,b){return dayLabel(a,b);},snap:function(n){return idbGet('jm:snap:'+KEY+':'+n);},closeBooking:function(){closeBooking();}};
+  window.__jm={map:map,g:function(){return {type:gType,overlays:gOverlays,dayLine:dayLine,day:activeDay};},setMapType:function(t){setMapType(t);},setDay:function(d,f){setDay(d,f);},byId:function(i){return byId(i);},persist:function(){return persist();},state:function(){return state;},sun:function(a,b,c){return sunTimes(a,b,c);},page:function(){return tripPageHtml();},online:function(){return onlineBase;},ramen:function(i){openRamenPage(i);},hoodOf:function(p){return hoodOf(p);},zones:function(){return ZONES;},buys:function(){return buys();},buySum:function(){return buySummary();},setBought:function(i,on,paid){setBought(buys().filter(function(b){return b.id===i;})[0],on,paid);},setToday:function(d,t){window.__jmToday=d;window.__jmNow=t||null;updateNextUp();},merge:function(r){return mergeRemote(r);},stamp:function(){stampChanges();},snapNow:function(){snapshotNow();},payload:function(){return syncPayload();},rain:function(d){var l=dayPlaces(d);return rainPlan(d,l,l.length?l:[]);},jpCard:function(i){showJpCard(byId(i));},photoQueue:function(){return photoQueue().length;},area:function(i){openAreaPage(i);},station:function(n){var st=STATIONS.filter(function(x){return x[0]===n;})[0];if(st)openStationSheet(st);},todos:function(){return SEED_TODO;},suggest:function(){suggestPlan();},clearSugg:function(){clearSuggestions();},ics:function(){return icsText();},load:function(d){return dayLoad(d,dayPlaces(d));},hint:function(id,d){return arriveHint(byId(id),d);},stations:function(){return STATIONS;},zoneOf:function(p){return zoneOf(p);},status:function(p){return placeStatus(p);},dayLabel:function(a,b){return dayLabel(a,b);},snap:function(n){return idbGet('jm:snap:'+KEY+':'+n);},closeBooking:function(){closeBooking();}};
 
   layer=L.layerGroup().addTo(map);buildZones();renderStations();
   map.on('click',function(){$('#bunchPop').classList.remove('on');});
@@ -3884,6 +4015,23 @@ function renderList(){
       });
       box.appendChild(rmb);
     }
+    /* chains: food and shops sharing a brand mark with three or more branches in this city collapse to one row */
+    var brandN={};arr.forEach(function(p){if(p.logo&&(p.cat==='food'||p.cat==='shopping'))brandN[p.logo]=(brandN[p.logo]||0)+1;});
+    var chains={},corder=[],rest=[];
+    arr.forEach(function(p){if(p.logo&&brandN[p.logo]>=3&&(p.cat==='food'||p.cat==='shopping')&&!p.prio&&!p.day){if(!chains[p.logo]){chains[p.logo]=[];corder.push(p.logo);}chains[p.logo].push(p);}else rest.push(p);});
+    if(corder.length&&!q){
+      var ch=document.createElement('div');ch.className='pl-hood';ch.innerHTML='<span>Chains, one row per brand</span><small>'+corder.length+'</small>';box.appendChild(ch);
+      corder.sort(function(a,b){return chains[b].length-chains[a].length;}).forEach(function(key){
+        var list2=chains[key],first=list2[0];
+        var nm=first.name.replace(/[,(].*$/,'').replace(/\s+(Shibuya|Shinjuku|Ginza|Ueno|Asakusa|Harajuku|Ikebukuro|Roppongi|Kichijoji|Kyoto|Osaka|Umeda|Namba|Dotonbori|Tennoji|Nagoya|Yokohama|Kobe|Hiroshima|Kanazawa|Tokyo)\b.*$/,'');
+        var row=document.createElement('button');row.type='button';row.className='chain-row';row.innerHTML='<span class="pin-mini" style="--c:'+cat(first).color+'">'+pinInner(first)+'</span><span class="nm"><b>'+esc(nm)+'</b><small>'+list2.length+' branches · '+esc(styleOf(first))+(list2.some(function(p){return p.pick;})?' · '+esc(pickLabel(list2.filter(function(p){return p.pick;})[0])):'')+'</small></span><span class="d">›</span>';
+        var wrap=document.createElement('div');wrap.className='chain-list';wrap.style.display='none';
+        list2.sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(p){wrap.appendChild(plRow(p));});
+        row.addEventListener('click',function(){var open=wrap.style.display==='none';wrap.style.display=open?'':'none';row.querySelector('.d').textContent=open?'⌄':'›';});
+        box.appendChild(row);box.appendChild(wrap);
+      });
+      arr=rest;
+    }
     var hoods={},order=[];
     arr.forEach(function(p){var hh=hoodOf(p)||'Around '+(AREAS[k].tab||AREAS[k].label);if(!hoods[hh]){hoods[hh]=[];order.push(hh);}hoods[hh].push(p);});
     order.sort(function(a,b){var ea=a.indexOf('Around ')===0,eb=b.indexOf('Around ')===0;if(ea!==eb)return ea?1:-1;return hoods[b].length-hoods[a].length||a.localeCompare(b);});
@@ -3919,6 +4067,18 @@ function wikiPhoto(p){
     if(u){p.ph=u;}else{p.phTried=Date.now();}
     persist();return u;
   }).catch(function(){delete photoBusy[p.id];return '';});
+}
+/* Photos: the phone asks Wikipedia for each sight that has none yet, one at a time, so the pages have pictures offline. */
+var photoRun=null;
+function photoQueue(){var order={landmark:0,shrine:0,nature:0,art:0,experience:1,hood:1,photo:1,anime:2,hotel:2,shopping:3,food:4,other:5};return state.places.filter(function(p){return !p.photo&&!p.ph&&!(p.phTried&&Date.now()-p.phTried<7*86400000)&&p.cat!=='other'&&!/^Poke Lid/.test(p.name);}).sort(function(a,b){return (order[a.cat]===undefined?6:order[a.cat])-(order[b.cat]===undefined?6:order[b.cat])||(b.pick?1:0)-(a.pick?1:0);});}
+function photoStatus(){var have=state.places.filter(function(p){return p.photo||p.ph;}).length;var el=$('#phStat');if(el)el.textContent=have+' of '+state.places.length+' places have a photo.'+(photoRun?' Looking up '+photoRun.done+' of '+photoRun.total+', found '+photoRun.found+'.':'');var b=$('#phRun');if(b)b.textContent=photoRun?'Stop':'Find photos for the rest';}
+function runPhotos(){
+  if(photoRun){photoRun.stop=true;photoRun=null;photoStatus();return;}
+  if(!navigator.onLine){toast('Needs the internet.');return;}
+  var q=photoQueue();if(!q.length){toast('Every place has been tried in the last week.');return;}
+  photoRun={total:q.length,done:0,found:0,stop:false};var run=photoRun;photoStatus();
+  (function next(){if(run.stop||!q.length){if(photoRun===run)photoRun=null;photoStatus();if(!run.stop)toast('Photos done: '+run.found+' found.');return;}
+    var p=q.shift();wikiPhoto(p).then(function(u){run.done++;if(u){run.found++;try{var im=new Image();im.src=u;}catch(e){}}photoStatus();setTimeout(next,1300);});})();
 }
 function commonsPage(u){var m=String(u||'').match(/\/commons\/(?:thumb\/)?[0-9a-f]\/[0-9a-f]{2}\/([^\/]+)/);return m?'https://commons.wikimedia.org/wiki/File:'+m[1]:'';}
 function openImageViewer(u,credit,title){
@@ -3963,6 +4123,12 @@ function openPlacePage(id,fromNav,opts){
   /* 4. status */
   var stat=(p.pick?'<span class="tag pick">♥ '+esc(pickLabel(p))+'</span>':'')+(p.mylist?'<span class="tag">📝 On our list</span>':'')+statusTags(p,{noPick:true});
   el('div','pp-status',stat);
+  if(p.visited){
+    var rt=el('div','pp-rate','<span class="k">How was it?</span><span class="stars"></span><button type="button" class="again">Would go again</button>');
+    var stars=rt.querySelector('.stars');
+    [1,2,3,4,5].forEach(function(n){var sb=document.createElement('button');sb.type='button';sb.textContent=(p.rating||0)>=n?'★':'☆';sb.setAttribute('aria-label',n+' of 5');sb.addEventListener('click',function(){p.rating=p.rating===n?0:n;persist();openPlacePage(id,true);});stars.appendChild(sb);});
+    var ag=rt.querySelector('.again');ag.classList.toggle('on',!!p.again);ag.textContent=p.again?'✓ Would go again':'Would go again';ag.addEventListener('click',function(){p.again=!p.again;persist();openPlacePage(id,true);});
+  }
   if(p.season){var sn=el('div','pp-season','<b>🍁 '+esc(p.season.label)+', '+esc(dayLabel(p.season.from,true))+' to '+esc(dayLabel(p.season.to,true))+'</b><span>'+esc(p.season.note)+'</span>'+(p.season.src?'<a href="'+esc(p.season.src)+'" target="_blank" rel="noopener">'+(p.season.ok?'Source':'Check the site')+'</a>':''));}
   var cl=closedLabel(p);
   if(cl&&((p.day&&closedOn(p,p.day))||closedOn(p,todayIso())))el('div','pp-alert',esc(p.day&&closedOn(p,p.day)?cl+'. It is planned for '+dayLabel(p.day,true)+', which is a closed day.':cl+'. Closed today.'));
@@ -3987,7 +4153,7 @@ function openPlacePage(id,fromNav,opts){
   if(r.book)ibtn('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',p.cat==='food'?'Book':'Tickets',false,null,r.book);
   ibtn(GLYPH.star,'Must do',!!p.prio,function(){p.prio=p.prio?0:1;persist();refreshMarker(p.id);renderList();openPlacePage(id,true);});
   ibtn('<path d="M5 12l5 5L20 7"/>','Visited',!!p.visited,function(){p.visited=!p.visited;if(p.visited)p.visitedAt=new Date().toISOString();persist();renderMarkers();renderList();openPlacePage(id,true);if(typeof renderRamen==='function')renderRamen();});
-  if(jp)ibtn('<path d="M4 6h10M9 4v2c0 5-2 8-5 10M6 10c2 3 4 5 8 6M13 20l4-9 4 9M14.5 17h5"/>','Japanese',false,function(){$('#bigJpText').textContent=jp;$('#bigJpEn').textContent=p.name;$('#bigSpk').dataset.text=jp;$('#bigJp').classList.add('on');});
+  if(jp)ibtn('<path d="M4 6h10M9 4v2c0 5-2 8-5 10M6 10c2 3 4 5 8 6M13 20l4-9 4 9M14.5 17h5"/>','Japanese',false,function(){showJpCard(p);});
   ibtn('<path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>','Map',false,function(){revealOnMap(id);});
   ibtn('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>','More',false,function(){moreBox.classList.toggle('on');planBox.classList.remove('on');});
   var planBox=el('div','pp-planbox'+(opts.plan?' on':''),'<div class="r"><label for="ppDay">Day</label><select id="ppDay"></select></div><div class="r"><label for="ppTime">Time</label><input id="ppTime" type="time"></div>');
@@ -3995,7 +4161,7 @@ function openPlacePage(id,fromNav,opts){
   if(p.closed&&p.closed.length){Array.from(sel.options).forEach(function(o){if(o.value&&closedOn(p,o.value))o.textContent+=' · closed';});}
   var tm=planBox.querySelector('#ppTime');tm.value=p.time||'';
   sel.addEventListener('change',function(){assignDay(p,this.value);openPlacePage(id,true,{plan:!!this.value});});
-  tm.addEventListener('change',function(){p.time=this.value||'';persist();renderDays();planBtn.innerHTML=planLabel();var sb=$('#ppBarPlan');if(sb)sb.innerHTML=planLabel();});
+  tm.addEventListener('change',function(){p.time=this.value||'';delete p.sugg;persist();renderDays();planBtn.innerHTML=planLabel();var sb=$('#ppBarPlan');if(sb)sb.innerHTML=planLabel();});
   var pnote=el('div','note','A day and time are a plan, not a booking. Bookings live under Trip.',planBox);pnote.style.margin='0 0 8px';
   var pbtns=el('div','btns','',planBox);
   if(p.day){var rm=document.createElement('button');rm.type='button';rm.className='btn small';rm.textContent='Remove from this day';rm.addEventListener('click',function(){assignDay(p,'');p.time='';persist();openPlacePage(id,true);});pbtns.appendChild(rm);}
@@ -4026,6 +4192,20 @@ function openPlacePage(id,fromNav,opts){
       }).catch(function(){wb.disabled=false;wb.textContent='Needs the internet';});
     });
     var gb=document.createElement('a');gb.className='btn';gb.target='_blank';gb.rel='noopener';gb.href='https://www.google.com/search?q='+encodeURIComponent(p.name+' '+(AREAS[p.area]||AREAS.other).label+' Japan');gb.textContent='Search Google';er.appendChild(gb);
+  }
+  /* to buy here */
+  var bh=buys().filter(function(x){return x.placeId===p.id;});
+  if(bh.length||['shopping','anime'].indexOf(p.cat)>-1){
+    if(bh.length){el('h3','ar-h','To buy here');var bx=el('div','ar-rows buy-here','');bh.forEach(function(x){bx.appendChild(buyRow(x,false));});}
+    var ba=el('button','linkadd','+ Add something to buy here');ba.type='button';ba.addEventListener('click',function(){$('#ramenPage').classList.remove('open');if(history.state&&history.state.v==='place')history.back();showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();setTimeout(function(){openBuyForm(null,p.id);},60);});
+  }
+  /* if it is full: three other food places close by, walk-ins first */
+  if(p.cat==='food'){
+    var LIGHT=/coffee|cafe|café|crepe|bakery|sweets|dessert|tea|matcha|pancake|ice cream|soft serve|juice|cola|candy|dagashi|donut|parfait|pudding|souffl/i;
+    function isLight(q){var st=((q.page||q.ramen||{}).style||'')+' '+q.name;return LIGHT.test(st)||/(?:☕|🍰|🥐|🍦|🍵|🧁|🍩|🥤|🍮|🥞|🍡)/.test(q.icon||'');}
+    var pl=isLight(p);
+    var fbs=state.places.filter(function(q){return q.id!==p.id&&q.cat==='food'&&!q.visited&&typeof q.lat==='number'&&isLight(q)===pl;}).map(function(q){var r2=q.page||q.ramen||{};return {q:q,d:distM([p.lat,p.lng],[q.lat,q.lng]),bk:!!r2.book};}).filter(function(x){return x.d<=600;}).sort(function(a,b){return (a.bk-b.bk)||((b.q.pick?1:0)-(a.q.pick?1:0))||a.d-b.d;}).slice(0,3);
+    if(fbs.length){el('h3','ar-h','If it is full');var fbx=el('div','ar-rows','');fbs.forEach(function(x){var q=x.q;var rr=document.createElement('button');rr.type='button';rr.className='stn-row';rr.innerHTML='<span class="pin-mini" style="--c:'+cat(q).color+'">'+pinInner(q)+'</span><span class="nm"><b>'+esc(q.name)+'</b><small>'+esc(styleOf(q))+(x.bk?' · takes bookings':' · walk in')+(q.pick?' · '+esc(pickLabel(q)):'')+'</small></span><span class="d">'+esc(fmtDist(x.d))+'</span>';rr.addEventListener('click',function(){openPlacePage(q.id);});fbx.appendChild(rr);});}
   }
   var ne=el('div','pp-notes-ed','<b>Our notes</b>');
   var ta=document.createElement('textarea');ta.id='ppNotes';ta.placeholder='What we want to do here, what to order, who recommended it.';ta.value=p.notes||'';ta.rows=1;ne.appendChild(ta);
@@ -4069,6 +4249,7 @@ var SEED_BOOKINGS=[
   {id:'bk-rc',type:'train',title:'Romancecar, Shinjuku to Hakone-Yumoto',date:'2026-11-15',end:'',time:'',ref:'',notes:'About 80 minutes. Seats go on sale at 10:00 Japan time one month before departure (15 October) on EMot Online Tickets. Limited express surcharge 1,200 yen per person on top of a base ticket or the 2-day Hakone Freepass (7,100 yen). Source: odakyu-global.com/passes/romancecar.',placeId:'',status:'pending'},
   {id:'bk-shink',type:'train',title:'Shinkansen, Odawara to Kyoto',date:'2026-11-17',end:'',time:'',ref:'',notes:'Tozan railway from Hakone-Yumoto to Odawara first, then a Hikari to Kyoto, about 2 hours. Reserve seats through smartEX or at the station; check the sale window on the JR Central site before relying on a date. Large suitcases need the oversized baggage seats or should be sent ahead.',placeId:'',status:'pending'},
   {id:'bk-kyo-osa',type:'train',title:'Kyoto to Osaka, JR Special Rapid',date:'2026-11-22',end:'',time:'',ref:'',notes:'About 30 minutes, trains every 15 minutes, no reservation. Tap in with Suica.',placeId:'',status:'free'},
+  {id:'bk-grutto',type:'ticket',title:'Tokyo Museum Grutto Pass 2026, two passes',date:'2026-11-10',end:'',time:'',ref:'80024-2026-0910-8100-0390-0005',notes:'Two QR passes at 2,500 yen, bought 10 September 2026 on webket.jp (purchase number is the reference). Issue the QR tickets from the confirmation email or My Page before the first museum; the pass then runs for two months from that first use, inside the 1 April 2026 to 31 March 2027 window. Show the QR at the entrance. Free entry at Rikugien, Hama-rikyu Gardens and the Sumida Hokusai Museum permanent collection among 107 places; a discount, not free entry, at the Tokyo National Museum and the Mori Art Museum. Source: rekibun.or.jp/grutto.',placeId:'',status:'confirmed'},
   {id:'bk-home',type:'flight',title:'Flight home',date:'2026-12-01',end:'',time:'',ref:'',notes:'Airport and time still to add. Add the booking details here.',placeId:'',status:'confirmed'}
 ];
 /* Booking status is its own field. Existing bookings without one keep evidence-based defaults: a reference or an attachment counts as confirmed, otherwise pending. Seeded bookings take the seed's value. */
@@ -4086,9 +4267,10 @@ function bookingStatus(p){var bs=bookingsForPlace(p).filter(function(b){return b
 function placeStatus(p){
   var out=[];
   if(p.prio)out.push({k:'must',t:'Must do'});
-  if(p.day)out.push({k:'planned',t:'Planned '+dayLabel(p.day)+(p.time?' '+p.time:'')});
+  if(p.day)out.push({k:'planned',t:(p.sugg?'Suggested ':'Planned ')+dayLabel(p.day)+(p.time?' '+p.time:'')});
   var bk=bookingStatus(p);if(bk)out.push({k:bk==='confirmed'?'confirmed':'pending',t:bk==='confirmed'?'Booked':'Booking pending'});
   if(p.visited)out.push({k:'visited',t:'Visited'});
+  if(p.pass)out.push({k:'pass',t:'🎟 '+p.pass.name+(p.pass.kind==='free'?', free entry':', discount')});
   if(p.season&&p.season.from<=TRIP_END&&p.season.to>=TRIP_START)out.push({k:'season',t:'🍁 '+p.season.label+', '+dayLabel(p.season.from)+' to '+dayLabel(p.season.to)+(p.season.ok?'':', unverified')});
   return out;
 }
@@ -4115,6 +4297,7 @@ var SEED_CHECKS=[
   ['c-esim','eSIM or pocket wifi ordered'],
   ['c-vjw','Visit Japan Web filled in, QR code screenshot saved'],
   ['c-teamlab','teamLab tickets saved as screenshots'],
+  ['c-grutto','Grutto Pass: issue the two QR tickets from the webket email or My Page before the first museum, then screenshot them'],
   ['c-shink','Shinkansen seats reserved, Odawara to Kyoto, 17 Nov'],
   ['c-lug1','Tokyo, by 13 Nov: ask Tokyu Stay reception to send the big suitcases ahead to the Kyoto hotel with Yamato (takkyubin), so Hakone is done with a day bag. Write the delivery date from the slip in the app.'],
   ['c-lug2','Kyoto, the day before 22 Nov: send the suitcases on to the Osaka hotel the same way, or carry them, it is a 30 minute train.'],
@@ -4155,6 +4338,8 @@ function renderJournal(){
   var box=$('#jrList');if(!box)return;box.innerHTML='';
   var j=journalGroups();
   if(!j.order.length){box.innerHTML='<div class="empty">Nothing visited yet. Mark a place as visited and it appears here.</div>';return;}
+  var best=state.places.filter(function(p){return p.visited&&(p.rating||p.again);}).sort(function(a,b){return (b.rating||0)-(a.rating||0)||(b.again?1:0)-(a.again?1:0)||a.name.localeCompare(b.name);}).slice(0,10);
+  if(best.length){var bw=document.createElement('div');bw.className='jr-day';bw.innerHTML='<h3>Best of the trip</h3>';best.forEach(function(p){var r=document.createElement('button');r.type='button';r.className='jr-row';r.innerHTML=pinHtml(p)+'<div><b>'+esc(p.name)+'</b><small>'+(p.rating?'★'.repeat(p.rating)+'☆'.repeat(5-p.rating):'')+(p.again?(p.rating?' · ':'')+'would go again':'')+'</small></div>';r.addEventListener('click',function(){openPlacePage(p.id);});bw.appendChild(r);});box.appendChild(bw);}
   var total=0;
   j.order.forEach(function(k){
     var wrap=document.createElement('div');wrap.className='jr-day';
@@ -4205,7 +4390,7 @@ var SEED_TODO=[
 ];
 function todos(){if(!state.todos)state.todos={};return state.todos;}
 function todoState(id){return todos()[id]||{};}
-function setTodo(id,st){todos()[id]=Object.assign({},todoState(id),st);persist();renderTodos();}
+function setTodo(id,st){todos()[id]=Object.assign({},todoState(id),st,{u:Date.now()});persist();renderTodos();if(typeof scheduleSyncPush==='function')scheduleSyncPush();}
 function todoDaysLeft(by){if(!by)return null;var a=todayIso().split('-'),b=by.split('-');var d1=Date.UTC(+a[0],+a[1]-1,+a[2]),d2=Date.UTC(+b[0],+b[1]-1,+b[2]);return Math.round((d2-d1)/86400000);}
 function renderTodos(){
   var box=$('#todoList');if(!box)return;box.innerHTML='';
@@ -4231,6 +4416,186 @@ function renderTodos(){
   var na=SEED_TODO.filter(function(t){return todoState(t.id).status==='na';});
   if(na.length){var u=document.createElement('button');u.type='button';u.className='linkadd';u.textContent=na.length+' hidden as not needed. Show';u.addEventListener('click',function(){na.forEach(function(t){setTodo(t.id,{status:''});});});box.appendChild(u);}
 }
+/* Calendar export: every dated booking and every planned stop with a time, in Japan time, with an alert an hour before timed items. */
+function icsText(){
+  function pad(n){return (n<10?'0':'')+n;}
+  function utc(iso,hm){var d=iso.split('-'),t=(hm||'00:00').split(':');var ms=Date.UTC(+d[0],+d[1]-1,+d[2],+t[0]-9,+t[1]);var x=new Date(ms);return x.getUTCFullYear()+pad(x.getUTCMonth()+1)+pad(x.getUTCDate())+'T'+pad(x.getUTCHours())+pad(x.getUTCMinutes())+'00Z';}
+  function dateOnly(iso){return iso.replace(/-/g,'');}
+  function nextDay(iso){var d=iso.split('-');var x=new Date(Date.UTC(+d[0],+d[1]-1,+d[2]+1));return x.getUTCFullYear()+pad(x.getUTCMonth()+1)+pad(x.getUTCDate());}
+  function esc2(t){return String(t||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');}
+  var out=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Japan 2026 map//EN','CALSCALE:GREGORIAN','X-WR-CALNAME:Japan 2026'];
+  var stamp=utc(todayIso(),'12:00');
+  bookings().forEach(function(b){
+    if(!b.date)return;
+    var pl=b.placeId?byId(b.placeId):null,loc=pl?(pl.name+(pl.addr?', '+pl.addr:'')):'';
+    out.push('BEGIN:VEVENT','UID:jm-'+b.id+'@japan2026','DTSTAMP:'+stamp);
+    if(b.type==='hotel'&&b.end){out.push('DTSTART;VALUE=DATE:'+dateOnly(b.date),'DTEND;VALUE=DATE:'+dateOnly(b.end));}
+    else if(b.time){out.push('DTSTART:'+utc(b.date,b.time),'DTEND:'+utc(b.date,(function(){var t=b.time.split(':');var m=+t[0]*60+ +t[1]+90;return pad(Math.floor(m/60)%24)+':'+pad(m%60);})()));}
+    else{out.push('DTSTART;VALUE=DATE:'+dateOnly(b.date),'DTEND;VALUE=DATE:'+nextDay(b.date));}
+    out.push('SUMMARY:'+esc2(b.title+(b.status==='pending'?' (not confirmed)':'')),'DESCRIPTION:'+esc2((b.ref?'Reference '+b.ref+'. ':'')+(b.notes||'')));
+    if(loc)out.push('LOCATION:'+esc2(loc));
+    if(pl)out.push('GEO:'+pl.lat+';'+pl.lng);
+    if(b.time)out.push('BEGIN:VALARM','TRIGGER:-PT60M','ACTION:DISPLAY','DESCRIPTION:'+esc2(b.title),'END:VALARM');
+    out.push('END:VEVENT');
+  });
+  state.places.forEach(function(p){
+    if(!p.day||!p.time)return;
+    var r=p.ramen||p.page||{},dur=durMinutes(r.dur)||60;var t=p.time.split(':');var m=+t[0]*60+ +t[1]+dur;
+    out.push('BEGIN:VEVENT','UID:jm-place-'+p.id+'@japan2026','DTSTAMP:'+stamp,'DTSTART:'+utc(p.day,p.time),'DTEND:'+utc(p.day,pad(Math.floor(m/60)%24)+':'+pad(m%60)),'SUMMARY:'+esc2((p.sugg?'Suggested: ':'')+p.name),'DESCRIPTION:'+esc2((r.style||'')+(p.notes?'. '+p.notes:'')),'LOCATION:'+esc2(p.name+(p.addr?', '+p.addr:'')),'GEO:'+p.lat+';'+p.lng,'END:VEVENT');
+  });
+  out.push('END:VCALENDAR');
+  return out.join('\r\n');
+}
+function exportIcs(){
+  var txt=icsText(),blob=new Blob([txt],{type:'text/calendar'});
+  var f=null;try{f=new File([blob],'japan-2026.ics',{type:'text/calendar'});}catch(e){}
+  if(f&&navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'Japan 2026 calendar'}).catch(function(){});return;}
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='japan-2026.ics';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+/* Essentials: taxi cards for the hotels, the insurance line, both kept with the trip so they sync. */
+function renderEssentials(){
+  var box=$('#taxiList');if(box){box.innerHTML='';
+    var seen={};bookings().filter(function(b){return b.type==='hotel';}).forEach(function(b){var p=b.placeId?byId(b.placeId):null;if(!p||seen[p.id])return;seen[p.id]=1;
+      var r=document.createElement('button');r.type='button';r.className='taxi-row';r.innerHTML='<span style="font-size:22px">🏨</span><div><b>'+esc(p.name)+'</b><small>'+esc(jaAddr(p)||'No Japanese address saved yet')+'</small><small>'+esc(dayLabel(b.date)+(b.end?' to '+dayLabel(b.end):''))+'</small></div>';
+      r.addEventListener('click',function(){showJpCard(p,'taxi');});box.appendChild(r);});
+    if(!box.children.length)box.innerHTML='<div class="note">No hotel bookings with a place yet.</div>';
+  }
+  var t=trip(),ip=$('#insPhone'),pol=$('#insPolicy'),ic=$('#insCall');if(!ip)return;
+  if(ip&&!ip.dataset.bound){ip.dataset.bound='1';
+    ip.addEventListener('change',function(){t=trip();t.ins=ip.value.trim();t._u=Date.now();persist();syncIns();});
+    pol.addEventListener('change',function(){t=trip();t.insPol=pol.value.trim();t._u=Date.now();persist();});}
+  function syncIns(){var v=(trip().ins||'').replace(/[^+0-9]/g,'');ic.href=v?'tel:'+v:'#';ic.style.opacity=v?1:.4;}
+  ip.value=t.ins||'';pol.value=t.insPol||'';syncIns();
+}
+function jaAddr(p){var a=(p.addr||'').replace(/\s*\(.*?\)\s*/g,'').trim();return /[぀-ヿ㐀-鿿]/.test(a)?a:'';}
+/* The big Japanese card, with the address for a taxi and a few phrases for a counter. */
+var JP_PHRASES={
+ taxi:[['この住所までお願いします。','To this address, please.'],['ここに行きたいです。','We would like to go here.'],['カードは使えますか？','Can we pay by card?']],
+ food:[['2人です。','Two people.'],['予約していません。','We do not have a reservation.'],['予約しています。','We have a reservation.'],['英語のメニューはありますか？','Do you have an English menu?'],['カードは使えますか？','Can we pay by card?']],
+ other:[['ここに行きたいです。','We would like to go here.'],['カードは使えますか？','Can we pay by card?']]
+};
+function showJpCard(p,kind){
+  var jp=jpOf(p)||p.name;kind=kind||(p.cat==='food'?'food':p.cat==='hotel'?'taxi':'other');
+  var c=$('#bigJp');$('#bigJpText').textContent=jp;$('#bigJpEn').textContent=p.name;$('#bigSpk').dataset.text=jp;
+  var ex=$('#bigJpExtra');if(!ex){ex=document.createElement('div');ex.id='bigJpExtra';ex.className='x2';c.insertBefore(ex,c.querySelector('.h'));}
+  var a=jaAddr(p),tel=(p.page||p.ramen||{}).tel||'';
+  ex.innerHTML=(a?'<div class="ad">'+esc(a)+'</div>':'')+(tel?'<div class="tel">☎ '+esc(tel)+'</div>':'')+'<div class="ph"></div>';
+  var ph=ex.querySelector('.ph');
+  (JP_PHRASES[kind]||JP_PHRASES.other).forEach(function(x){var b=document.createElement('button');b.type='button';b.innerHTML='<b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small>';b.addEventListener('click',function(e){e.stopPropagation();$('#bigJpText').textContent=x[0];$('#bigJpEn').textContent=x[1];$('#bigSpk').dataset.text=x[0];});ph.appendChild(b);});
+  c.classList.add('on');
+}
+/* To buy: things we want, where, and what they cost. Bought items can go straight into Spending. */
+var SEED_BUYS=[{"id":"b-porter","item":"PORTER FORCE shoulder bag","placeId":"tk-porter-omotesando","price":27500,"pnote":"27,500 to 39,600 yen depending on the model, at an authorised PORTER dealer, checked 1 Oct 2026.","src":"https://www.galleria-mall.jp/fs/galleria/c/porter-f_force","note":"From your TikTok. Store-only versions exist at the flagship."},{"id":"b-asics","item":"ASICS GEL-KAYANO 14","placeId":"tk-asics-harajuku","price":18700,"pnote":"ASICS Japan price, checked 1 Oct 2026.","src":"https://www.asics.com/jp/ja-jp/gel-kayano-14/p/1203A537-109.html","note":"Sizes are in centimetres; the store does a free foot scan."},{"id":"b-thermos","item":"Thermos pocket eco bag, 10 L (REX-010)","placeId":"tk-shibuya-loft","price":658,"pnote":"Reference price 658 yen; it was on sale online for 490 yen in January 2026.","src":"https://nlab.itmedia.co.jp/research/articles/3712941/","note":"Folds into a pocket. Handy for the supermarket runs."},{"id":"b-iorino","item":"IORINO Nagamochi face towel","placeId":"tk-iori-grand-front-osaka","price":1980,"pnote":"34 by 80 cm, IORI price, checked 1 Oct 2026.","src":"https://www.i-ori.jp/c/towels/gd3647","note":"Also Yawaraka and Sugusara. Light but bulky in the suitcase."},{"id":"b-ncool","item":"Nitori N-Cool pillow pad","placeId":"tk-nitori-shibuya","price":599,"pnote":"599 to 999 yen depending on the grade, Nitori price.","src":"https://www.nitori.co.jp/decohome/product/n_15.html","note":"A summer range, so November stock may be thin; ask staff."},{"id":"b-chili","item":"KALDI green garlic chilli oil, 120 g","placeId":"tk-kaldi-sakura-stage","price":550,"pnote":"KALDI price including tax; limit two per person.","src":"https://www.kaldi.co.jp/ec/pro/disp/1/4515996937644","note":"Sells out, so buy it when you see it. Oil goes in the checked suitcase, not hand luggage."},{"id":"b-knife","item":"Kitchen knife, engraved","placeId":"hayakawa-hamonoten","price":"","pnote":"","src":"","note":"Compare with Kama-Asa in Kappabashi. Checked luggage only."},{"id":"b-trousers","item":"GLOBAL WORK easy-care trousers","placeId":"tk-global-work-ginza","price":"","pnote":"","src":"","note":"Try them on; Japanese sizes run small."},{"id":"b-hanafuda","item":"Nintendo hanafuda cards","placeId":"nin-kyoto","price":"","pnote":"","src":"","note":"The product Nintendo started with, sold in its own stores."},{"id":"b-pikachu","item":"Kyoto-only Pikachu, maiko or Heian design","placeId":"pc-kyoto","price":"","pnote":"","src":"","note":""},{"id":"b-furoshiki","item":"Furoshiki wrapping cloth","placeId":"tl-musubi","price":"","pnote":"","src":"","note":"Closed Wednesdays."},{"id":"b-kitkat","item":"Regional KitKats and snacks","placeId":"donki-shibuya","price":"","pnote":"","src":"","note":"Open 24 hours, two minutes from the crossing."},{"id":"b-tableware","item":"Plates, bowls and sake cups","placeId":"tl-tousyougama-kappabashi","price":"","pnote":"","src":"","note":"Ask for wrapping for the flight."}];
+function buys(){if(!state.buys)state.buys=[];return state.buys;}
+function removedBuys(){if(!state.removedBuys)state.removedBuys=[];return state.removedBuys;}
+function mergeBuys(){var have={},gone={};buys().forEach(function(b){have[b.id]=1;});removedBuys().forEach(function(id){gone[id]=1;});SEED_BUYS.forEach(function(sb){if(!have[sb.id]&&!gone[sb.id])buys().push(Object.assign({who:'both',bought:false,paid:''},sb));});}
+var buyFilter='open',buyEditId=null;
+function buyPlace(b){return b.placeId?byId(b.placeId):null;}
+function buyArea(b){var p=buyPlace(b);return p?(AREAS[p.area]?p.area:'other'):'_any';}
+function yen(n){return Math.round(n).toLocaleString('en-US')+' yen';}
+function buySummary(){var open=buys().filter(function(b){return !b.bought;}),bought=buys().filter(function(b){return b.bought;});var est=open.reduce(function(a,b){return a+(+b.price||0);},0),spent=bought.reduce(function(a,b){return a+(+b.paid||+b.price||0);},0),unpriced=open.filter(function(b){return !(+b.price);}).length;return {open:open.length,bought:bought.length,est:est,spent:spent,unpriced:unpriced};}
+function buyRateVal(){var v=parseFloat(String(state.rate||'').replace(',','.'));return isNaN(v)||v<=0?null:v;}
+function fetchRate(done){
+  fetch('https://api.frankfurter.dev/v1/latest?from=JPY&to=DKK').then(function(x){return x.json();}).then(function(js){
+    var v=js&&js.rates&&js.rates.DKK;if(!v)throw new Error('no rate');
+    state.rate=(v*100).toFixed(3);state.rateDate=js.date||todayIso();persist();var cv=$('#cvRate');if(cv)cv.value=state.rate;if(done)done(true);
+  }).catch(function(){if(done)done(false);});
+}
+function numIn(el){var v=parseFloat(String(el.value).replace(/\s/g,'').replace(/,(?=\d{3}\b)/g,'').replace(',','.'));return isNaN(v)?null:v;}
+/* two linked boxes: typing yen fills kroner and the other way round, at the current rate */
+function linkPair(yEl,dEl){
+  function fromY(){var v=numIn(yEl),k=buyRateVal();dEl.value=(v===null||!k)?'':(v*k/100).toFixed(v*k/100<100?2:0);yEl.dataset.src='1';dEl.dataset.src='';}
+  function fromD(){var v=numIn(dEl),k=buyRateVal();yEl.value=(v===null||!k)?'':String(Math.round(v/k*100));dEl.dataset.src='1';yEl.dataset.src='';}
+  if(!yEl.dataset.linked){yEl.dataset.linked='1';yEl.addEventListener('input',fromY);dEl.addEventListener('input',fromD);}
+  return {fromY:fromY,fromD:fromD};
+}
+function showBuyRate(){
+  var el=$('#byRate'),k=buyRateVal();
+  el.innerHTML=k?'100 yen = '+esc(String(+k.toFixed(3)))+' DKK'+(state.rateDate?', rate from '+esc(state.rateDate):'')+' · <button type="button" class="lnk" id="byRateUp">Update</button>':'No exchange rate yet, so only one currency can be filled. <button type="button" class="lnk" id="byRateUp">Get today\'s rate</button>';
+  $('#byRateUp').addEventListener('click',function(){el.textContent='Fetching the rate';fetchRate(function(ok){showBuyRate();renderBuys();if(!ok)toast('Could not fetch the rate. Type it under Spending.');else{var y=$('#byPrice'),d=$('#byPriceDkk');if(d.dataset.src&&d.value)linkPair(y,d).fromD();else if(y.value)linkPair(y,d).fromY();}});});
+  $('#byPriceDkk').disabled=!k;$('#byPaidDkk').disabled=!k;
+}
+function setBuyWhere(id,text){
+  $('#byWhere').value=id||'';var sel=$('#byWhereSel'),q=$('#byWhereQ'),p=id?byId(id):null;
+  if(p){sel.innerHTML='<span class="chip-sel">📍 '+esc(p.name)+(hoodOf(p)?', '+esc(hoodOf(p)):'')+' <button type="button" aria-label="Clear">×</button></span>';q.value='';q.style.display='none';}
+  else if(text){sel.innerHTML='<span class="chip-sel">'+esc(text)+' <small>not on the map</small> <button type="button" aria-label="Clear">×</button></span>';q.value=text;q.style.display='none';}
+  else{sel.innerHTML='';q.style.display='';if(!text)q.value='';}
+  var x=sel.querySelector('button');if(x)x.addEventListener('click',function(){$('#byWhere').value='';$('#byWhereQ').dataset.free='';setBuyWhere('','');$('#byWhereQ').focus();});
+  $('#byWhereRes').innerHTML='';$('#byWhereQ').dataset.free=p?'':(text||'');
+}
+function searchBuyWhere(){
+  var raw=$('#byWhereQ').value.trim(),q=normTxt(raw),box=$('#byWhereRes');box.innerHTML='';
+  if(!q){return;}
+  var hits=state.places.filter(function(p){return normTxt(p.name+' '+(p.jp||'')+' '+(hoodOf(p)||'')).indexOf(q)>-1;}).sort(function(a,b){var sa=['shopping','anime','food'].indexOf(a.cat)>-1?0:1,sb=['shopping','anime','food'].indexOf(b.cat)>-1?0:1;return sa-sb||a.name.length-b.name.length;}).slice(0,7);
+  hits.forEach(function(p){var b=document.createElement('button');b.type='button';b.innerHTML='<b>'+esc(p.name)+'</b><small>'+esc(((AREAS[p.area]||AREAS.other).tab||(AREAS[p.area]||AREAS.other).label).split(',')[0]+(hoodOf(p)?', '+hoodOf(p):''))+'</small>';b.addEventListener('click',function(){setBuyWhere(p.id,'');});box.appendChild(b);});
+  var f=document.createElement('button');f.type='button';f.className='free';f.innerHTML='<b>Use “'+esc(raw)+'”</b><small>a shop that is not on our map</small>';f.addEventListener('click',function(){setBuyWhere('',raw);});box.appendChild(f);
+}
+function setBought(b,on,paid){
+  b.bought=!!on;
+  if(on){b.paid=paid!==undefined?paid:(b.paid||b.price||'');if(paid===undefined&&!b.paidCur&&b.cur==='dkk'){b.paidCur='dkk';b.paidAmt=b.amt;}b.boughtAt=todayIso();var amt=parseInt(String(b.paid).replace(/[^0-9]/g,''),10);if(amt&&!b.expId){var e={id:uid(),date:todayIso(),amount:amt,cat:'shopping',note:b.item,placeId:b.placeId||''};expenses().unshift(e);b.expId=e.id;toast('Bought. '+yen(amt)+' added to Spending.');}else toast('Marked as bought.');}
+  else{if(b.expId){state.expenses=expenses().filter(function(e){return e.id!==b.expId;});delete b.expId;}delete b.boughtAt;}
+  persist();renderBuys();if(typeof renderExpenses==='function')renderExpenses();if(rmPageId&&$('#ramenPage').classList.contains('open'))openPlacePage(rmPageId,true);
+}
+function renderBuys(){
+  var box=$('#buyList');if(!box)return;box.innerHTML='';
+  var sm=buySummary(),dk=spentDkk(sm.est);
+  $('#buySum').innerHTML='<b>'+sm.open+' to buy</b>'+(sm.est?', about '+esc(yen(sm.est))+(dk?' ('+esc(dk.replace('≈ ','about '))+')':''):'')+(sm.unpriced?', '+sm.unpriced+' without a price':'')+(sm.bought?'. <b>'+sm.bought+' bought</b>'+(sm.spent?' for '+esc(yen(sm.spent)):''):'')+'.';
+  document.querySelectorAll('#buySeg button').forEach(function(x){x.classList.toggle('on',x.dataset.f===buyFilter);});
+  var list=buys().filter(function(b){return buyFilter==='all'||(buyFilter==='open'?!b.bought:b.bought);});
+  if(!list.length){box.innerHTML='<div class="empty">'+(buyFilter==='bought'?'Nothing bought yet.':'Nothing on the list.')+'</div>';return;}
+  var groups={};list.forEach(function(b){var k=buyArea(b);(groups[k]=groups[k]||[]).push(b);});
+  AREA_ORDER.concat(['other','_any']).forEach(function(k){var arr=groups[k];if(!arr)return;delete groups[k];
+    var h=document.createElement('div');h.className='pl-hood';h.innerHTML='<span>'+(k==='_any'?'Anywhere or other shops':esc(((AREAS[k]||AREAS.other).tab||(AREAS[k]||AREAS.other).label).split(',')[0]))+'</span><small>'+arr.length+'</small>';box.appendChild(h);
+    arr.sort(function(a,c){var pa=buyPlace(a),pc=buyPlace(c);return ((pa&&hoodOf(pa))||'zz').localeCompare((pc&&hoodOf(pc))||'zz')||((pa&&pa.name)||'').localeCompare((pc&&pc.name)||'');}).forEach(function(b){box.appendChild(buyRow(b,true));});
+  });
+}
+function buyRow(b,showWhere){
+  var p=buyPlace(b),r=document.createElement('div');r.className='buy-row'+(b.bought?' done':'');
+  var useP=b.bought&&b.paid,yv=useP?+b.paid:+b.price,isD=useP?b.paidCur==='dkk':b.cur==='dkk',dAmt=useP?b.paidAmt:b.amt;
+  var price='',dk='';
+  if(isD&&dAmt!==undefined&&dAmt!==''){price=(+dAmt).toLocaleString('en-US')+' DKK';dk=yv?'≈ '+yen(yv):'';}
+  else if(yv){price=(!useP&&b.pnote&&/ to /.test(b.pnote)?'from ':'')+yen(yv);dk=spentDkk(yv);}
+  r.innerHTML='<input type="checkbox" aria-label="Bought"'+(b.bought?' checked':'')+'><button type="button" class="bt"><b>'+esc(b.item)+'</b><small>'+(showWhere?esc(p?p.name+(hoodOf(p)?', '+hoodOf(p):''):(b.where?b.where+', not on the map':'Anywhere')):'')+'</small>'+(b.note?'<small class="nt">'+esc(b.note)+'</small>':'')+'</button><span class="pr">'+(price?'<b>'+esc(price)+'</b>':'<i>no price</i>')+(dk?'<small>'+esc(dk)+'</small>':'')+'</span>';
+  r.querySelector('input').addEventListener('change',function(){setBought(b,this.checked);});
+  r.querySelector('.bt').addEventListener('click',function(){openBuyForm(b.id);});
+  return r;
+}
+function openBuyForm(id,presetPlace){
+  var f=$('#buyForm');buyEditId=id||null;var b=id?buys().filter(function(x){return x.id===id;})[0]:null;
+  $('#byTitle').textContent=b?'Edit':'Add something to buy';
+  $('#byItem').value=b?b.item:'';
+  setBuyWhere(b?b.placeId:(presetPlace||''),b&&!b.placeId?(b.where||''):'');
+  var py=$('#byPrice'),pd=$('#byPriceDkk'),ay=$('#byPaid'),ad=$('#byPaidDkk');
+  var lp=linkPair(py,pd),la=linkPair(ay,ad);
+  py.value='';pd.value='';ay.value='';ad.value='';py.dataset.src='';pd.dataset.src='';ay.dataset.src='';ad.dataset.src='';
+  if(b){
+    if(b.cur==='dkk'&&b.amt!==undefined&&b.amt!==''){pd.value=b.amt;lp.fromD();}else if(b.price!==''&&b.price!==undefined){py.value=b.price;lp.fromY();}
+    if(b.paid){if(b.paidCur==='dkk'&&b.paidAmt){ad.value=b.paidAmt;la.fromD();}else{ay.value=b.paid;la.fromY();}}
+  }
+  $('#byWho').value=b?(b.who||'both'):'both';$('#byNote').value=b?(b.note||''):'';
+  $('#byPaidWrap').style.display=b&&b.bought?'':'none';$('#byDel').style.display=b?'':'none';
+  $('#byInfo').innerHTML=b&&b.pnote?esc(b.pnote)+(b.src?' <a href="'+esc(b.src)+'" target="_blank" rel="noopener">Source</a>':''):'';
+  showBuyRate();
+  f.classList.add('open');setTimeout(function(){try{f.scrollIntoView({block:'start'});}catch(e){}if(!b)$('#byItem').focus();},30);
+  if(!buyRateVal()&&navigator.onLine)fetchRate(function(ok){if(ok){renderBuys();if(f.classList.contains('open'))showBuyRate();}});
+}
+function saveBuyForm(){
+  var item=$('#byItem').value.trim();if(!item){toast('Name the thing to buy.');$('#byItem').focus();return;}
+  var pl=$('#byWhere').value,free=pl?'':(($('#byWhereQ').dataset.free||$('#byWhereQ').value||'').trim());
+  var py=$('#byPrice'),pd=$('#byPriceDkk'),ay=$('#byPaid'),ad=$('#byPaidDkk');
+  var yv=numIn(py),dv=numIn(pd),ayv=numIn(ay),adv=numIn(ad),k=buyRateVal();
+  var b=buyEditId?buys().filter(function(x){return x.id===buyEditId;})[0]:null;
+  if(!b){b={id:'bu-'+uid(),bought:false};buys().unshift(b);}
+  var oldPrice=String(b.price||''),cur=pd.dataset.src&&dv!==null?'dkk':'yen';
+  if(cur==='dkk'){b.cur='dkk';b.amt=dv;b.price=k?Math.round(dv/k*100):'';}else{b.cur='yen';delete b.amt;b.price=yv!==null?Math.round(yv):'';}
+  if(String(b.price||'')!==oldPrice){b.pnote='';b.src='';}
+  b.item=item;b.placeId=pl;b.where=free;b.who=$('#byWho').value;b.note=$('#byNote').value.trim();
+  if(b.bought){var pc=ad.dataset.src&&adv!==null?'dkk':'yen';if(pc==='dkk'){b.paidCur='dkk';b.paidAmt=adv;b.paid=k?Math.round(adv/k*100):'';}else{b.paidCur='yen';delete b.paidAmt;b.paid=ayv!==null?Math.round(ayv):'';}
+    if(b.expId){var e=expenses().filter(function(x){return x.id===b.expId;})[0];if(e&&b.paid)e.amount=b.paid;}}
+  $('#buyForm').classList.remove('open');buyEditId=null;persist();renderBuys();if(typeof renderExpenses==='function')renderExpenses();
+  toast(b.price?item+' saved, '+yen(b.price)+(spentDkk(b.price)?' '+spentDkk(b.price):''):item+' saved');
+}
+function deleteBuy(){if(!buyEditId)return;var b=buys().filter(function(x){return x.id===buyEditId;})[0];if(!b)return;if(b.expId)state.expenses=expenses().filter(function(e){return e.id!==b.expId;});if(SEED_BUYS.some(function(x){return x.id===b.id;}))removedBuys().push(b.id);state.buys=buys().filter(function(x){return x.id!==b.id;});$('#buyForm').classList.remove('open');buyEditId=null;persist();renderBuys();toast('Removed from the list.');}
 function bkCard(b,compact){
   var el=document.createElement('button');el.type='button';el.className='bk-card';
   var sub=[];
@@ -4476,7 +4841,7 @@ function createTrip(){
     var t={id:id,name:name,travellers:$('#nWho').value.trim(),start:start,end:end,pack:$('#nPack').checked?'japan':'',tz:'',segments:[{from:start,to:end,label:found.filter(Boolean).map(function(c){return c.label;}).join(', ')||name,city:found.filter(Boolean).length===1?found.filter(Boolean)[0].key:''}],cities:found.filter(Boolean),_u:Date.now()};
     var fresh={places:[],tips:Object.assign({},SEED_TIPS),hidden:[],library:[],removedSeeds:[],guides:[],checks:[],bookings:[],expenses:[],trip:t,gone:{},photoSplit:1,closedSeeded:1,expMigrated:1};
     if(t.pack==='japan'){fresh.places=SEED_PLACES.map(function(p){var np=Object.assign({visited:false},p);if(SEED_CLOSED[p.id])np.closed=SEED_CLOSED[p.id].slice();return np;});fresh.removedSeeds=[];}
-    else{fresh.removedSeeds=SEED_PLACES.map(function(p){return p.id;});fresh.removedBookings=SEED_BOOKINGS.map(function(b){return b.id;});fresh.removedChecks=[];}
+    else{fresh.removedSeeds=SEED_PLACES.map(function(p){return p.id;});fresh.removedBookings=SEED_BOOKINGS.map(function(b){return b.id;});fresh.removedBuys=SEED_BUYS.map(function(b){return b.id;});fresh.removedChecks=[];}
     var key='jm:trip:'+id;
     return idbSet(key,JSON.stringify(fresh)).catch(function(){try{window.localStorage.setItem(key,JSON.stringify(fresh));}catch(e){}}).then(function(){
       var ix=tripsIndex();ix.list.push({id:id,name:name,start:start,end:end});ix.active=id;saveTripsIndex(ix);location.reload();
@@ -4537,7 +4902,7 @@ function shareLocation(){
   },function(){toast('Location not available here.');},{enableHighAccuracy:true,timeout:12000});
 }
 function bindWho(){
-  $('#shareLoc').addEventListener('click',shareLocation);
+  if($('#shareLoc'))$('#shareLoc').addEventListener('click',shareLocation);
   $('#whoSeg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;whoFilter=b.dataset.who;document.querySelectorAll('#whoSeg button').forEach(function(x){x.classList.toggle('on',x===b);});if(whoFilter!=='all')$('#chkWho').value=whoFilter;renderChecks();});
 }
 var errShown=false;
@@ -4603,7 +4968,7 @@ function bindTools(){
     }).catch(function(){$('#cvNote').textContent='Could not fetch the rate here. Type it from a bank app instead.';});
   });
   note();
-  rate.addEventListener('input',function(){state.rate=rate.value;state.rateDate='';persist();note();if(yen.value)yen.dispatchEvent(new Event('input'));});
+  rate.addEventListener('input',function(){state.rate=rate.value;state.rateDate='';persist();note();if(yen.value)yen.dispatchEvent(new Event('input'));if($('#buyForm')&&$('#buyForm').classList.contains('open'))showBuyRate();renderBuys();});
   yen.addEventListener('input',function(){var v=parseFloat(String(yen.value).replace(',','.')),k=r();dkk.value=(isNaN(v)||!k)?'':(v*k/100).toFixed(2);});
   dkk.addEventListener('input',function(){var v=parseFloat(String(dkk.value).replace(',','.')),k=r();yen.value=(isNaN(v)||!k)?'':Math.round(v/k*100);});
 }
@@ -4857,7 +5222,7 @@ function fillDaySelect(sel){
 }
 function assignDay(p,iso){
   var prev=p.day||'';
-  p.day=iso;
+  p.day=iso;delete p.sugg;
   if(iso&&iso!==prev){ var mx=-1; dayPlaces(iso).forEach(function(q){ if(q.id!==p.id&&(q.order||0)>mx)mx=q.order||0; }); p.order=mx+1; }
   persist();renderList();renderDays();updateNextUp();
   if(activeDay)setDay(activeDay,false); else renderMarkers();
@@ -4938,16 +5303,25 @@ function wxLine(iso){
 function updateNextUp(){
   var el=$('#nextUp');if(!el)return;
   var today=todayIso();
-  if(today<TRIP_START||today>TRIP_END){el.classList.remove('on');return;}
-  var hm=nowHMTz();
+  if(today<TRIP_START||today>TRIP_END||state.todayHidden===today){el.classList.remove('on');el.innerHTML='';return;}
+  var hm=nowHMTz(),list=dayPlaces(today);
   var items=[];
-  dayPlaces(today).forEach(function(p){if(!p.visited)items.push({t:p.time||'',label:p.name,kind:'stop'});});
-  bookingsForDay(today).forEach(function(b){if(b.type!=='hotel')items.push({t:b.time||'',label:b.title,kind:'booking'});});
+  list.forEach(function(p){if(!p.visited)items.push({t:p.time||'',label:p.name,p:p,kind:'stop'});});
+  bookingsForDay(today).forEach(function(b){if(b.type==='hotel')return;var p=b.placeId?byId(b.placeId):null;if(p&&p.visited)return;if(p&&items.some(function(x){return x.p===p;})){items.forEach(function(x){if(x.p===p){x.booked=b.status==='confirmed';if(!x.t)x.t=b.time||'';}});return;}items.push({t:b.time||'',label:b.title,p:p,kind:'booking',booked:b.status==='confirmed'});});
   var timed=items.filter(function(x){return x.t&&x.t>=hm;}).sort(function(a,b){return a.t<b.t?-1:1;});
-  var pick=timed[0]||items.filter(function(x){return !x.t;})[0];
-  if(!pick){el.classList.remove('on');return;}
-  el.textContent='Next up: '+(pick.t?pick.t+' ':'')+pick.label;
+  var pick=timed[0]||items.filter(function(x){return !x.t;})[0]||null;
+  var done=list.filter(function(p){return p.visited;}).length;
+  var hotel=hotelForNight(today),k=wxAreaFor(today),c=k?AREAS[k].center:null,sun=c?sunTimes(today,c[0],c[1]):null;
+  var dist=pick&&pick.p&&userPos?fmtDist(distM(userPos,[pick.p.lat,pick.p.lng])):'';
+  el.innerHTML='<div class="tc-h"><b>Today, '+esc(dayLabel(today,true))+'</b><span>'+esc(dayHint(today))+(list.length?' · '+done+' of '+list.length+' done':'')+'</span><button type="button" class="tc-x" aria-label="Hide for today">×</button></div>'
+    +(pick?'<div class="tc-n"><span class="t">'+esc(pick.t||'Next')+'</span><b>'+esc(pick.label)+'</b>'+(pick.booked?'<span class="bst ok">✓ Booked</span>':'')+(dist?'<small>'+esc(dist)+'</small>':'')+'</div>':'<div class="tc-n"><b>'+(list.length?'All planned stops done.':'Nothing planned today.')+'</b></div>')
+    +'<div class="tc-m">'+(hotel?'Sleeping: '+esc(hotel.title):'No hotel saved for tonight')+(sun?' · sunset '+sun.set:'')+'</div>'
+    +'<div class="tc-b">'+(pick&&pick.p?'<a class="btn small primary" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+pick.p.lat+','+pick.p.lng+'&travelmode=transit">Directions</a><button type="button" class="btn small" data-a="done">Done here</button>':'')+'<button type="button" class="btn small" data-a="now">What now?</button><button type="button" class="btn small" data-a="plan">Plan ›</button></div>';
   el.classList.add('on');
+  el.querySelector('.tc-x').addEventListener('click',function(){state.todayHidden=today;persist();updateNextUp();});
+  var dn=el.querySelector('[data-a=done]');if(dn)dn.addEventListener('click',function(){var p=pick.p;p.visited=true;p.visitedAt=new Date().toISOString();delete p.sugg;persist();renderMarkers();renderList();renderDays();updateNextUp();toast(p.name+' marked visited. Rate it on its page.');});
+  el.querySelector('[data-a=now]').addEventListener('click',function(){$('#nowBtn').click();});
+  el.querySelector('[data-a=plan]').addEventListener('click',function(){expandedDay=today;showPage('days');});
 }
 function updateDayBarWx(){
   var el=$('#dayWx');if(!el)return;
@@ -4986,6 +5360,66 @@ function nearbyUnplanned(anchors,max){
   out.sort(function(a,b){return ((b.p.prio?2:0)+(b.p.pick?1:0))-((a.p.prio?2:0)+(a.p.pick?1:0))||a.d-b.d;});
   return out.slice(0,max||5);
 }
+/* A draft itinerary: one area cluster per day around the fixed tickets and hotels. Suggestions carry a flag until you keep, move or retime them. */
+var SEED_PLAN=[["2026-11-10",[["shibuya","18:30"],["ram-ichiran","19:30"]]],["2026-11-11",[["meiji","09:00"],["takeshita","10:30"],["tl-kiddy-land-harajuku","11:15"],["lp-marion-crepes-harajuku","12:00"],["nezumuseum","13:30"],["tl-miyashita-park","15:00"],["shibuyasky","16:00"],["nin-tokyo","17:45"],["pc-shibuya","18:15"]]],["2026-11-12",[["tsukiji","08:30"],["hamarikyu","10:00"],["ginza","11:15"],["gundam-odaiba","15:30"],["op-odaiba","16:15"]]],["2026-11-13",[["sensoji","08:30"],["tl-nakamise-dori","09:30"],["kappabashi","10:30"],["lp-benitsuru-asakusa","12:00"],["skytree","14:00"],["pc-skytree","15:30"],["akiba","17:30"]]],["2026-11-14",[["borderless","10:00"],["zojoji","12:45"],["tokyotower","13:30"],["gyoen","15:00"],["tocho","16:15"],["omoide","18:00"],["goldengai","20:00"]]],["2026-11-15",[["yumoto","11:30"],["openair","13:00"],["gorapark","15:30"]]],["2026-11-16",[["owakudani","10:30"],["togendai","11:45"],["ashi","12:45"],["motohakone","14:00"],["sekisho","14:30"]]],["2026-11-17",[["kyototower","14:30"],["nishiki","15:15"],["hayakawa-hamonoten","16:00"],["pontocho","18:30"]]],["2026-11-18",[["kodaiji","08:30"],["yasaka","10:00"],["gion","10:45"],["chionin","12:30"],["nin-kyoto","15:30"],["pc-kyoto","16:15"]]],["2026-11-19",[["fushimi","07:30"],["tofukuji","10:00"],["byodoin","12:00"]]],["2026-11-20",[["kinkakuji","09:00"],["ryoanji","10:15"],["nijo","15:00"],["lp-blue-bottle-kyoto-kiyamachi","17:00"]]],["2026-11-21",[["arashiyama","08:00"],["togetsukyo","09:15"],["torokko","10:30"],["nanzenji","13:30"],["eikando","14:30"],["philosopher","15:30"],["ginkakuji","16:15"],["kiyomizu","19:00"]]],["2026-11-22",[["dotonbori","14:00"],["kuromon","15:00"],["pc-osakadx","16:30"],["ich-dotonbori","19:00"]]],["2026-11-23",[["osakacastle","09:00"],["nin-osaka","13:00"],["pc-osaka","13:45"],["umeda","16:00"]]],["2026-11-24",[["usj","08:30"],["nintendo-world","09:30"]]],["2026-11-25",[["todaiji","09:00"],["nara","10:30"],["kasuga","11:30"],["naramachi","14:00"],["kofukuji","15:30"]]],["2026-11-26",[["shitennoji","10:00"],["tsutenkaku","12:00"],["harukas","16:00"]]],["2026-11-27",[["kb-kitano","10:00"],["kb-nunobiki","12:00"],["kb-beef","14:00"],["kb-harborland","16:00"]]],["2026-11-28",[["hr-peace","09:30"],["hr-okonomi","12:00"],["hr-miyajima","14:30"]]],["2026-11-29",[["amerika","11:00"],["lp-truffle-bakery-namba","13:00"],["kaiyukan","15:00"]]],["2026-11-30",[["osaka-housing","10:00"]]]];
+function suggestPlan(){
+  var added=0,skipped=0;
+  SEED_PLAN.forEach(function(day){
+    var d=day[0];if(d<TRIP_START||d>TRIP_END)return;
+    var order=dayPlaces(d).length;
+    day[1].forEach(function(x){
+      var p=byId(x[0]);if(!p)return;
+      if(p.day){skipped++;return;}
+      p.day=d;p.time=x[1]||'';p.order=order++;p.sugg=1;added++;
+    });
+  });
+  persist();renderList();renderDays();updateNextUp();
+  toast(added?added+' suggested stops added across the trip. Keep, move or remove them day by day.':'Nothing to add: every suggested place already has a day.');
+}
+function clearSuggestions(){
+  var n=0;state.places.forEach(function(p){if(p.sugg){p.day='';p.time='';delete p.sugg;n++;}});
+  persist();renderList();renderDays();updateNextUp();toast(n?n+' suggestions removed. Your own stops stayed.':'No suggestions to remove.');
+}
+function keepSuggestion(p){delete p.sugg;persist();renderDays();}
+function suggCount(){return state.places.filter(function(p){return p.sugg&&p.day;}).length;}
+/* Rough time budget for a day: the stored durations of the stops against the daylight. Distances stay straight line and are never turned into minutes. */
+function durMinutes(txt){
+  if(!txt)return null;var t=txt.toLowerCase(),m;
+  if(/full day/.test(t))return 480;if(/half a day/.test(t))return 240;
+  if((m=t.match(/(\d+(?:\.\d+)?)\s*to\s*(\d+(?:\.\d+)?)\s*hours?/)))return Math.round((+m[1]+ +m[2])/2*60);
+  if((m=t.match(/(\d+(?:\.\d+)?)\s*hours?/)))return Math.round(+m[1]*60);
+  if((m=t.match(/(\d+)\s*to\s*(\d+)\s*minutes?/)))return Math.round((+m[1]+ +m[2])/2);
+  if((m=t.match(/(\d+)\s*minutes?/)))return +m[1];
+  return null;
+}
+function dayLoad(iso,list){
+  var mins=0,unknown=0;list.forEach(function(p){var r=p.ramen||p.page||{};var d=durMinutes(r.dur);if(d===null)unknown++;else mins+=d;});
+  var k=wxAreaFor(iso),c=k?AREAS[k].center:null,sun=c?sunTimes(iso,c[0],c[1]):null,day=null;
+  if(sun){var a=sun.rise.split(':'),b=sun.set.split(':');day=(+b[0]*60+ +b[1])-(+a[0]*60+ +a[1]);}
+  var km=0;for(var i=1;i<list.length;i++)km+=legDist(list[i-1],list[i]);
+  return {mins:mins,unknown:unknown,day:day,sun:sun,km:km};
+}
+function fmtH(m){var h=Math.floor(m/60),mm=Math.round(m%60);return h?(h+' h'+(mm?' '+(mm<10?'0':'')+mm:'')):mm+' min';}
+/* Arrive-by hints from the "best time" note of a place, only when a planned time contradicts it. */
+function arriveHint(p,iso){
+  var r=p.ramen||p.page||{};if(!p.time||!r.best)return '';
+  var b=r.best.toLowerCase(),m,t=p.time;
+  function hm(h,mi){return (h<10?'0':'')+h+':'+(mi||'00');}
+  if((m=b.match(/before (\d{1,2})(?::(\d{2}))?/))){var lim=hm(+m[1],m[2]);if(t>lim)return 'Their note says before '+lim+'; planned '+t+'.';}
+  if((m=b.match(/after (\d{1,2})(?::(\d{2}))?/))&&!/before/.test(b)){var lim2=hm(+m[1],m[2]);if(t<lim2)return 'Their note says after '+lim2+'; planned '+t+'.';}
+  if(/at opening|when it opens|first slot/.test(b)&&t>'10:00')return 'Best at opening; planned '+t+'.';
+  if(/sunset/.test(b)){var k=wxAreaFor(iso),c=k?AREAS[k].center:null,sun=c?sunTimes(iso,c[0],c[1]):null;if(sun){var st=sun.set.split(':'),pt=t.split(':'),diff=(+pt[0]*60+ +pt[1])-(+st[0]*60+ +st[1]);if(diff<-100||diff>30)return 'Best around sunset ('+sun.set+'); planned '+t+'.';}}
+  return '';
+}
+/* Rain plan: indoor saved places near the day, open on that weekday. Opens by itself when the forecast says rain. */
+var INDOOR_LANDMARK={skytree:1,tokyotower:1,tocho:1,kyototower:1,harukas:1,umeda:1,marunouchi:1};
+var OUTDOOR_EXP={usj:1,'nintendo-world':1,torokko:1};
+function isIndoor(p){if(p.indoor!==undefined)return !!p.indoor;if(['art','anime','shopping','food'].indexOf(p.cat)>-1)return true;if(p.cat==='experience')return !OUTDOOR_EXP[p.id];if(p.cat==='landmark')return !!INDOOR_LANDMARK[p.id];return false;}
+function rainPlan(iso,list,anchors){
+  var out=state.places.filter(function(p){return !p.day&&!p.visited&&isIndoor(p)&&p.cat!=='food'&&!closedOn(p,iso)&&typeof p.lat==='number';}).map(function(p){var d=1e9;anchors.forEach(function(a){d=Math.min(d,distM([a.lat,a.lng],[p.lat,p.lng]));});return {p:p,d:d};}).filter(function(x){return x.d<=1500;}).sort(function(a,b){var pa=(a.p.prio?-400:0)+(a.p.pick?-200:0),pb=(b.p.prio?-400:0)+(b.p.pick?-200:0);return (a.d+pa)-(b.d+pb);}).slice(0,6);
+  var outdoor=list.filter(function(p){return !isIndoor(p);});
+  return {alts:out,outdoor:outdoor};
+}
 function renderDays(){
   var box=$('#dayList');box.innerHTML='';var t=todayIso();
   var days=tripDays();
@@ -5009,6 +5443,7 @@ function renderDays(){
   card.innerHTML='<div class="dc-h"><b>'+esc(dayLabel(d,true))+(d===t?' · Today':'')+'</b><span>'+esc(dayHint(d))+'</span></div>'
     +(wxd?'<div class="dc-r"><span class="k">Weather</span><span>'+esc(WX_ICON(wxd.code))+' '+wxd.hi+'° / '+wxd.lo+'°'+(wxd.rain>=40?', '+wxd.rain+'% rain':'')+' <small>Open-Meteo forecast</small></span></div>':'')
     +'<div class="dc-r"><span class="k">Sleeping</span><span>'+(hotel?'<button type="button" class="lnk" data-bk="'+esc(hotel.id)+'">'+esc(hotel.title)+'</button> <span class="bst '+(hotel.status==='confirmed'?'ok':'pend')+'">'+(hotel.status==='confirmed'?'✓ Confirmed':'○ Pending')+'</span>':(d===TRIP_END?'Flying home':'<span class="muted">No hotel booked for this night</span>'))+'</span></div>';
+  if(list.length){var ld=dayLoad(d,list);var ldTxt='About '+fmtH(ld.mins)+' at the stops'+(ld.unknown?' ('+ld.unknown+' without a duration)':'')+(ld.day?', '+fmtH(ld.day)+' of daylight '+ld.sun.rise+' to '+ld.sun.set:'')+(ld.km?', '+fmtDist(ld.km,false)+' between stops as the crow flies':'')+'.';var over=ld.day&&ld.mins>ld.day-60;card.insertAdjacentHTML('beforeend','<div class="dc-r"><span class="k">Load</span><span'+(over?' class="warn"':'')+'>'+esc(ldTxt)+(over?' That is more than the daylight allows; drop or shorten one.':'')+'</span></div>');}
   card.querySelectorAll('[data-bk]').forEach(function(x){x.addEventListener('click',function(){openBooking(x.dataset.bk);});});
   box.appendChild(card);
   /* fixed bookings */
@@ -5023,7 +5458,7 @@ function renderDays(){
   var editB=document.createElement('button');editB.type='button';editB.className='btn small'+(dayEdit?' primary':'');editB.textContent=dayEdit?'Done':'Edit day';editB.setAttribute('aria-pressed',dayEdit?'true':'false');
   editB.addEventListener('click',function(){dayEdit=!dayEdit;renderDays();});
   if(list.length)hd.appendChild(editB);
-  if(!list.length){var e=document.createElement('div');e.className='note';e.textContent='Open a place and tap Add to day. A stop is a plan, not a booking.';box.appendChild(e);}
+  if(!list.length){var e=document.createElement('div');e.className='note';e.textContent='Open a place and tap Add to day. A stop is a plan, not a booking.';box.appendChild(e);var sug=SEED_PLAN.filter(function(x){return x[0]===d;})[0];if(sug&&sug[1].some(function(x){var p=byId(x[0]);return p&&!p.day;})){var sb=document.createElement('button');sb.type='button';sb.className='btn small';sb.style.margin='6px 0 2px';sb.textContent='Suggest this day';sb.addEventListener('click',function(){var order=0;sug[1].forEach(function(x){var p=byId(x[0]);if(!p||p.day)return;p.day=d;p.time=x[1]||'';p.order=order++;p.sugg=1;});persist();renderList();renderDays();updateNextUp();});box.appendChild(sb);}}
   /* time checks: same time twice, or times out of order in a manual sequence */
   var clash={},seen={},outOfOrder=false,lastT='';
   list.forEach(function(p){if(p.time){if(seen[p.time])clash[p.time]=1;seen[p.time]=1;if(lastT&&p.time<lastT)outOfOrder=true;lastT=p.time;}});
@@ -5042,9 +5477,10 @@ function renderDays(){
     var r=document.createElement('div');r.className='stop-row'+(dayEdit?' edit':'');
     var bk=bookingStatus(p);
     var dirHref=i>0?'https://www.google.com/maps/dir/?api=1&origin='+list[i-1].lat+','+list[i-1].lng+'&destination='+p.lat+','+p.lng+'&travelmode=walking':'https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'&travelmode=transit';
-    r.innerHTML='<span class="n">'+(i+1)+'</span><span class="t">'+esc(p.time||'')+'</span><button type="button" class="name"><b>'+esc(p.name)+'</b><small>'+esc(hoodOf(p)||styleOf(p))+(p.visited?' · visited':'')+'</small>'+(closedOn(p,d)?'<span class="tag closed">Closed this day</span>':'')+(bk?'<span class="tag '+(bk==='confirmed'?'ok':'pend')+'">'+(bk==='confirmed'?'✓ Booked':'○ Booking pending')+'</span>':'')+'</button>'
+    r.innerHTML='<span class="n">'+(i+1)+'</span><span class="t">'+esc(p.time||'')+'</span><button type="button" class="name"><b>'+esc(p.name)+'</b><small>'+esc(hoodOf(p)||styleOf(p))+(p.visited?' · visited':'')+'</small>'+(closedOn(p,d)?'<span class="tag closed">Closed this day</span>':'')+(bk?'<span class="tag '+(bk==='confirmed'?'ok':'pend')+'">'+(bk==='confirmed'?'✓ Booked':'○ Booking pending')+'</span>':'')+(p.sugg?'<span class="tag sugg">Suggested</span>':'')+(arriveHint(p,d)?'<span class="hint">'+esc(arriveHint(p,d))+'</span>':'')+'</button>'+(p.sugg&&!dayEdit?'<button type="button" class="keep" aria-label="Keep this suggestion">Keep</button>':'')
       +(dayEdit?'<button type="button" class="mv up" aria-label="Move up">▲</button><button type="button" class="mv down" aria-label="Move down">▼</button><select class="mvday" aria-label="Move to another day"><option value="">Move to…</option></select>':'<a class="dir" href="'+dirHref+'" target="_blank" rel="noopener" aria-label="Directions">➜</a>');
     r.querySelector('.name').addEventListener('click',function(){openPlacePage(p.id);});
+    var kp=r.querySelector('.keep');if(kp)kp.addEventListener('click',function(e){e.stopPropagation();keepSuggestion(p);});
     if(dayEdit){
       r.querySelector('.up').addEventListener('click',function(){swapOrder(list,i,i-1);});
       r.querySelector('.down').addEventListener('click',function(){swapOrder(list,i,i+1);});
@@ -5062,6 +5498,19 @@ function renderDays(){
     sec('Nearby, not planned',list.length?'saved places within 800 m of a stop on this day':'saved places within 800 m of the hotel');
     near.forEach(function(x){box.appendChild(plRowSimple(x.p,'≈ '+fmtDist(x.d)));});
   }
+  /* rain plan */
+  var rp=rainPlan(d,list,anchors);
+  if(rp.alts.length&&(rp.outdoor.length||!list.length)){
+    var wet=wxd&&wxd.rain>=50;
+    var rh=sec('If it rains',wet?'rain likely, '+wxd.rain+'%':(rp.outdoor.length?rp.outdoor.length+' of the stops are outdoors':'indoor ideas near the hotel'));
+    var rb=document.createElement('div');rb.className='rain-box'+(wet?' open':'');
+    var tg=document.createElement('button');tg.type='button';tg.className='btn small';tg.textContent=wet?'Hide':'Show indoor options';
+    tg.addEventListener('click',function(){rb.classList.toggle('open');tg.textContent=rb.classList.contains('open')?'Hide':'Show indoor options';});
+    rh.appendChild(tg);
+    if(rp.outdoor.length)rb.insertAdjacentHTML('beforeend','<div class="note" style="margin:2px 0 6px">Outdoors: '+rp.outdoor.map(function(p){return esc(p.name);}).join(', ')+'.</div>');
+    rp.alts.forEach(function(x){rb.appendChild(plRowSimple(x.p,'≈ '+fmtDist(x.d)));});
+    box.appendChild(rb);
+  }
   /* actions */
   var act=document.createElement('div');act.className='day-actions';
   var show=document.createElement('button');show.className='btn small primary';show.textContent='Show on the map';show.type='button';
@@ -5072,6 +5521,9 @@ function renderDays(){
   var sh=document.createElement('button');sh.className='btn small';sh.textContent='Share as text';sh.type='button';
   sh.addEventListener('click',function(){shareDay(d);});
   act.appendChild(sh);
+  var nS=suggCount();
+  if(!nS){var sp=document.createElement('button');sp.className='btn small';sp.textContent='Suggest the whole trip';sp.type='button';sp.addEventListener('click',function(){if(sp.dataset.armed!=='1'){sp.dataset.armed='1';sp.textContent='Tap again to fill every empty day';setTimeout(function(){sp.dataset.armed='';sp.textContent='Suggest the whole trip';},4000);return;}suggestPlan();});act.appendChild(sp);}
+  else{var cs=document.createElement('button');cs.className='btn small';cs.textContent='Remove '+nS+' suggestions';cs.type='button';cs.addEventListener('click',function(){if(cs.dataset.armed!=='1'){cs.dataset.armed='1';cs.textContent='Tap again to remove them all';setTimeout(function(){cs.dataset.armed='';cs.textContent='Remove '+nS+' suggestions';},4000);return;}clearSuggestions();});act.appendChild(cs);}
   if(dayEdit&&list.length>2){
     var opt=document.createElement('button');opt.className='btn small';opt.textContent='Suggest a shorter order';opt.type='button';
     opt.addEventListener('click',function(){shortestRoute(d);});
@@ -5116,7 +5568,7 @@ function shareDay(iso){
   if(navigator.share){navigator.share({title:'Japan '+dayLabel(iso,true),text:text}).catch(function(){});return;}
   copyText(text,function(ok){toast(ok?'Day copied as text':'Could not copy here');});
 }
-function swapOrder(list,i,j){
+function swapOrder(list,i,j){if(list[i])delete list[i].sugg;if(list[j])delete list[j].sugg;
   if(j<0||j>=list.length)return;
   list.forEach(function(p,k){p.order=k;});
   var a=list[i],b=list[j];var tmp=a.order;a.order=b.order;b.order=tmp;
@@ -5534,7 +5986,7 @@ function typeIcon(kind,name){
 }
 /* map-wide search: our own places first, then anywhere in Japan */
 function fmtStamp(iso){var d=new Date(iso);if(isNaN(d))return '';return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+', '+pad2(d.getHours())+':'+pad2(d.getMinutes());}
-function spentDkk(yen){var r=parseFloat(String(state.rate||'').replace(',','.'));var y=parseFloat(yen);if(!y||!r)return '';return '≈ '+(y*r/100).toFixed(0)+' DKK';}
+function spentDkk(yen){var r=parseFloat(String(state.rate||'').replace(',','.'));var y=parseFloat(yen);if(!y||!r)return '';return '≈ '+Math.round(y*r/100).toLocaleString('en-US')+' DKK';}
 function whatNow(){
   var hmNow=nowHMTz().split(':'),h=(+hmNow[0])+(+hmNow[1])/60,today=todayIso();
   var origin=userPos||[map.getCenter().lat,map.getCenter().lng];
@@ -5843,7 +6295,7 @@ function renderBackupNote(){
   var d=new Date(state.lastBackup),days=Math.floor((Date.now()-d.getTime())/86400000);
   el.textContent='Last backup '+(days===0?'today':days===1?'yesterday':days+' days ago')+(state.changedSince?', '+state.changedSince+' changes since.':'.');
 }
-function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),todos:todos(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',trip:trip(),gone:state.gone||{},routes:state.routes||{},photoSplit:1,closedSeeded:1,expMigrated:1,conanNoted:1,caledoFixed:1,friendNoted:1,fix55:1,fix61:1,fix62:1,bk62:1,fix64:1,schema:SCHEMA,exported:new Date().toISOString()},null,2);}
+function exportJson(){return JSON.stringify({places:state.places,tips:state.tips,hidden:state.hidden,library:library(),removedSeeds:removedSeeds(),guides:guides(),removedGuides:removedGuides(),checks:checks(),removedChecks:removedChecks(),buys:buys(),removedBuys:removedBuys(),rate:state.rate||'',theme:state.theme||'auto',bookings:bookings(),removedBookings:removedBookings(),todos:todos(),expenses:expenses(),budget:state.budget||'',customCats:customCats(),voiceName:state.voiceName||'',trip:trip(),gone:state.gone||{},routes:state.routes||{},photoSplit:1,closedSeeded:1,expMigrated:1,conanNoted:1,caledoFixed:1,friendNoted:1,fix55:1,fix61:1,fix62:1,bk62:1,fix64:1,fix66:1,schema:SCHEMA,exported:new Date().toISOString()},null,2);}
 var pvAction=null;
 function openPreview(title,intro,stats,detail,safety,apply){
   $('#pvTitle').textContent=title;$('#pvIntro').textContent=intro;
@@ -5874,7 +6326,7 @@ function applyBackup(js){
   var keepKey='jm:snap:'+KEY+':'+todayIso()+'-pre-import';
   idbSet(keepKey,JSON.stringify(state)).then(function(){return idbGet('jm:snaps:'+KEY).then(function(v){var list=v?JSON.parse(v):[];var d=todayIso()+'-pre-import';if(list.indexOf(d)===-1)list.push(d);return idbSet('jm:snaps:'+KEY,JSON.stringify(list.slice(-8)));});}).catch(function(){});
   state.places=js.places.map(function(p){return Object.assign({id:uid(),visited:false,notes:'',icon:'',jp:'',when:'',area:'other',cat:'other',img:'',photo:'',day:'',order:0},p);});
-  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();state.bookings=Array.isArray(js.bookings)?js.bookings:[];state.removedBookings=Array.isArray(js.removedBookings)?js.removedBookings:[];mergeBookings();state.expenses=Array.isArray(js.expenses)?js.expenses:[];state.budget=js.budget||'';state.customCats=Array.isArray(js.customCats)?js.customCats:[];installCustomCats();if(js.trip)state.trip=js.trip;state.gone=js.gone||{};applyTrip();buildTabs();
+  state.tips=Object.assign({},SEED_TIPS,js.tips||{});state.hidden=Array.isArray(js.hidden)?js.hidden:[];state.library=Array.isArray(js.library)?js.library:(state.library||[]);state.removedSeeds=Array.isArray(js.removedSeeds)?js.removedSeeds:[];state.guides=Array.isArray(js.guides)?js.guides:[];state.removedGuides=Array.isArray(js.removedGuides)?js.removedGuides:[];mergeGuides();state.checks=Array.isArray(js.checks)?js.checks:[];state.removedChecks=Array.isArray(js.removedChecks)?js.removedChecks:[];mergeChecks();state.buys=Array.isArray(js.buys)?js.buys:[];state.removedBuys=Array.isArray(js.removedBuys)?js.removedBuys:[];mergeBuys();state.rate=js.rate||state.rate||'';state.theme=js.theme||state.theme||'auto';applyTheme();state.bookings=Array.isArray(js.bookings)?js.bookings:[];state.removedBookings=Array.isArray(js.removedBookings)?js.removedBookings:[];mergeBookings();state.expenses=Array.isArray(js.expenses)?js.expenses:[];state.budget=js.budget||'';state.customCats=Array.isArray(js.customCats)?js.customCats:[];installCustomCats();if(js.trip)state.trip=js.trip;state.gone=js.gone||{};applyTrip();buildTabs();
   $('#importErr').textContent='';$('#importText').value='';$('#previewModal').classList.remove('open');
   persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea('all');toast('Imported '+state.places.length+' places');
 }
@@ -5887,8 +6339,10 @@ function bind(){
   $('#scrim').addEventListener('click',closeDrawer);
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click',function(){
-      if(['trip','tools','bookings','journal','data','guides'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
-      if(b.dataset.panel==='tools')renderChecks();
+      if(['trip','tools','bookings','journal','data','guides','prep','buy'].indexOf(b.dataset.panel)>-1)moreSub=b.dataset.panel;
+      if(b.dataset.panel==='buy'){renderBuys();if(!buyRateVal()&&navigator.onLine)fetchRate(function(ok){if(ok)renderBuys();});}
+      if(b.dataset.panel==='prep'){renderTodos();renderChecks();renderEssentials();}
+      if(b.dataset.panel==='data')photoStatus();
       if(b.dataset.panel==='journal')renderJournal();
       if(b.dataset.panel==='bookings')renderBookings();
       if(b.dataset.panel==='trip')renderTripPanel();
@@ -6023,6 +6477,15 @@ function bind(){
   $('#rmPageBack').addEventListener('click',function(){if(pendingNote)flushNote();if(history.state&&((history.state.v==='place'&&history.state.id===rmPageId)||(history.state.v==='area'&&history.state.id===rmAreaId))){history.back();return;}$('#ramenPage').classList.remove('open');window.scrollTo(0,0);if(currentPage==='places')renderList();});
   $('#rmPageMap').addEventListener('click',function(){if(rmPageId)revealOnMap(rmPageId);else if(rmAreaId){var z=ZONE_BY_ID[rmAreaId];$('#ramenPage').classList.remove('open');if(history.state&&history.state.v==='area')history.back();showPage('map');setTimeout(function(){focusZone(z);},60);}});
   $('#stnClose').addEventListener('click',function(){$('#stnSheet').classList.remove('open');});
+  $('#icsBtn').addEventListener('click',exportIcs);
+  $('#buySeg').addEventListener('click',function(e){var x=e.target.closest('button');if(!x)return;buyFilter=x.dataset.f;renderBuys();});
+  $('#buyAdd').addEventListener('click',function(){openBuyForm(null);});
+  $('#byWhereQ').addEventListener('input',function(){this.dataset.free='';$('#byWhere').value='';searchBuyWhere();});
+  $('#byWhereQ').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var f=$('#byWhereRes button');if(f)f.click();}});
+  $('#bySave').addEventListener('click',saveBuyForm);
+  $('#byCancel').addEventListener('click',function(){$('#buyForm').classList.remove('open');buyEditId=null;});
+  $('#byDel').addEventListener('click',function(){if(this.dataset.armed!=='1'){this.dataset.armed='1';this.textContent='Tap again to remove';var t=this;setTimeout(function(){t.dataset.armed='';t.textContent='Remove';},3000);return;}this.dataset.armed='';this.textContent='Remove';deleteBuy();});
+  $('#phRun').addEventListener('click',runPhotos);
   $('#signOpen').addEventListener('click',function(){$('#sgSearch').value='';renderSigns();$('#sgView').classList.add('open');});
   $('#sgBack').addEventListener('click',function(){$('#sgView').classList.remove('open');window.scrollTo(0,0);});
   $('#sgSearch').addEventListener('input',renderSigns);
@@ -6054,6 +6517,7 @@ function bind(){
   $('#nowBtn').addEventListener('click',function(){ if(!userPos&&navigator.geolocation){ navigator.geolocation.getCurrentPosition(function(pos){userPos=[pos.coords.latitude,pos.coords.longitude];whatNow();},function(){whatNow();},{timeout:4000,maximumAge:120000}); } else whatNow(); });
   $('#nowClose').addEventListener('click',function(){$('#nowSheet').classList.remove('open');});
   fetchWeather(false);
+  setInterval(function(){if(currentPage==='map')updateNextUp();},60000);
   $('#searchCancel').addEventListener('click',closeSearch);
   $('#mapSearch').addEventListener('input',function(){runSearch(false);});
   $('#mapSearch').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();runSearch(true);}});
@@ -6111,7 +6575,7 @@ function bind(){
     if(pendingReset===null){pendingReset=1;$('#resetBtn').textContent='Tap again to replace everything';setTimeout(function(){pendingReset=null;$('#resetBtn').textContent='Reset to starter list';},3000);return;}
     pendingReset=null;$('#resetBtn').textContent='Reset to starter list';
     state.places=SEED_PLACES.map(function(p){return Object.assign({visited:false},p);});
-    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();state.checks=[];state.removedChecks=[];mergeChecks();state.bookings=[];state.removedBookings=[];mergeBookings();state.expenses=[];
+    state.tips=Object.assign({},SEED_TIPS);state.hidden=[];state.removedSeeds=[];state.guides=[];state.removedGuides=[];mergeGuides();state.checks=[];state.removedChecks=[];mergeChecks();state.buys=[];state.removedBuys=[];mergeBuys();state.bookings=[];state.removedBookings=[];mergeBookings();state.expenses=[];
     persist();buildChips();renderMarkers();renderList();renderDays();renderTips();closeDrawer();setArea(AREA_ORDER[0]||'all');toast('Starter list restored');
   });
   document.addEventListener('keydown',function(e){
