@@ -861,10 +861,10 @@ body.dark #nextUp{background:#2A2E3A}
 .buy-row .sw{display:flex;align-items:flex-start;gap:10px;padding:10px 0;position:relative;z-index:1;background:var(--washi);transition:transform .18s ease;touch-action:pan-y;user-select:none;-webkit-user-select:none;will-change:transform}
 .guide-view .buy-row .sw{background:var(--paper)}
 .buy-row.drag .sw{transition:none}
-.buy-row .sw-del{position:absolute;top:0;bottom:0;width:96px;background:var(--danger);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:0;visibility:hidden;border-radius:0}
-.buy-row .sw-del.r{right:0}.buy-row .sw-del.l{left:0}
-.buy-row[data-side=r] .sw-del.r,.buy-row[data-side=l] .sw-del.l{visibility:visible}
-.buy-row.open .sw-del{box-shadow:inset 0 0 0 2px rgba(255,255,255,.15)}
+.buy-row .sw-act{position:absolute;top:0;bottom:0;width:96px;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:0;visibility:hidden;border-radius:0}
+.buy-row .sw-act.del{right:0;background:var(--danger)}.buy-row .sw-act.edit{left:0;background:#22304D}
+.buy-row[data-side=r] .sw-act.del,.buy-row[data-side=l] .sw-act.edit{visibility:visible}
+.buy-row .bt small.go{color:var(--shu);font-style:normal;font-weight:700}
 .buy-hint{font-size:12px;color:var(--muted);margin:0 0 6px}
 .buy-quick{display:flex;gap:8px;margin:0 0 6px}
 .buy-quick input{flex:1;min-width:0;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
@@ -1180,7 +1180,7 @@ body.dark .ar-card{background:#2A2E3A}
     <div class="panel" id="panel-trip">
       <div class="tool">
         <h3>What is new</h3>
-        <p class="note" style="margin:4px 0"><b>Version 72.</b> To buy list: slide a row sideways to reveal Remove, a long slide removes it at once, with Undo. Type a thing and press Enter to add it quickly; tap it later for the price, the shop or a note.</p>
+        <p class="note" style="margin:4px 0"><b>Version 73.</b> To buy list: tap an item to open its shop on the map. Slide right for Edit, slide left for Remove (a long slide does it at once, with Undo). Type a thing and press Enter to add it quickly.</p>
         <p class="note" style="margin:4px 0"><b>Version 71.</b> #FFFFFFT Sendagaya and the Whitesville 2-pack T-shirt on the buy list.</p>
         <p class="note" style="margin:4px 0"><b>Version 70.</b> Adding to the To buy list: search a saved place or type any shop, enter the price in yen or kroner and the other fills itself, longer notes.</p>
         <p class="note" style="margin:4px 0"><b>Version 69.</b> A To buy list: what, where, the price in yen and kroner, ticked off as you buy, with the amount going into Spending.</p>
@@ -1242,7 +1242,7 @@ body.dark .ar-card{background:#2A2E3A}
       <p class="note" id="buySum"></p>
       <div class="inline-btns" style="justify-content:space-between;margin:4px 0 8px"><div class="seg" id="buySeg"><button type="button" data-f="open">To buy</button><button type="button" data-f="bought">Bought</button><button type="button" data-f="all">All</button></div><button class="btn small" id="buyAdd" type="button">Add with details</button></div>
       <form class="buy-quick" id="buyQuick" autocomplete="off"><input id="buyQuickIn" placeholder="Type something to buy, then Enter" enterkeyhint="done" autocomplete="off"><button class="btn small primary" type="submit">Add</button></form>
-      <p class="buy-hint">Slide a row sideways to remove it. Tap a row to add the price, the shop or a note.</p>
+      <p class="buy-hint">Tap a row to open the shop on the map. Slide right to edit, slide left to remove.</p>
       <div class="buy-form" id="buyForm">
         <h3 id="byTitle" style="margin:0 0 8px">Add something to buy</h3>
         <div class="field"><label for="byItem">What</label><input id="byItem" placeholder="Matcha whisk, sneakers, Pokemon cards" autocomplete="off"></div>
@@ -1764,7 +1764,7 @@ window.__mlMap=function(m){return m&&m._ml;};
 (function(){
 'use strict';
 
-var APP_VERSION='72';
+var APP_VERSION='73';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -4571,17 +4571,34 @@ function buyRow(b,showWhere){
   var price='',dk='';
   if(isD&&dAmt!==undefined&&dAmt!==''){price=(+dAmt).toLocaleString('en-US')+' DKK';dk=yv?'≈ '+yen(yv):'';}
   else if(yv){price=(!useP&&b.pnote&&/ to /.test(b.pnote)?'from ':'')+yen(yv);dk=spentDkk(yv);}
-  r.innerHTML='<button type="button" class="sw-del l" aria-label="Remove '+esc(b.item)+'">Remove</button><button type="button" class="sw-del r" aria-label="Remove '+esc(b.item)+'">Remove</button><div class="sw"><input type="checkbox" aria-label="Bought"'+(b.bought?' checked':'')+'><button type="button" class="bt"><b>'+esc(b.item)+'</b><small>'+(showWhere?esc(p?p.name+(hoodOf(p)?', '+hoodOf(p):''):(b.where?b.where+', not on the map':'Anywhere')):'')+'</small>'+(b.note?'<small class="nt">'+esc(b.note)+'</small>':'')+'</button><span class="pr">'+(price?'<b>'+esc(price)+'</b>':'<i>no price</i>')+(dk?'<small>'+esc(dk)+'</small>':'')+'</span></div>';
+  var onPage=rmPageId&&$('#ramenPage').classList.contains('open')&&p&&p.id===rmPageId;
+  var where=showWhere?(p?p.name+(hoodOf(p)?', '+hoodOf(p):''):(b.where?b.where+', not on the map':'Anywhere')):'';
+  r.innerHTML='<button type="button" class="sw-act edit" aria-label="Edit '+esc(b.item)+'">Edit</button><button type="button" class="sw-act del" aria-label="Remove '+esc(b.item)+'">Remove</button><div class="sw"><input type="checkbox" aria-label="Bought"'+(b.bought?' checked':'')+'><button type="button" class="bt"><b>'+esc(b.item)+'</b>'+(where?'<small'+(p&&!onPage?' class="go"':'')+'>'+esc(where)+(p&&!onPage?' \u203a':'')+'</small>':'')+(b.note?'<small class="nt">'+esc(b.note)+'</small>':'')+'</button><span class="pr">'+(price?'<b>'+esc(price)+'</b>':'<i>no price</i>')+(dk?'<small>'+esc(dk)+'</small>':'')+'</span></div>';
   r.querySelector('input').addEventListener('change',function(){setBought(b,this.checked);});
-  r.querySelector('.bt').addEventListener('click',function(){if(r.classList.contains('open')){swClose(r);return;}openBuyForm(b.id);});
-  r.querySelectorAll('.sw-del').forEach(function(x){x.addEventListener('click',function(){deleteBuyRow(b);});});
-  swipeRow(r,function(){deleteBuyRow(b);});
+  r.querySelector('.bt').addEventListener('click',function(){if(r.classList.contains('open')){swClose(r);return;}openBuyTarget(b);});
+  r.querySelector('.sw-act.del').addEventListener('click',function(){deleteBuyRow(b);});
+  r.querySelector('.sw-act.edit').addEventListener('click',function(){swClose(r);goBuyEdit(b);});
+  swipeRow(r,function(){deleteBuyRow(b);},function(){swClose(r);goBuyEdit(b);});
   return r;
+}
+/* v73: a tap opens the shop on the map; the edit form is reached by sliding right */
+function openBuyTarget(b){
+  var p=buyPlace(b);
+  if(p&&!(rmPageId===p.id&&$('#ramenPage').classList.contains('open'))){openPlacePage(p.id);return;}
+  goBuyEdit(b);
+}
+function goBuyEdit(b){
+  if($('#ramenPage').classList.contains('open')){
+    $('#ramenPage').classList.remove('open');if(history.state&&history.state.v==='place')history.back();
+    showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();setTimeout(function(){openBuyForm(b.id);},60);return;
+  }
+  if(currentPage!=='more'){showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();}
+  openBuyForm(b.id);
 }
 /* v72: slide a row sideways to reveal Remove; a long slide removes at once, with Undo */
 var swOpenRow=null;
 function swClose(r){if(!r)return;r.classList.remove('open');r.dataset.side='';var t=r.querySelector('.sw');if(t)t.style.transform='';if(swOpenRow===r)swOpenRow=null;}
-function swipeRow(r,onDelete){
+function swipeRow(r,onDelete,onEdit){
   var t=r.querySelector('.sw'),W=96,sx=0,sy=0,dx=0,base=0,active=false,horiz=null,pid=null;
   function setX(x){dx=x;t.style.transform=x?'translateX('+x+'px)':'';r.dataset.side=x>0?'l':(x<0?'r':'');}
   function end(e){
@@ -4590,7 +4607,10 @@ function swipeRow(r,onDelete){
     setTimeout(function(){r._moved=false;},60);
     if(horiz!==true)return;
     var w=r.offsetWidth||320;
-    if(e.type!=='pointercancel'&&Math.abs(dx)>=w*0.6){r.classList.add('open');setX(dx>0?w:-w);setTimeout(function(){if(r.isConnected)onDelete();},140);return;}
+    if(e.type!=='pointercancel'&&Math.abs(dx)>=w*0.6){
+      if(dx<0){r.classList.add('open');setX(-w);setTimeout(function(){if(r.isConnected)onDelete();},140);}
+      else{setX(W);r.classList.add('open');swOpenRow=r;setTimeout(function(){if(onEdit)onEdit();},120);}
+      return;}
     if(Math.abs(dx)>=W*0.45){setX(dx>0?W:-W);r.classList.add('open');swOpenRow=r;}else swClose(r);
   }
   t.addEventListener('pointerdown',function(e){
