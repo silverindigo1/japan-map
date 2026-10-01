@@ -854,8 +854,6 @@ body.dark #nextUp{background:#2A2E3A}
 .pp-rate .stars button{border:none;background:none;font-size:24px;color:#E0A100;padding:0 1px;line-height:1}
 .pp-rate .again{border:1px solid var(--line);background:var(--washi);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--ink)}
 .pp-rate .again.on{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok)}
-.buy-form{display:none;border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px;background:var(--paper)}
-.buy-form.open{display:block}
 .buy-form select,.buy-form input{width:100%}
 .buy-row{position:relative;overflow:hidden;border-top:1px solid var(--line)}
 .buy-row .sw{display:flex;align-items:flex-start;gap:10px;padding:10px 0;position:relative;z-index:1;background:var(--washi);transition:transform .18s ease;touch-action:pan-y;user-select:none;-webkit-user-select:none;will-change:transform}
@@ -877,7 +875,6 @@ body.dark #nextUp{background:#2A2E3A}
 .buy-row .pr{text-align:right;white-space:nowrap}
 .buy-row .pr b{display:block;font-size:13px}.buy-row .pr small{display:block;font-size:11px;color:var(--muted)}.buy-row .pr i{font-size:12px;color:var(--muted)}
 .buy-row.done .bt b{text-decoration:line-through;color:var(--muted)}
-body.dark .buy-form{background:#2A2E3A}
 .by-pair{display:flex;align-items:center;gap:8px}
 .by-pair>div{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--washi);padding:0 10px}
 .by-pair>div input{flex:1;min-width:0;border:none!important;background:transparent!important;padding:9px 0!important;font-size:16px}
@@ -885,7 +882,8 @@ body.dark .buy-form{background:#2A2E3A}
 .by-pair b{color:var(--muted)}
 .by-pair input:disabled{opacity:.4}
 .by-rate{display:block;font-size:12px;color:var(--muted);margin-top:5px}
-.by-rate .lnk{border:none;background:none;color:var(--indigo);font-weight:700;padding:0;font-size:12px}
+.by-rate .lnk,.buy-form .lnk{border:none;background:none;color:var(--indigo);font-weight:700;padding:0;font-size:12px}
+.buy-form .note .lnk{font-size:14px}
 .by-sel .chip-sel{display:inline-flex;align-items:center;gap:6px;background:var(--washi);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 12px;font-size:14px;font-weight:600}
 .by-sel .chip-sel small{font-weight:500;color:var(--muted);font-size:11px}
 .by-sel .chip-sel button{border:none;background:var(--line);border-radius:50%;width:22px;height:22px;line-height:20px;font-size:14px;color:var(--ink)}
@@ -1180,6 +1178,7 @@ body.dark .ar-card{background:#2A2E3A}
     <div class="panel" id="panel-trip">
       <div class="tool">
         <h3>What is new</h3>
+        <p class="note" style="margin:4px 0"><b>Version 74.</b> The To buy edit form opens as its own screen on top of the list or the shop page, so nothing scrolls or jumps. Cancel or Save brings you back where you were.</p>
         <p class="note" style="margin:4px 0"><b>Version 73.</b> To buy list: tap an item to open its shop on the map. Slide right for Edit, slide left for Remove (a long slide does it at once, with Undo). Type a thing and press Enter to add it quickly.</p>
         <p class="note" style="margin:4px 0"><b>Version 71.</b> #FFFFFFT Sendagaya and the Whitesville 2-pack T-shirt on the buy list.</p>
         <p class="note" style="margin:4px 0"><b>Version 70.</b> Adding to the To buy list: search a saved place or type any shop, enter the price in yen or kroner and the other fills itself, longer notes.</p>
@@ -1243,27 +1242,6 @@ body.dark .ar-card{background:#2A2E3A}
       <div class="inline-btns" style="justify-content:space-between;margin:4px 0 8px"><div class="seg" id="buySeg"><button type="button" data-f="open">To buy</button><button type="button" data-f="bought">Bought</button><button type="button" data-f="all">All</button></div><button class="btn small" id="buyAdd" type="button">Add with details</button></div>
       <form class="buy-quick" id="buyQuick" autocomplete="off"><input id="buyQuickIn" placeholder="Type something to buy, then Enter" enterkeyhint="done" autocomplete="off"><button class="btn small primary" type="submit">Add</button></form>
       <p class="buy-hint">Tap a row to open the shop on the map. Slide right to edit, slide left to remove.</p>
-      <div class="buy-form" id="buyForm">
-        <h3 id="byTitle" style="margin:0 0 8px">Add something to buy</h3>
-        <div class="field"><label for="byItem">What</label><input id="byItem" placeholder="Matcha whisk, sneakers, Pokemon cards" autocomplete="off"></div>
-        <div class="field"><label for="byWhereQ">Where</label>
-          <input type="hidden" id="byWhere">
-          <div class="by-sel" id="byWhereSel"></div>
-          <input id="byWhereQ" placeholder="Search our saved places, or type a shop name" autocomplete="off" autocapitalize="off">
-          <div class="by-res" id="byWhereRes"></div>
-        </div>
-        <div class="field"><label>Price</label>
-          <div class="by-pair"><div><input id="byPrice" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPriceDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
-          <small class="by-rate" id="byRate"></small>
-        </div>
-        <div class="field" id="byPaidWrap"><label>Paid</label>
-          <div class="by-pair"><div><input id="byPaid" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPaidDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
-        </div>
-        <div class="field"><label for="byWho">For</label><select id="byWho"><option value="both">Both</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select></div>
-        <div class="field"><label for="byNote">Note</label><textarea id="byNote" rows="2" placeholder="Size, colour, model, who it is for, a link"></textarea></div>
-        <p class="note" id="byInfo" style="margin:0 0 8px"></p>
-        <div class="inline-btns"><button class="btn primary" id="bySave" type="button">Save</button><button class="btn" id="byCancel" type="button">Cancel</button><button class="btn" id="byDel" type="button">Remove</button></div>
-      </div>
       <div id="buyList"></div>
       <p class="note" style="margin-top:14px">Tax-free from November 2026: pay the full price with your passport shown, keep the goods unopened, and the tax is refunded after the customs check at the airport. Ticking an item as bought adds what you paid to Spending.</p>
     </div>
@@ -1437,6 +1415,34 @@ body.dark .ar-card{background:#2A2E3A}
       <div class="field"><label class="chk-row" style="border:0"><input type="checkbox" id="nPack"><span>Start with the Japan starter pack (119 places, guides, phrasebook)</span></label></div>
       <p class="note">Guides, the phrasebook and the signs dictionary are about Japan. They come along with every trip, so use them or ignore them.</p>
       <div class="err" id="nErr"></div>
+    </div>
+  </div>
+  <div class="modal" id="buyForm" role="dialog" aria-modal="true" style="z-index:68">
+    <div class="modal-head">
+      <button class="btn" id="byCancel" type="button">Cancel</button>
+      <h2 id="byTitle">Add something to buy</h2>
+      <button class="btn primary" id="bySave" type="button">Save</button>
+    </div>
+    <div class="form buy-form">
+        <div class="field"><label for="byItem">What</label><input id="byItem" placeholder="Matcha whisk, sneakers, Pokemon cards" autocomplete="off"></div>
+        <div class="field"><label for="byWhereQ">Where</label>
+          <input type="hidden" id="byWhere">
+          <div class="by-sel" id="byWhereSel"></div>
+          <input id="byWhereQ" placeholder="Search our saved places, or type a shop name" autocomplete="off" autocapitalize="off">
+          <div class="by-res" id="byWhereRes"></div>
+        </div>
+        <div class="field"><label>Price</label>
+          <div class="by-pair"><div><input id="byPrice" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPriceDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
+          <small class="by-rate" id="byRate"></small>
+        </div>
+        <div class="field" id="byPaidWrap"><label>Paid</label>
+          <div class="by-pair"><div><input id="byPaid" inputmode="decimal" placeholder="0"><span>yen</span></div><b>=</b><div><input id="byPaidDkk" inputmode="decimal" placeholder="0"><span>DKK</span></div></div>
+        </div>
+        <div class="field"><label for="byWho">For</label><select id="byWho"><option value="both">Both</option><option value="florian">Florian</option><option value="lendita">Lendita</option></select></div>
+        <div class="field"><label for="byNote">Note</label><textarea id="byNote" rows="3" placeholder="Size, colour, model, who it is for, a link"></textarea></div>
+        <p class="note" id="byInfo" style="margin:0 0 12px"></p>
+        <p class="note" id="byOpen" style="margin:0 0 12px"></p>
+        <div class="inline-btns"><button class="btn danger" id="byDel" type="button">Remove from the list</button></div>
     </div>
   </div>
   <div class="modal" id="bkModal" role="dialog" aria-modal="true" style="z-index:68">
@@ -1764,7 +1770,7 @@ window.__mlMap=function(m){return m&&m._ml;};
 (function(){
 'use strict';
 
-var APP_VERSION='73';
+var APP_VERSION='74';
 var KEY='japan-map:v1';
 (function(){try{var ix=JSON.parse(window.localStorage.getItem('jm:trips')||'null');if(ix&&ix.active&&ix.active!=='japan-2026')KEY='jm:trip:'+ix.active;}catch(e){}})();
 /* Optional: paste your Google Maps API key between the quotes to bake it into the file, or enter it in List > Backup > Google Maps instead. */
@@ -4213,7 +4219,7 @@ function openPlacePage(id,fromNav,opts){
   var bh=buys().filter(function(x){return x.placeId===p.id;});
   if(bh.length||['shopping','anime'].indexOf(p.cat)>-1){
     if(bh.length){el('h3','ar-h','To buy here');var bx=el('div','ar-rows buy-here','');bh.forEach(function(x){bx.appendChild(buyRow(x,false));});}
-    var ba=el('button','linkadd','+ Add something to buy here');ba.type='button';ba.addEventListener('click',function(){$('#ramenPage').classList.remove('open');if(history.state&&history.state.v==='place')history.back();showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();setTimeout(function(){openBuyForm(null,p.id);},60);});
+    var ba=el('button','linkadd','+ Add something to buy here');ba.type='button';ba.addEventListener('click',function(){openBuyForm(null,p.id);});
   }
   /* if it is full: three other food places close by, walk-ins first */
   if(p.cat==='food'){
@@ -4587,14 +4593,7 @@ function openBuyTarget(b){
   if(p&&!(rmPageId===p.id&&$('#ramenPage').classList.contains('open'))){openPlacePage(p.id);return;}
   goBuyEdit(b);
 }
-function goBuyEdit(b){
-  if($('#ramenPage').classList.contains('open')){
-    $('#ramenPage').classList.remove('open');if(history.state&&history.state.v==='place')history.back();
-    showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();setTimeout(function(){openBuyForm(b.id);},60);return;
-  }
-  if(currentPage!=='more'){showPage('more');document.querySelector('.tabs button[data-panel=buy]').click();}
-  openBuyForm(b.id);
-}
+function goBuyEdit(b){openBuyForm(b.id);}
 /* v72: slide a row sideways to reveal Remove; a long slide removes at once, with Undo */
 var swOpenRow=null;
 function swClose(r){if(!r)return;r.classList.remove('open');r.dataset.side='';var t=r.querySelector('.sw');if(t)t.style.transform='';if(swOpenRow===r)swOpenRow=null;}
@@ -4634,7 +4633,7 @@ function deleteBuyRow(b){
   if(exp)state.expenses=expenses().filter(function(e){return e.id!==b.expId;});
   if(seed&&removedBuys().indexOf(b.id)===-1)removedBuys().push(b.id);
   state.buys=list.filter(function(x){return x!==b;});
-  if(buyEditId===b.id){$('#buyForm').classList.remove('open');buyEditId=null;}
+  if(buyEditId===b.id)closeBuyForm();
   swOpenRow=null;buyRefresh();
   toastUndo('Removed '+b.item,function(){
     var cur=buys();if(cur.some(function(x){return x.id===copy.id;}))return;
@@ -4667,9 +4666,12 @@ function openBuyForm(id,presetPlace){
   $('#byPaidWrap').style.display=b&&b.bought?'':'none';$('#byDel').style.display=b?'':'none';
   $('#byInfo').innerHTML=b&&b.pnote?esc(b.pnote)+(b.src?' <a href="'+esc(b.src)+'" target="_blank" rel="noopener">Source</a>':''):'';
   showBuyRate();
-  f.classList.add('open');setTimeout(function(){try{f.scrollIntoView({block:'start'});}catch(e){}if(!b)$('#byItem').focus();},30);
+  var pl2=b&&buyPlace(b);$('#byOpen').innerHTML=pl2?'<button type="button" class="lnk" id="byGo">Open '+esc(pl2.name)+' on the map</button>':'';
+  if(pl2)$('#byGo').addEventListener('click',function(){closeBuyForm();openPlacePage(pl2.id);});
+  f.classList.add('open');f.querySelector('.form').scrollTop=0;if(!b)setTimeout(function(){$('#byItem').focus();},60);
   if(!buyRateVal()&&navigator.onLine)fetchRate(function(ok){if(ok){renderBuys();if(f.classList.contains('open'))showBuyRate();}});
 }
+function closeBuyForm(){$('#buyForm').classList.remove('open');buyEditId=null;window.scrollTo(0,0);}
 function saveBuyForm(){
   var item=$('#byItem').value.trim();if(!item){toast('Name the thing to buy.');$('#byItem').focus();return;}
   var pl=$('#byWhere').value,free=pl?'':(($('#byWhereQ').dataset.free||$('#byWhereQ').value||'').trim());
@@ -4683,7 +4685,7 @@ function saveBuyForm(){
   b.item=item;b.placeId=pl;b.where=free;b.who=$('#byWho').value;b.note=$('#byNote').value.trim();
   if(b.bought){var pc=ad.dataset.src&&adv!==null?'dkk':'yen';if(pc==='dkk'){b.paidCur='dkk';b.paidAmt=adv;b.paid=k?Math.round(adv/k*100):'';}else{b.paidCur='yen';delete b.paidAmt;b.paid=ayv!==null?Math.round(ayv):'';}
     if(b.expId){var e=expenses().filter(function(x){return x.id===b.expId;})[0];if(e&&b.paid)e.amount=b.paid;}}
-  $('#buyForm').classList.remove('open');buyEditId=null;persist();renderBuys();if(typeof renderExpenses==='function')renderExpenses();
+  closeBuyForm();buyRefresh();
   toast(b.price?item+' saved, '+yen(b.price)+(spentDkk(b.price)?' '+spentDkk(b.price):''):item+' saved');
 }
 function deleteBuy(){if(!buyEditId)return;var b=buys().filter(function(x){return x.id===buyEditId;})[0];if(!b)return;deleteBuyRow(b);}
@@ -6575,8 +6577,8 @@ function bind(){
   $('#byWhereQ').addEventListener('input',function(){this.dataset.free='';$('#byWhere').value='';searchBuyWhere();});
   $('#byWhereQ').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var f=$('#byWhereRes button');if(f)f.click();}});
   $('#bySave').addEventListener('click',saveBuyForm);
-  $('#byCancel').addEventListener('click',function(){$('#buyForm').classList.remove('open');buyEditId=null;});
-  $('#byDel').addEventListener('click',function(){if(this.dataset.armed!=='1'){this.dataset.armed='1';this.textContent='Tap again to remove';var t=this;setTimeout(function(){t.dataset.armed='';t.textContent='Remove';},3000);return;}this.dataset.armed='';this.textContent='Remove';deleteBuy();});
+  $('#byCancel').addEventListener('click',closeBuyForm);
+  $('#byDel').addEventListener('click',function(){if(this.dataset.armed!=='1'){this.dataset.armed='1';this.textContent='Tap again to remove';var t=this;setTimeout(function(){t.dataset.armed='';t.textContent='Remove from the list';},3000);return;}this.dataset.armed='';this.textContent='Remove from the list';deleteBuy();});
   $('#phRun').addEventListener('click',runPhotos);
   $('#signOpen').addEventListener('click',function(){$('#sgSearch').value='';renderSigns();$('#sgView').classList.add('open');});
   $('#sgBack').addEventListener('click',function(){$('#sgView').classList.remove('open');window.scrollTo(0,0);});
